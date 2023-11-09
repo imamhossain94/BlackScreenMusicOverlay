@@ -32,9 +32,12 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+    buildFeatures {
+        viewBinding true
+    }
 }
 
-configurations.all {
+configurations.configureEach {
     exclude group: 'androidx.appcompat', module: 'appcompat'
     exclude group: 'androidx.core', module: 'core'
     exclude group: 'androidx.drawerlayout', module: 'drawerlayout'
@@ -48,11 +51,12 @@ configurations.all {
 dependencies {
     implementation 'androidx.core:core-ktx:1.10.1'
 
-    implementation 'io.github.oneuiproject:design:1.2.3'
+    implementation 'io.github.oneuiproject:design:1.2.6'
     implementation 'io.github.oneuiproject:icons:1.0.1'
-    implementation 'io.github.oneuiproject.sesl:appcompat:1.3.0'
-    implementation 'io.github.oneuiproject.sesl:material:1.4.0'
-    implementation 'io.github.oneuiproject.sesl:recyclerview:1.3.0'
+    implementation 'io.github.oneuiproject.sesl:appcompat:1.4.0'
+    implementation 'io.github.oneuiproject.sesl:material:1.5.0'
+    implementation 'io.github.oneuiproject.sesl:recyclerview:1.4.0'
     implementation 'io.github.oneuiproject.sesl:preference:1.1.0'
     /*TODO: add/update/remove libraries*/
+    implementation 'androidx.databinding:databinding-runtime:7.1.1'
 }

@@ -1,4 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="ic_launcher_background">#0072DE</color>
+
+    <color name="lightPrimaryText">#202020</color>
+    <color name="lightSecondaryText">#9E9E9E</color>
+    <color name="lightBackground">#FFFFFF</color>
+    <color name="lightCardBackground">#fafafa</color>
+    <color name="lightTipCardBackground">#e7eef4</color>
+    <color name="lightIcon">#737373</color>
+
+    <!--Dark Theme-->
+    <color name="darkPrimaryText">#E8EAED</color>
+    <color name="darkSecondaryText">#9AA0A6</color>
+    <color name="darkBackground">#000000</color>
+    <color name="darkCardBackground">#3b3b3b</color>
+    <color name="darkTipCardBackground">#002b4e</color>
+    <color name="darkIcon">#9AA0A6</color>
+
+
 </resources>
