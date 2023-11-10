@@ -1,6 +1,8 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'kotlin-android'
+    id 'kotlin-kapt'
 }
 
 android {
@@ -59,4 +61,5 @@ dependencies {
     implementation 'io.github.oneuiproject.sesl:preference:1.1.0'
     /*TODO: add/update/remove libraries*/
     implementation 'androidx.databinding:databinding-runtime:7.1.1'
+
 }

@@ -4,21 +4,25 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical"
-    android:background="#000">
+    android:background="?attr/colorBackground">
 
-    <View
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"/>
+        android:layout_weight="1"
+        android:layout_margin="60dp"
+        android:background="@drawable/card_edge">
 
+
+    </LinearLayout>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/tabs_bottomnav_text"
         style="@style/OneUi.BottomNavViewTextMode"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#000"
-        app:itemTextColor="#fff"
+        android:background="@drawable/oui_btn_transparent_background"
+        app:itemTextColor="?attr/colorPrimaryText"
         app:menu="@menu/clock_style_bttom_menu" />
 
 </LinearLayout>

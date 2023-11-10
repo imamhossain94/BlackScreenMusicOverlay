@@ -15,4 +15,9 @@
         <attr name="SummaryText" format="string" />
     </declare-styleable>
 
+    <declare-styleable name="CardViewCustomAttrs">
+        <attr name="strokeWidthX" format="dimension" />
+        <attr name="strokeColorX" format="color" />
+    </declare-styleable>
+
 </resources>
