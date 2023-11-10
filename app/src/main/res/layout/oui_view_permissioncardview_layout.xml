@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:viewBindingIgnore="false">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/oui_permissioncardview_container"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/listChoiceBackgroundIndicator"
+        android:paddingStart="@dimen/oui_permission_content_padding_horizontal"
+        android:paddingTop="@dimen/oui_permissioncardview_item_padding_vertical"
+        android:paddingEnd="@dimen/oui_permission_content_padding_horizontal"
+        android:paddingBottom="@dimen/oui_permissioncardview_item_padding_vertical">
+
+        <ImageView
+            android:id="@+id/oui_permissioncardview_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="3.0dip"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/oui_permissioncardview_title"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/oui_permissioncardview_title"
+            style="@style/OneUi.PermissionCardView.TitleStyle"
+            android:layout_width="0.0dip"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24.0dip"
+            app:layout_constraintBottom_toTopOf="@id/oui_permissioncardview_summary"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/oui_permissioncardview_icon"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/oui_permissioncardview_summary"
+            android:layout_width="0.0dip"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24.0dip"
+            android:textColor="?android:attr/textColorSecondary"
+            android:textSize="13.0sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/oui_permissioncardview_icon"
+            app:layout_constraintTop_toBottomOf="@id/oui_permissioncardview_title" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</merge>

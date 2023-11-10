@@ -17,5 +17,8 @@
     <color name="darkTipCardBackground">#002b4e</color>
     <color name="darkIcon">#9AA0A6</color>
 
+    <color name="oui_subheader_text_color">#ff838383</color>
+    <color name="oui_permissioncardview_item_icon_color">#ff505050</color>
+
 
 </resources>

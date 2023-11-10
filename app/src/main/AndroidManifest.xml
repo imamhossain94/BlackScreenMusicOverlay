@@ -15,7 +15,7 @@
         <meta-data android:name="theming-meta-xml" android:value="@xml/meta_998_sesl_app" />
 
         <activity
-            android:name=".MainActivity"
+            android:name=".PermissionActivity"
             android:exported="true">
             <meta-data
                 android:name="com.sec.android.app.launcher.icon_theme"
@@ -25,6 +25,19 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
+            <meta-data
+                android:name="com.sec.android.app.launcher.icon_theme"
+                android:value="themeColor" />
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
+
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
         </activity>
 
         <activity

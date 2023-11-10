@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Music Overlay</string>
+
+    <string name="oui_permission_page_description">The following permissions are required for the app to work correctly.</string>
+
+    <string name="oui_app_permission_appear_on_top_title">Appear on top settings</string>
+    <string name="oui_app_permission_appear_on_top_summary">This permission is used to enable the app to appear on top of other applications.</string>
 </resources>

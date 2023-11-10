@@ -8,4 +8,11 @@
         <attr name="colorCardBackground" format="color"/>
         <attr name="colorTipCardBackground" format="color"/>
     </declare-styleable>
+
+    <declare-styleable name="PermissionCardView">
+        <attr name="IconDrawable" format="reference" />
+        <attr name="TitleText" format="string" />
+        <attr name="SummaryText" format="string" />
+    </declare-styleable>
+
 </resources>

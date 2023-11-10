@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- OneUI -->
+    <dimen name="oui_permission_content_padding_horizontal">24.0dip</dimen>
+    <dimen name="oui_permissioncardview_item_padding_vertical">14.0dip</dimen>
+
+
+</resources>
