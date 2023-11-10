@@ -22,7 +22,6 @@
                 android:value="themeColor" />
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -33,16 +32,10 @@
             <meta-data
                 android:name="com.sec.android.app.launcher.icon_theme"
                 android:value="themeColor" />
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
-
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
-<!--            </intent-filter>-->
         </activity>
 
-        <activity
-            android:name=".AboutActivity"
-            android:exported="false" />
+        <activity android:name=".ClockStyleActivity" android:theme="@style/AppTheme.ClockStyle" android:exported="false" />
+        <activity android:name=".AboutActivity" android:exported="false" />
 
     </application>
 

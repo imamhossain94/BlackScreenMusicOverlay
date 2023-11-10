@@ -7,11 +7,16 @@
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/about_source_code"
         style="@style/OneUI.AppInfoButton"
-        android:text="Button 1" />
+        android:text="Source Code" />
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/about_donate"
+        android:id="@+id/about_other_app"
         style="@style/OneUI.AppInfoButton"
-        android:text="Button 2" />
+        android:text="Other Application" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/about_privacy_policy"
+        style="@style/OneUI.AppInfoButton"
+        android:text="Privacy Policy" />
 
 </dev.oneuiproject.oneui.layout.AppInfoLayout>

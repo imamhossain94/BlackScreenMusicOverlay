@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.newagedevs.musicoverlay.databinding.ActivityMainBinding
-import dev.oneuiproject.oneui.utils.ActivityUtils
 
 
 class MainActivity : AppCompatActivity() {
@@ -18,6 +17,10 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.toolbarLayout.setNavigationButtonAsBack()
+
+        binding.startClockStyleActivity.setOnClickListener {
+            startActivity(Intent(this, ClockStyleActivity::class.java))
+        }
 
         binding.aboutMusicOverlay.setOnClickListener {
             startActivity(Intent(this, AboutActivity::class.java))

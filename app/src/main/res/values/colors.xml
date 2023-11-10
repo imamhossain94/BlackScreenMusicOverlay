@@ -2,6 +2,7 @@
 <resources>
     <color name="ic_launcher_background">#0072DE</color>
 
+    <!--Light Theme-->
     <color name="lightPrimaryText">#202020</color>
     <color name="lightSecondaryText">#9E9E9E</color>
     <color name="lightBackground">#FFFFFF</color>
@@ -17,6 +18,15 @@
     <color name="darkTipCardBackground">#002b4e</color>
     <color name="darkIcon">#9AA0A6</color>
 
+    <!--ClockStyle Theme-->
+    <color name="clockStylePrimaryText">#E8EAED</color>
+    <color name="clockStyleSecondaryText">#9AA0A6</color>
+    <color name="clockStyleBackground">#000000</color>
+    <color name="clockStyleCardBackground">#3b3b3b</color>
+    <color name="clockStyleTipCardBackground">#002b4e</color>
+    <color name="clockStyleIcon">#9AA0A6</color>
+
+    <!--Permission Theme-->
     <color name="oui_subheader_text_color">#ff838383</color>
     <color name="oui_permissioncardview_item_icon_color">#ff505050</color>
 

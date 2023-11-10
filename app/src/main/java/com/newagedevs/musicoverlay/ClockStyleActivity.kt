@@ -2,17 +2,15 @@ package com.newagedevs.musicoverlay
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.newagedevs.musicoverlay.databinding.ActivityAboutBinding
+import com.newagedevs.musicoverlay.databinding.ActivityClockStyleBinding
 
-class AboutActivity : AppCompatActivity() {
+class ClockStyleActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityAboutBinding
-
+    private lateinit var binding: ActivityClockStyleBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding = ActivityAboutBinding.inflate(layoutInflater);
+        binding = ActivityClockStyleBinding.inflate(layoutInflater);
         setContentView(binding.root)
-
     }
 }
