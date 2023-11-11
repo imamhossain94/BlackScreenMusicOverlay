@@ -4,17 +4,150 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical"
-    android:background="?attr/colorBackground">
+    android:background="?android:windowBackground">
 
-    <LinearLayout
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_margin="60dp"
-        android:background="@drawable/card_edge">
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:id="@+id/clock_view_holder"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_marginVertical="15dp"
+            android:layout_marginHorizontal="30dp"
+            android:background="@drawable/card_edge"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:orientation="horizontal">
+
+        </LinearLayout>
+
+        <dev.oneuiproject.oneui.widget.RoundLinearLayout
+            android:id="@+id/clock_style_holder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@color/oui_background_color"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent">
+
+            <View
+                android:layout_width="60dp"
+                android:layout_height="3dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="5dp"
+                android:layout_gravity="center"
+                android:background="?android:attr/listDivider" />
+
+            <dev.oneuiproject.oneui.widget.MarginsTabLayout
+                android:id="@+id/tabs_subtab"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="16dp">
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:padding="10dp"
+                    android:id="@+id/clock69"
+                    android:background="@drawable/rounded_corners2">
+                    <com.newagedevs.musicoverlay.view.TextClockView
+                        android:id="@+id/textClockViewVerticalNumber"
+                        android:layout_width="match_parent"
+                        android:layout_height="100dp"
+                        app:textSize="26sp"
+                        app:clockStyle="verticalNumberClock"/>
+                </LinearLayout>
+                <View
+                    android:layout_width="10dp"
+                    android:layout_height="1dp"/>
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:padding="10dp"
+                    android:id="@+id/clock86"
+                    android:background="@drawable/rounded_corners2">
+                    <com.newagedevs.musicoverlay.view.TextClockView
+                        android:id="@+id/textClockViewVerticalTe"
+                        android:layout_width="match_parent"
+                        android:layout_height="100dp"
+                        app:textSize="26sp"
+                        app:clockStyle="horizontalNumberClock"/>
+                </LinearLayout>
+                <View
+                    android:layout_width="10dp"
+                    android:layout_height="1dp"/>
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:id="@+id/clock363"
+                    android:padding="10dp"
+                    android:background="@drawable/rounded_corners2">
+                    <com.newagedevs.musicoverlay.view.ClockView
+                        android:layout_width="match_parent"
+                        android:layout_height="100dp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingHorizontal="16dp"
+                android:paddingBottom="16dp">
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:padding="10dp"
+                    android:id="@+id/clock2"
+                    android:background="@drawable/rounded_corners2"
+                    android:gravity="center">
+                    <com.newagedevs.musicoverlay.view.TextClockView
+                        android:id="@+id/textClockViewVerticalText"
+                        android:layout_width="match_parent"
+                        android:layout_height="100dp"
+                        app:textSize="26sp"
+                        app:clockStyle="verticalTextClock"/>
+                </LinearLayout>
+                <View
+                    android:layout_width="10dp"
+                    android:layout_height="1dp"/>
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:padding="10dp"
+                    android:id="@+id/clock4"
+                    android:background="@drawable/rounded_corners2"
+                    android:gravity="center">
+                    <com.newagedevs.musicoverlay.view.CustomClockView
+                        android:layout_width="match_parent"
+                        android:layout_height="100dp"/>
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </dev.oneuiproject.oneui.widget.RoundLinearLayout>
 
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/tabs_bottomnav_text"

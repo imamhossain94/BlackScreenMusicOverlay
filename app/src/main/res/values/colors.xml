@@ -30,5 +30,18 @@
     <color name="oui_subheader_text_color">#ff838383</color>
     <color name="oui_permissioncardview_item_icon_color">#ff505050</color>
 
+    <!--Clock Colors-->
+    <color name="black">#FF000000</color>
+    <color name="pureBlack">#000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="White">#ffffff</color>
+
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="limeBlue">#00C0F0</color>
+    <color name="limeGreen">#7fff7f</color>
+    <color name="lightRed">#ff4c4c</color>
+    <color name="gblue">#4885ed</color>
 
 </resources>

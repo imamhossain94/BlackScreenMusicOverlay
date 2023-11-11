@@ -11,4 +11,5 @@
     </style>
 
     <style name="OneUi.BottomNavViewTextMode" parent="Widget.Design.Light.BottomNavigationView.Text" />
+
 </resources>

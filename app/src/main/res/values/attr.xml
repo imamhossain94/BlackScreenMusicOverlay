@@ -20,4 +20,13 @@
         <attr name="strokeColorX" format="color" />
     </declare-styleable>
 
+    <declare-styleable name="TextClockView">
+        <attr name="textSize" format="dimension"/>
+        <attr name="clockStyle" format="enum">
+            <enum name="verticalNumberClock" value="0"/>
+            <enum name="horizontalNumberClock" value="1"/>
+            <enum name="verticalTextClock" value="2"/>
+        </attr>
+    </declare-styleable>
+
 </resources>

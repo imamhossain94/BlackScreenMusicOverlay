@@ -34,7 +34,7 @@
                 android:value="themeColor" />
         </activity>
 
-        <activity android:name=".ClockStyleActivity" android:theme="@style/AppTheme.ClockStyle" android:exported="false" />
+        <activity android:name=".ClockStyleActivity" android:exported="false" />
         <activity android:name=".AboutActivity" android:exported="false" />
 
     </application>
