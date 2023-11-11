@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.View
+import androidx.core.content.ContextCompat
 import com.newagedevs.musicoverlay.R
 import java.util.Calendar
 
@@ -65,7 +66,7 @@ class ClockView : View {
         val thickness = width * 0.06f // 1% of view's width
         mHandPaint!!.strokeWidth = thickness
         // coordinates of hand's end
-        mHandPaint!!.color = resources.getColor(R.color.limeBlue)
+        mHandPaint!!.color = ContextCompat.getColor(context, R.color.lightRed)
         val angle = hoursAngle
         val x = getStopX(viewRadius, handRadius, angle)
         val y = getStopY(viewRadius, handRadius, angle)

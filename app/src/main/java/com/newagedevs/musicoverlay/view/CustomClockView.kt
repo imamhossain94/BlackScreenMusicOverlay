@@ -47,7 +47,7 @@ class CustomClockView : RelativeLayout {
         val timeTicker = object : Runnable {
             override fun run() {
                 updateTime()
-                postDelayed(this, 1000) // Update every second
+                postDelayed(this, 1000)
             }
         }
         post(timeTicker)
@@ -55,64 +55,64 @@ class CustomClockView : RelativeLayout {
 
     private fun createDividerView() {
         dividerView = View(context)
-        val params = RelativeLayout.LayoutParams(
+        val params = LayoutParams(
             LayoutParams.MATCH_PARENT,
             2.dpToPx()
         )
-        params.addRule(RelativeLayout.CENTER_VERTICAL)
-        params.addRule(RelativeLayout.CENTER_HORIZONTAL)
+        params.addRule(CENTER_VERTICAL)
+        params.addRule(CENTER_HORIZONTAL)
         dividerView?.layoutParams = params
         dividerView?.setBackgroundColor(Color.WHITE)
     }
 
     private fun createMinTextView() {
         minTextView = createTextView("00", R.drawable.rounded_corners4)
-        val params = RelativeLayout.LayoutParams(
+        val params = LayoutParams(
             40.dpToPx(),
             40.dpToPx()
         )
-        params.addRule(RelativeLayout.CENTER_VERTICAL)
-        params.addRule(RelativeLayout.CENTER_HORIZONTAL)
+        params.addRule(CENTER_VERTICAL)
+        params.addRule(CENTER_HORIZONTAL)
         minTextView?.layoutParams = params
     }
 
     private fun createHrTextView() {
         hrTextView = createTextView("00", R.drawable.rounded_corners3)
-        val params = RelativeLayout.LayoutParams(
+        val params = LayoutParams(
             40.dpToPx(),
             40.dpToPx()
         )
-        params.addRule(RelativeLayout.CENTER_VERTICAL)
-        minTextView?.id?.let { params.addRule(RelativeLayout.LEFT_OF, it) }
+        params.addRule(CENTER_VERTICAL)
+        minTextView?.id?.let { params.addRule(LEFT_OF, it) }
         params.setMargins(0, 0, 4.dpToPx(), 0)
         hrTextView?.layoutParams = params
     }
 
     private fun createAmPmTextView() {
         amPmTextView = createTextView("aa", R.drawable.rounded_corners5)
-        val params = RelativeLayout.LayoutParams(
+        val params = LayoutParams(
             40.dpToPx(),
             40.dpToPx()
         )
-        params.addRule(RelativeLayout.CENTER_VERTICAL)
-        minTextView?.id?.let { params.addRule(RelativeLayout.RIGHT_OF, it) }
+        params.addRule(CENTER_VERTICAL)
+        minTextView?.id?.let { params.addRule(RIGHT_OF, it) }
         params.setMargins(4.dpToPx(), 0, 0, 0)
         amPmTextView?.layoutParams = params
     }
 
     private fun createSecTextView() {
-        secTextView = createTextView("00", R.drawable.rounded_corners6)
-        val params = RelativeLayout.LayoutParams(
+        secTextView = createTextView("00", R.drawable.rounded_corners6, 10f)
+        val params = LayoutParams(
             18.dpToPx(),
             18.dpToPx()
         )
-        amPmTextView?.id?.let { params.addRule(RelativeLayout.BELOW, it) }
-        minTextView?.id?.let { params.addRule(RelativeLayout.RIGHT_OF, it) }
+        amPmTextView?.id?.let { params.addRule(BELOW, it) }
+        minTextView?.id?.let { params.addRule(RIGHT_OF, it) }
         params.setMargins((-7).dpToPx(), (-15).dpToPx(), 0, 0)
         secTextView?.layoutParams = params
     }
 
-    private fun createTextView(text: String, backgroundResource: Int): TextView {
+    private fun createTextView(text: String, backgroundResource: Int, fontSize: Float=16f): TextView {
         return TextView(context).apply {
             id = View.generateViewId()
             layoutParams = LayoutParams(
@@ -120,7 +120,7 @@ class CustomClockView : RelativeLayout {
                 LayoutParams.WRAP_CONTENT
             )
             gravity = Gravity.CENTER
-            textSize = 14f
+            textSize = fontSize
             setTextColor(Color.WHITE)
             setBackgroundResource(backgroundResource)
             this.text = text

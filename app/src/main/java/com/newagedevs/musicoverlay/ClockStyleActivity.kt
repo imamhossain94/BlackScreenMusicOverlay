@@ -1,11 +1,15 @@
 package com.newagedevs.musicoverlay
 
+import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import android.view.ViewGroup
 import android.view.animation.TranslateAnimation
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.tabs.TabLayout
 import com.newagedevs.musicoverlay.databinding.ActivityClockStyleBinding
+import com.newagedevs.musicoverlay.extension.OnSwipeTouchListener
 import com.newagedevs.musicoverlay.extension.ResizeAnimation
 
 class ClockStyleActivity : AppCompatActivity() {
@@ -13,6 +17,8 @@ class ClockStyleActivity : AppCompatActivity() {
     private var originalWidth: Int = 0
     private var originalHeight: Int = 0
     private lateinit var binding: ActivityClockStyleBinding
+
+    @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -30,36 +36,59 @@ class ClockStyleActivity : AppCompatActivity() {
 
             when (it.itemId) {
                 R.id.bvn_1 -> {
-                    binding.clockStyleHolder.slideUp()
-                    val resizeAnimation = ResizeAnimation(
-                        binding.clockViewHolder,
-                        (originalHeight * 0.85).toInt().toFloat(),
-                        binding.clockViewHolder.height.toFloat(),
-                        (originalWidth * 0.85).toInt().toFloat(),
-                        binding.clockViewHolder.width.toFloat(),
-                        300 // Duration in milliseconds
-                    )
-                    binding.clockViewHolder.startAnimation(resizeAnimation)
+                    showClockStyleHolder()
                 }
                 R.id.bvn_2 -> {
-                    binding.clockStyleHolder.slideDown()
-                    val resizeAnimation = ResizeAnimation(
-                        binding.clockViewHolder,
-                        originalHeight.toFloat(),
-                        binding.clockViewHolder.height.toFloat(),
-                        originalWidth.toFloat(),
-                        binding.clockViewHolder.width.toFloat(),
-                        300 // Duration in milliseconds
-                    )
-                    binding.clockViewHolder.startAnimation(resizeAnimation)
+                    hideClockStyleHolder()
                 }
                 else -> {}
             }
             false
         }
 
+        binding.clockViewHolder.setOnTouchListener(object : OnSwipeTouchListener(this@ClockStyleActivity) {
+            override fun onSwipeTop() {
+                showClockStyleHolder()
+            }
+            override fun onSwipeBottom() {
+                hideClockStyleHolder()
+            }
+        })
 
+    }
 
+    private fun showClockStyleHolder() {
+        val isOriginalSize = binding.clockViewHolder.layoutParams?.let { layoutParams ->
+            layoutParams.width == originalWidth || layoutParams.width == -1
+                    && layoutParams.height == originalHeight || layoutParams.height == 0
+        } ?: false
+        val resizeAnimation = ResizeAnimation(
+            binding.clockViewHolder,
+            originalHeight.toFloat(),
+            binding.clockViewHolder.height.toFloat(),
+            originalWidth.toFloat(),
+            binding.clockViewHolder.width.toFloat(),
+            300
+        )
+        binding.clockViewHolder.startAnimation(resizeAnimation)
+        if(!isOriginalSize) binding.clockStyleHolder.slideUp()
+    }
+
+    private fun hideClockStyleHolder() {
+        val isOriginalSize = binding.clockViewHolder.layoutParams?.let { layoutParams ->
+            layoutParams.width == originalWidth || layoutParams.width == -1
+                    && layoutParams.height == originalHeight || layoutParams.height == 0
+        } ?: false
+        val resizeAnimation = ResizeAnimation(
+            binding.clockViewHolder,
+            originalHeight + (originalHeight * 0.15).toInt().toFloat(),
+            binding.clockViewHolder.height.toFloat(),
+            originalWidth + (originalWidth * 0.15).toInt().toFloat(),
+            binding.clockViewHolder.width.toFloat(),
+            300
+        )
+        binding.clockViewHolder.startAnimation(resizeAnimation)
+        if(isOriginalSize) binding.clockStyleHolder.slideDown()
     }
 
 
