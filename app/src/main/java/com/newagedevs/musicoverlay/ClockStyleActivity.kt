@@ -2,15 +2,18 @@ package com.newagedevs.musicoverlay
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import android.view.View
-import android.view.ViewGroup
 import android.view.animation.TranslateAnimation
 import androidx.appcompat.app.AppCompatActivity
+import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
+import com.newagedevs.musicoverlay.adapter.ViewPagerAdapter
 import com.newagedevs.musicoverlay.databinding.ActivityClockStyleBinding
 import com.newagedevs.musicoverlay.extension.OnSwipeTouchListener
 import com.newagedevs.musicoverlay.extension.ResizeAnimation
+import com.newagedevs.musicoverlay.fragment.AppearanceFragment
+import com.newagedevs.musicoverlay.fragment.ClocksFragment
 
 class ClockStyleActivity : AppCompatActivity() {
 
@@ -54,6 +57,20 @@ class ClockStyleActivity : AppCompatActivity() {
                 hideClockStyleHolder()
             }
         })
+
+
+        val adapter = ViewPagerAdapter(this@ClockStyleActivity)
+
+        adapter.addFragment( ClocksFragment(),"Select Clock")
+        adapter.addFragment( AppearanceFragment(),"Appearance")
+        val viewPager: ViewPager2 = binding.viewPager
+        viewPager.adapter = adapter
+        viewPager.currentItem = 0
+
+        val tabs: TabLayout = binding.tabsSubtab
+        TabLayoutMediator(tabs, viewPager) { tab, position ->
+            tab.text = adapter.getTabTitle(position)
+        }.attach()
 
     }
 

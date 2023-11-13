@@ -10,7 +10,7 @@ import androidx.core.content.ContextCompat
 import com.newagedevs.musicoverlay.R
 import java.util.Calendar
 
-class ClockView : View {
+class FrameClockView : View {
     private var mBackgroundPaint: Paint? = null
     private var mHandPaint: Paint? = null
 
@@ -45,13 +45,47 @@ class ClockView : View {
      */
     private val invalidator = Runnable { invalidate() }
     override fun onDraw(canvas: Canvas) {
+        drawRectClockFrame(canvas)
         drawBackground(canvas)
         drawMinuteHand(canvas)
         drawHourHand(canvas)
-        //drawSecondHand(canvas);
+        drawSecondHand(canvas);
         drawNail(canvas)
         // redraw itself in REDRAW_RATE millis
         postDelayed(invalidator, REDRAW_RATE)
+    }
+
+    private fun drawClockFrame(canvas: Canvas) {
+        val padding = 15
+        val viewRadius = width / 2f - padding
+        val frameRadius = viewRadius * 1.1f // Adjust the frame size as needed
+        val frameThickness = viewRadius * 0.01f // Adjust the frame thickness as needed
+        val framePaint = Paint()
+        framePaint.color = Color.WHITE
+        framePaint.style = Paint.Style.STROKE
+        framePaint.strokeWidth = frameThickness
+        canvas.drawCircle(viewRadius + padding, viewRadius + padding, frameRadius, framePaint)
+    }
+
+    private fun drawRectClockFrame(canvas: Canvas) {
+        val padding = 15
+        val viewRadius = width / 2f - padding
+        val frameSize = viewRadius * 1.1f // Adjust the frame size as needed
+        val frameThickness = viewRadius * 0.01f // Adjust the frame thickness as needed
+        val framePaint = Paint()
+        framePaint.color = Color.WHITE
+        framePaint.style = Paint.Style.STROKE
+        framePaint.strokeWidth = frameThickness
+
+        // Calculate the coordinates of the rounded square
+        val left = (viewRadius + padding) - frameSize
+        val top = (viewRadius + padding) - frameSize
+        val right = (viewRadius + padding) + frameSize
+        val bottom = (viewRadius + padding) + frameSize
+        val cornerRadius = frameSize * 0.1f // Adjust the corner radius as needed
+
+        // Draw the rounded square
+        canvas.drawRoundRect(left, top, right, bottom, cornerRadius, cornerRadius, framePaint)
     }
 
     private fun drawBackground(canvas: Canvas) {
@@ -65,7 +99,7 @@ class ClockView : View {
         val thickness = width * 0.06f // 1% of view's width
         mHandPaint!!.strokeWidth = thickness
         // coordinates of hand's end
-        mHandPaint!!.color = ContextCompat.getColor(context, R.color.lightRed)
+        mHandPaint!!.color = Color.WHITE
         val angle = hoursAngle
         val x = getStopX(viewRadius, handRadius, angle)
         val y = getStopY(viewRadius, handRadius, angle)
@@ -79,7 +113,7 @@ class ClockView : View {
         mHandPaint!!.strokeWidth = thickness
         // coordinates of hand's end
         val angle = minutesAngle
-        mHandPaint!!.color = Color.WHITE
+        mHandPaint!!.color = ContextCompat.getColor(context, R.color.lightRed)
         val x = getStopX(viewRadius, handRadius, angle)
         val y = getStopY(viewRadius, handRadius, angle)
         canvas.drawLine(viewRadius, viewRadius, x, y, mHandPaint!!)
@@ -92,6 +126,7 @@ class ClockView : View {
         mHandPaint!!.strokeWidth = thickness
         // coordinates of hand's end
         val angle = secondsAngle
+        mHandPaint!!.color = ContextCompat.getColor(context, R.color.limeBlue)
         val x = getStopX(viewRadius, handRadius, angle)
         val y = getStopY(viewRadius, handRadius, angle)
         canvas.drawLine(viewRadius, viewRadius, x, y, mHandPaint!!)
@@ -156,7 +191,7 @@ class ClockView : View {
         }
 
     companion object {
-        private val TAG = ClockView::class.java.simpleName
+        private val TAG = FrameClockView::class.java.simpleName
         private const val REDRAW_RATE: Long = 20 // 20ms
         private const val BACKGROUND_COLOR = -0xf677ae
     }

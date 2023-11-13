@@ -80,8 +80,8 @@ class TextClockView : LinearLayout {
             1 -> {
                 // Horizontal Number Clock
                 orientation = HORIZONTAL
-                mHourTextView?.text = String.format("%02d", calendar[Calendar.HOUR])
-                mMinuteTextView?.text = String.format(" %02d", calendar[Calendar.MINUTE])
+                mHourTextView?.text = String.format("%02d:", calendar[Calendar.HOUR])
+                mMinuteTextView?.text = String.format("%02d", calendar[Calendar.MINUTE])
             }
             2 -> {
                 // Vertical Text Clock
@@ -93,7 +93,7 @@ class TextClockView : LinearLayout {
     }
 
     private fun convertToWords(number: Int): String {
-        val units = arrayOf("", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten",
+        val units = arrayOf("Zero", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten",
             "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen")
         val tens = arrayOf("", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety")
 
