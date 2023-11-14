@@ -6,16 +6,9 @@
     android:orientation="horizontal"
     android:paddingHorizontal="12dp">
 
-    <com.thebluealliance.spectrum.SpectrumPalette
-        android:id="@+id/chl_paletteColor"
+    <com.newagedevs.musicoverlay.view.ColorPaletteView
+        android:id="@+id/colorPaletteView"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:layout_margin="15dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView"
-        app:spectrum_colors="@array/demo_color" />
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

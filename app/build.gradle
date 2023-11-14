@@ -62,6 +62,5 @@ dependencies {
     implementation 'io.github.oneuiproject.sesl:preference:1.1.0'
     /*TODO: add/update/remove libraries*/
     implementation 'androidx.databinding:databinding-runtime:7.1.1'
-    implementation 'com.thebluealliance:spectrum:0.7.1'
 
 }

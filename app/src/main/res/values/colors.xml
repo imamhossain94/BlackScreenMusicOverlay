@@ -54,4 +54,18 @@
         <item>@color/lightRed</item>
     </array>
 
+    <!--Palette Colors-->
+    <color name="paletteColor1">#e32d2c</color>
+    <color name="paletteColor2">#f07b12</color>
+    <color name="paletteColor3">#e2e300</color>
+    <color name="paletteColor4">#30ca72</color>
+    <color name="paletteColor5">#2366eb</color>
+    <color name="paletteColor6">#7937a5</color>
+    <color name="paletteColor7">#b27b78</color>
+    <color name="paletteColor8">#a67a39</color>
+    <color name="paletteColor9">#000000</color>
+    <color name="paletteColor10">#90acc4</color>
+    <color name="paletteColor11">#fcfcfc</color>
+    <color name="paletteColor12">#fffffe</color>
+
 </resources>
