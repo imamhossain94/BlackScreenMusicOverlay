@@ -76,14 +76,14 @@ class ColorPaletteView @JvmOverloads constructor(
     }
 
     private fun createColorCell(color: Int): TextView {
-        val colorCell = createTextViewWithLayout(48.dpToPx(), 48.dpToPx(), 8, 8, 8, 60)
+        val colorCell = createTextViewWithLayout(36.dpToPx(), 36.dpToPx(), 8, 8, 8, 60)
         colorCell.background = createCircleDrawable(color)
         colorCell.setOnClickListener { handleColorSelection(colorCell, color) }
         return colorCell
     }
 
     private fun createGradientColorCell(): TextView {
-        val colorCell = createTextViewWithLayout(48.dpToPx(), 48.dpToPx(), 8, 8, 8, 60)
+        val colorCell = createTextViewWithLayout(36.dpToPx(), 36.dpToPx(), 8, 8, 8, 60)
         colorCell.background = createCircleDrawableGradient(context)
         colorCell.setOnClickListener { handleGradientColorSelection(colorCell) }
         return colorCell
