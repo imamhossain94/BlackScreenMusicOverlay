@@ -21,18 +21,40 @@
     </declare-styleable>
 
     <declare-styleable name="TextClockView">
-        <attr name="textSize" format="dimension"/>
+        <!-- Clock Update Settings -->
+        <attr name="textClockAutoUpdate" format="boolean"/>
+        <attr name="timePattern" format="string"/>
+
+        <!-- Hour Text Settings -->
+        <attr name="hourColor" format="color"/>
+        <attr name="hourTextSize" format="dimension"/>
+
+        <!-- Minute Text Settings -->
+        <attr name="minuteColor" format="color"/>
+        <attr name="minuteTextSize" format="dimension"/>
+
+        <!-- Meridian (AM/PM) Text Settings -->
+        <attr name="meridianColor" format="color"/>
+        <attr name="meridianTextSize" format="dimension"/>
+
+        <!-- Clock Type (12-hour or 24-hour) -->
+        <attr name="clockType" format="enum">
+            <enum name="Hour12" value="0"/>
+            <enum name="Hour24" value="1"/>
+        </attr>
+
+        <!-- Clock Style Settings -->
         <attr name="clockStyle" format="enum">
-            <enum name="verticalNumberClock" value="0"/>
-            <enum name="horizontalNumberClock" value="1"/>
-            <enum name="horizontalNumberClock2" value="2"/>
-            <enum name="verticalTextClock" value="3"/>
+            <enum name="VerticalNumber" value="0"/>
+            <enum name="HorizontalNumber" value="1"/>
+            <enum name="HorizontalNumber2" value="2"/>
         </attr>
     </declare-styleable>
 
+
     <declare-styleable name="FrameClockView">
         <!-- Clock Attributes -->
-        <attr name="autoUpdate" format="boolean"/>
+        <attr name="frameClockAutoUpdate" format="boolean"/>
 
         <!-- Frame Attributes -->
         <attr name="showFrame" format="boolean"/>

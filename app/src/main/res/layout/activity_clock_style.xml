@@ -29,9 +29,17 @@
 
             <com.newagedevs.musicoverlay.view.TextClockView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:textSize="50sp"
-                app:clockStyle="horizontalNumberClock"/>
+                android:layout_height="100dp"
+                app:textClockAutoUpdate="true"
+                app:timePattern="hh:mm a"
+                app:hourColor="#FFFFFF"
+                app:hourTextSize="16sp"
+                app:minuteColor="#FF0000"
+                app:minuteTextSize="14sp"
+                app:meridianColor="#00FF00"
+                app:meridianTextSize="12sp"
+                app:clockType="Hour12"
+                app:clockStyle="VerticalNumber"/>
 
         </LinearLayout>
 

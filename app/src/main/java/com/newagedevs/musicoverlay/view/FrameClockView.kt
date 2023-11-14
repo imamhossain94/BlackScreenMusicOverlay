@@ -15,7 +15,7 @@ class FrameClockView : View {
     private var mBackgroundPaint: Paint? = null
     private var mHandPaint: Paint? = null
 
-    private var autoUpdate: Boolean = true
+    private var frameClockAutoUpdate: Boolean = true
 
     private var showFrame: Boolean = false
     private var frameRadius: Float = 0f
@@ -52,7 +52,7 @@ class FrameClockView : View {
         attrs?.let {
             val typedArray = context.obtainStyledAttributes(it, R.styleable.FrameClockView)
             try {
-                autoUpdate = typedArray.getBoolean(R.styleable.FrameClockView_autoUpdate, true)
+                frameClockAutoUpdate = typedArray.getBoolean(R.styleable.FrameClockView_frameClockAutoUpdate, true)
 
                 showFrame = typedArray.getBoolean(R.styleable.FrameClockView_showFrame, false)
                 frameRadius = typedArray.getDimension(R.styleable.FrameClockView_frameRadius, 0f)
@@ -99,7 +99,7 @@ class FrameClockView : View {
         drawHourHand(canvas)
         drawNail(canvas)
         // redraw itself in REDRAW_RATE millis
-        if (autoUpdate) {
+        if (frameClockAutoUpdate) {
             postDelayed(invalidator, REDRAW_RATE)
         }
     }

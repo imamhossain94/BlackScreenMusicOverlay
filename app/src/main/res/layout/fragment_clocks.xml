@@ -18,11 +18,18 @@
             android:id="@+id/clock69"
             android:background="@drawable/rounded_corners2">
             <com.newagedevs.musicoverlay.view.TextClockView
-                android:id="@+id/textClockViewVerticalTe"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
-                app:textSize="26sp"
-                app:clockStyle="horizontalNumberClock"/>
+                app:textClockAutoUpdate="true"
+                app:timePattern="hh:mm a"
+                app:hourColor="#FFFFFF"
+                app:hourTextSize="16sp"
+                app:minuteColor="#FF0000"
+                app:minuteTextSize="14sp"
+                app:meridianColor="#00FF00"
+                app:meridianTextSize="12sp"
+                app:clockType="Hour12"
+                app:clockStyle="VerticalNumber"/>
         </LinearLayout>
         <View
             android:layout_width="10dp"
@@ -35,11 +42,18 @@
             android:id="@+id/clock86"
             android:background="@drawable/rounded_corners2">
             <com.newagedevs.musicoverlay.view.TextClockView
-                android:id="@+id/textClockViewVerticalNumber"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
-                app:textSize="26sp"
-                app:clockStyle="verticalNumberClock"/>
+                app:textClockAutoUpdate="true"
+                app:timePattern="hh:mm a"
+                app:hourColor="#FFFFFF"
+                app:hourTextSize="16sp"
+                app:minuteColor="#FF0000"
+                app:minuteTextSize="14sp"
+                app:meridianColor="#00FF00"
+                app:meridianTextSize="12sp"
+                app:clockType="Hour12"
+                app:clockStyle="VerticalNumber"/>
         </LinearLayout>
         <View
             android:layout_width="10dp"
@@ -54,8 +68,16 @@
             <com.newagedevs.musicoverlay.view.TextClockView
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
-                app:textSize="26sp"
-                app:clockStyle="horizontalNumberClock2"/>
+                app:textClockAutoUpdate="true"
+                app:timePattern="hh:mm a"
+                app:hourColor="#FFFFFF"
+                app:hourTextSize="16sp"
+                app:minuteColor="#FF0000"
+                app:minuteTextSize="14sp"
+                app:meridianColor="#00FF00"
+                app:meridianTextSize="12sp"
+                app:clockType="Hour12"
+                app:clockStyle="VerticalNumber"/>
         </LinearLayout>
     </LinearLayout>
 
@@ -74,7 +96,7 @@
             <com.newagedevs.musicoverlay.view.FrameClockView
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
-                app:autoUpdate="true"
+                app:frameClockAutoUpdate="true"
                 app:showFrame="true"
                 app:frameRadius="15dp"
                 app:frameColor="#FF0000"
@@ -99,7 +121,7 @@
             <com.newagedevs.musicoverlay.view.FrameClockView
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
-                app:autoUpdate="true"
+                app:frameClockAutoUpdate="true"
                 app:showFrame="false"
                 app:frameRadius="15dp"
                 app:frameColor="#FF0000"
@@ -124,7 +146,7 @@
             <com.newagedevs.musicoverlay.view.FrameClockView
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
-                app:autoUpdate="true"
+                app:frameClockAutoUpdate="true"
                 app:showFrame="true"
                 app:frameRadius="50dp"
                 app:frameColor="#FF0000"

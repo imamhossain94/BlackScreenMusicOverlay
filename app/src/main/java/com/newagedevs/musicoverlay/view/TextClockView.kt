@@ -11,12 +11,26 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import com.newagedevs.musicoverlay.R
+import com.newagedevs.musicoverlay.models.ClockStyle
+import com.newagedevs.musicoverlay.models.ClockType
+import java.text.ParseException
+import java.text.SimpleDateFormat
 import java.util.*
 
 class TextClockView : LinearLayout {
     private var mHourTextView: TextView? = null
     private var mMinuteTextView: TextView? = null
-    private var mClockStyle: Int = 0
+    private var mMeridianTextView: TextView? = null
+    private var mTextClockAutoUpdate: Boolean = false
+    private var mHourColor: Int = 0
+    private var mHourTextSize: Float = 0f
+    private var mMinuteColor: Int = 0
+    private var mMinuteTextSize: Float = 0f
+    private var mMeridianColor: Int = 0
+    private var mMeridianTextSize: Float = 0f
+    private var mClockType: ClockType = ClockType.HOUR_12
+    private var mClockStyle: ClockStyle = ClockStyle.VERTICAL_NUMBER
+    private var mTimePattern: String = "HH:mm"
 
     constructor(context: Context) : super(context) {
         init(context, null)
@@ -29,31 +43,50 @@ class TextClockView : LinearLayout {
     private fun init(context: Context, attrs: AttributeSet?) {
         // Retrieve attributes from XML
         val typedArray = context.obtainStyledAttributes(attrs, R.styleable.TextClockView)
-        val textSize = typedArray.getDimension(R.styleable.TextClockView_textSize, 26f)
-        mClockStyle = typedArray.getInt(R.styleable.TextClockView_clockStyle, 0)
+        mTextClockAutoUpdate = typedArray.getBoolean(R.styleable.TextClockView_textClockAutoUpdate, false)
+        mHourColor = typedArray.getColor(R.styleable.TextClockView_hourColor, Color.WHITE)
+        mHourTextSize = typedArray.getDimension(R.styleable.TextClockView_hourTextSize, 26f)
+        mMinuteColor = typedArray.getColor(R.styleable.TextClockView_minuteColor, ContextCompat.getColor(context, R.color.lightRed))
+        mMinuteTextSize = typedArray.getDimension(R.styleable.TextClockView_minuteTextSize, 26f)
+        mMeridianColor = typedArray.getColor(R.styleable.TextClockView_meridianColor, Color.WHITE)
+        mMeridianTextSize = typedArray.getDimension(R.styleable.TextClockView_meridianTextSize, 26f)
+        val clockTypeValue = typedArray.getInt(R.styleable.TextClockView_clockType, 0)
+        mClockType = if (clockTypeValue == 1) ClockType.HOUR_24 else ClockType.HOUR_12
+        val clockStyleValue = typedArray.getInt(R.styleable.TextClockView_clockStyle, 0)
+        mClockStyle = when (clockStyleValue) {
+            1 -> ClockStyle.HORIZONTAL_NUMBER
+            2 -> ClockStyle.HORIZONTAL_NUMBER_2
+            3 -> ClockStyle.VERTICAL_TEXT
+            else -> ClockStyle.VERTICAL_NUMBER
+        }
+        mTimePattern = typedArray.getString(R.styleable.TextClockView_timePattern) ?: "HH:mm"
         typedArray.recycle()
 
-        // Create and add TextViews for hours and minutes
-        mHourTextView = createTextView(context, Color.WHITE, textSize)
-        mMinuteTextView = createTextView(context, ContextCompat.getColor(context, R.color.lightRed), textSize)
+        // Create and add TextViews for hours, minutes, and meridian
+        mHourTextView = createTextView(context, mHourColor, mHourTextSize)
+        mMinuteTextView = createTextView(context, mMinuteColor, mMinuteTextSize)
+        mMeridianTextView = createTextView(context, mMeridianColor, mMeridianTextSize)
 
         // Add TextViews to the layout
         addView(mHourTextView)
         addView(mMinuteTextView)
+        addView(mMeridianTextView)
 
         // Set initial values
         updateTime()
 
-        gravity = if (mClockStyle == 3) Gravity.CENTER_VERTICAL or Gravity.START else Gravity.CENTER
+        gravity = if (mClockStyle == ClockStyle.VERTICAL_TEXT) Gravity.CENTER_VERTICAL or Gravity.START else Gravity.CENTER
 
         // Listen for time changes and update TextViews accordingly
-        val timeTicker = object : Runnable {
-            override fun run() {
-                updateTime()
-                postDelayed(this, 1000) // Update every second
+        if (mTextClockAutoUpdate) {
+            val timeTicker = object : Runnable {
+                override fun run() {
+                    updateTime()
+                    postDelayed(this, 1000) // Update every second
+                }
             }
+            post(timeTicker)
         }
-        post(timeTicker)
     }
 
     private fun createTextView(context: Context, textColor: Int, textSize: Float): TextView {
@@ -62,7 +95,10 @@ class TextClockView : LinearLayout {
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
             )
-            gravity = if (mClockStyle == 2) Gravity.START else Gravity.CENTER
+            gravity = when {
+                mClockStyle == ClockStyle.HORIZONTAL_NUMBER_2 && this@TextClockView.indexOfChild(this) == 2 -> Gravity.START
+                else -> Gravity.CENTER
+            }
             setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize)
             this.setTextColor(textColor)
         }
@@ -70,32 +106,60 @@ class TextClockView : LinearLayout {
 
     private fun updateTime() {
         val calendar = Calendar.getInstance()
-        when (mClockStyle) {
-            0 -> {
-                // Vertical Number Clock
-                orientation = VERTICAL
-                mHourTextView?.text = String.format("%02d", if (calendar[Calendar.HOUR] == 0) 12 else calendar[Calendar.HOUR])
-                mMinuteTextView?.text = String.format("%02d", calendar[Calendar.MINUTE])
+        val dateFormat = SimpleDateFormat(mTimePattern, Locale.getDefault())
+        val formattedTime = dateFormat.format(calendar.time)
+
+        try {
+            when (mClockStyle) {
+                ClockStyle.VERTICAL_NUMBER -> {
+                    orientation = VERTICAL
+                    mHourTextView?.text = String.format("%02d", if (calendar[Calendar.HOUR] == 0) 12 else getHourValue(formattedTime))
+                    mMinuteTextView?.text = String.format("%02d", calendar[Calendar.MINUTE])
+                   mMeridianTextView?.text = getMeridian(formattedTime)
+                }
+                ClockStyle.HORIZONTAL_NUMBER -> {
+                    orientation = HORIZONTAL
+                    mHourTextView?.text = String.format("%02d", if (calendar[Calendar.HOUR] == 0) 12 else getHourValue(formattedTime))
+                    mMinuteTextView?.text = String.format(" %02d", calendar[Calendar.MINUTE])
+                    mMeridianTextView?.text = getMeridian(formattedTime)
+                }
+                ClockStyle.HORIZONTAL_NUMBER_2 -> {
+                    orientation = HORIZONTAL
+                    mHourTextView?.text = String.format("%02d", if (calendar[Calendar.HOUR] == 0) 12 else getHourValue(formattedTime))
+                    mMinuteTextView?.text = String.format("\n%02d", calendar[Calendar.MINUTE])
+                    mMeridianTextView?.text = getMeridian(formattedTime)
+                }
+                ClockStyle.VERTICAL_TEXT -> {
+                    orientation = VERTICAL
+                    mHourTextView?.text = convertToWords(getHourValue(formattedTime))
+                    mMinuteTextView?.text = convertToWords(calendar[Calendar.MINUTE])
+                    mMeridianTextView?.text = getMeridian(formattedTime)
+                }
             }
-            1 -> {
-                // Horizontal Number Clock
-                orientation = HORIZONTAL
-                mHourTextView?.text = String.format("%02d", if (calendar[Calendar.HOUR] == 0) 12 else calendar[Calendar.HOUR])
-                mMinuteTextView?.text = String.format(" %02d", calendar[Calendar.MINUTE])
-            }
-            2 -> {
-                // Horizontal Number Clock
-                orientation = HORIZONTAL
-                mHourTextView?.text = String.format("%02d", if (calendar[Calendar.HOUR] == 0) 12 else calendar[Calendar.HOUR])
-                mMinuteTextView?.text = String.format("\n%02d", calendar[Calendar.MINUTE])
-            }
-            3 -> {
-                // Vertical Text Clock
-                orientation = VERTICAL
-                mHourTextView?.text = convertToWords(calendar[Calendar.HOUR])
-                mMinuteTextView?.text = convertToWords(calendar[Calendar.MINUTE])
-            }
+        } catch (e: ParseException) {
+            e.printStackTrace()
         }
+    }
+
+    private fun getHourValue(formattedTime: String): Int {
+        val hourFormat = SimpleDateFormat("HH", Locale.getDefault())
+        return if (mClockType == ClockType.HOUR_12) {
+            val hour = hourFormat.format(hourFormat.parse(formattedTime)!!)
+            val hourValue = Integer.parseInt(hour)
+            if (hourValue == 0) 12 else hourValue
+        } else {
+            val hour24Format = SimpleDateFormat("H", Locale.getDefault())
+            val hour24 = hour24Format.format(hour24Format.parse(formattedTime)!!)
+            Integer.parseInt(hour24)
+        }
+    }
+
+    private fun getMeridian(formattedTime: String): String {
+        val inputFormat = SimpleDateFormat("hh:mm a", Locale.getDefault())
+        val date = inputFormat.parse(formattedTime)
+
+        val meridianFormat = SimpleDateFormat("a", Locale.getDefault())
+        return meridianFormat.format(date!!)
     }
 
     private fun convertToWords(number: Int): String {
@@ -109,5 +173,5 @@ class TextClockView : LinearLayout {
             else -> throw IllegalArgumentException("Number must be less than 100")
         }
     }
-
 }
+
