@@ -15,22 +15,22 @@ class FrameClockView : View {
     private var mBackgroundPaint: Paint? = null
     private var mHandPaint: Paint? = null
 
-    private var frameClockAutoUpdate: Boolean = true
+    private var frameClockAutoUpdate: Boolean = false
 
     private var showFrame: Boolean = false
-    private var frameRadius: Float = 0f
-    private var frameColor: Int = Color.WHITE
-    private var frameThickness: Float = 0f
+    private var frameRadius: Float = 40f
+    private var frameColor: Int = 0x63FFFFFF
+    private var frameThickness: Float = 2f
 
     private var showSecondsHand: Boolean = false
-    private var secondHandColor: Int = Color.RED
-    private var secondHandThickness: Float = 0f
+    private var secondHandColor: Int = 0x63FFFFFF
+    private var secondHandThickness: Float = 3f
 
     private var hourHandColor: Int = Color.WHITE
-    private var hourHandThickness: Float = 0f
+    private var hourHandThickness: Float = 5f
 
     private var minuteHandColor: Int = Color.RED
-    private var minuteHandThickness: Float = 0f
+    private var minuteHandThickness: Float = 5f
 
     constructor(context: Context) : super(context) {
         init(context, null)
@@ -52,22 +52,22 @@ class FrameClockView : View {
         attrs?.let {
             val typedArray = context.obtainStyledAttributes(it, R.styleable.FrameClockView)
             try {
-                frameClockAutoUpdate = typedArray.getBoolean(R.styleable.FrameClockView_frameClockAutoUpdate, true)
+                frameClockAutoUpdate = typedArray.getBoolean(R.styleable.FrameClockView_frameClockAutoUpdate, false)
 
                 showFrame = typedArray.getBoolean(R.styleable.FrameClockView_showFrame, false)
-                frameRadius = typedArray.getDimension(R.styleable.FrameClockView_frameRadius, 0f)
-                frameColor = typedArray.getColor(R.styleable.FrameClockView_frameColor, Color.WHITE)
-                frameThickness = typedArray.getDimension(R.styleable.FrameClockView_frameThickness, 0f)
+                frameRadius = typedArray.getDimension(R.styleable.FrameClockView_frameRadius, 40f)
+                frameColor = typedArray.getColor(R.styleable.FrameClockView_frameColor, 0x63FFFFFF)
+                frameThickness = typedArray.getDimension(R.styleable.FrameClockView_frameThickness, 2f)
 
                 showSecondsHand = typedArray.getBoolean(R.styleable.FrameClockView_showSecondsHand, false)
-                secondHandColor = typedArray.getColor(R.styleable.FrameClockView_secondHandColor, Color.RED)
-                secondHandThickness = typedArray.getDimension(R.styleable.FrameClockView_secondHandThickness, 0f)
+                secondHandColor = typedArray.getColor(R.styleable.FrameClockView_secondHandColor, 0x63FFFFFF)
+                secondHandThickness = typedArray.getDimension(R.styleable.FrameClockView_secondHandThickness, 3f)
 
                 hourHandColor = typedArray.getColor(R.styleable.FrameClockView_hourHandColor, Color.WHITE)
-                hourHandThickness = typedArray.getDimension(R.styleable.FrameClockView_hourHandThickness, 0f)
+                hourHandThickness = typedArray.getDimension(R.styleable.FrameClockView_hourHandThickness, 5f)
 
                 minuteHandColor = typedArray.getColor(R.styleable.FrameClockView_minuteHandColor, Color.RED)
-                minuteHandThickness = typedArray.getDimension(R.styleable.FrameClockView_minuteHandThickness, 0f)
+                minuteHandThickness = typedArray.getDimension(R.styleable.FrameClockView_minuteHandThickness, 5f)
             } finally {
                 typedArray.recycle()
             }
@@ -92,11 +92,11 @@ class FrameClockView : View {
             drawRectClockFrame(canvas)
         }
         drawBackground(canvas)
+        drawMinuteHand(canvas)
+        drawHourHand(canvas)
         if (showSecondsHand) {
             drawSecondHand(canvas)
         }
-        drawMinuteHand(canvas)
-        drawHourHand(canvas)
         drawNail(canvas)
         // redraw itself in REDRAW_RATE millis
         if (frameClockAutoUpdate) {
@@ -109,7 +109,7 @@ class FrameClockView : View {
         val viewRadius = width / 2f - padding
         val frameSize = viewRadius * 1.1f // Adjust the frame size as needed
         val framePaint = Paint()
-        framePaint.color = Color.WHITE
+        framePaint.color = frameColor
         framePaint.style = Paint.Style.STROKE
         framePaint.strokeWidth = frameThickness.takeIf { it > 0 } ?: (viewRadius * 0.01f)
 

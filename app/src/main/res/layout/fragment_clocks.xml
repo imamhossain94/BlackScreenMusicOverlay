@@ -9,7 +9,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="16dp">
+        android:paddingTop="8dp"
+        android:paddingBottom="5dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp">
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -21,7 +24,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
                 app:textClockAutoUpdate="true"
-                app:timePattern="hh:mm a"
+                app:timePattern="hh:mm"
                 app:hourColor="#FFFFFF"
                 app:hourTextSize="16sp"
                 app:minuteColor="#FF0000"
@@ -45,7 +48,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
                 app:textClockAutoUpdate="true"
-                app:timePattern="hh:mm a"
+                app:timePattern="hh:mm"
                 app:hourColor="#FFFFFF"
                 app:hourTextSize="16sp"
                 app:minuteColor="#FF0000"
@@ -53,7 +56,7 @@
                 app:meridianColor="#00FF00"
                 app:meridianTextSize="12sp"
                 app:clockType="Hour12"
-                app:clockStyle="VerticalNumber"/>
+                app:clockStyle="HorizontalNumber"/>
         </LinearLayout>
         <View
             android:layout_width="10dp"
@@ -69,7 +72,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
                 app:textClockAutoUpdate="true"
-                app:timePattern="hh:mm a"
+                app:timePattern="hh:mm"
                 app:hourColor="#FFFFFF"
                 app:hourTextSize="16sp"
                 app:minuteColor="#FF0000"
@@ -77,7 +80,7 @@
                 app:meridianColor="#00FF00"
                 app:meridianTextSize="12sp"
                 app:clockType="Hour12"
-                app:clockStyle="VerticalNumber"/>
+                app:clockStyle="HorizontalNumber2"/>
         </LinearLayout>
     </LinearLayout>
 
@@ -86,7 +89,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="16dp">
+        android:paddingTop="5dp"
+        android:paddingBottom="16dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp">
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -96,43 +102,8 @@
             <com.newagedevs.musicoverlay.view.FrameClockView
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
-                app:frameClockAutoUpdate="true"
-                app:showFrame="true"
-                app:frameRadius="15dp"
-                app:frameColor="#FF0000"
-                app:frameThickness="1dp"
-                app:showSecondsHand="true"
-                app:secondHandColor="#00FF00"
-                app:secondHandThickness="2dp"
-                app:hourHandColor="#FFFFFF"
-                app:hourHandThickness="8dp"
-                app:minuteHandColor="#FFFF00"
-                app:minuteHandThickness="5dp" />
-        </LinearLayout>
-        <View
-            android:layout_width="10dp"
-            android:layout_height="1dp"/>
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:padding="10dp"
-            android:background="@drawable/rounded_corners2">
-            <com.newagedevs.musicoverlay.view.FrameClockView
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                app:frameClockAutoUpdate="true"
                 app:showFrame="false"
-                app:frameRadius="15dp"
-                app:frameColor="#FF0000"
-                app:frameThickness="1dp"
-                app:showSecondsHand="true"
-                app:secondHandColor="#00FF00"
-                app:secondHandThickness="2dp"
-                app:hourHandColor="#FFFFFF"
-                app:hourHandThickness="8dp"
-                app:minuteHandColor="#FFFF00"
-                app:minuteHandThickness="5dp" />
+                app:showSecondsHand="false" />
         </LinearLayout>
         <View
             android:layout_width="10dp"
@@ -147,17 +118,21 @@
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
                 app:frameClockAutoUpdate="true"
-                app:showFrame="true"
-                app:frameRadius="50dp"
-                app:frameColor="#FF0000"
-                app:frameThickness="1dp"
-                app:showSecondsHand="true"
-                app:secondHandColor="#00FF00"
-                app:secondHandThickness="2dp"
-                app:hourHandColor="#FFFFFF"
-                app:hourHandThickness="8dp"
-                app:minuteHandColor="#FFFF00"
-                app:minuteHandThickness="5dp" />
+                app:showSecondsHand="true" />
+        </LinearLayout>
+        <View
+            android:layout_width="10dp"
+            android:layout_height="1dp"/>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="10dp"
+            android:background="@drawable/rounded_corners2">
+            <com.newagedevs.musicoverlay.view.FrameClockView
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                app:showFrame="true"/>
         </LinearLayout>
     </LinearLayout>
 
