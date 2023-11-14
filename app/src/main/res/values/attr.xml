@@ -25,8 +25,34 @@
         <attr name="clockStyle" format="enum">
             <enum name="verticalNumberClock" value="0"/>
             <enum name="horizontalNumberClock" value="1"/>
-            <enum name="verticalTextClock" value="2"/>
+            <enum name="horizontalNumberClock2" value="2"/>
+            <enum name="verticalTextClock" value="3"/>
         </attr>
     </declare-styleable>
+
+    <declare-styleable name="FrameClockView">
+        <!-- Clock Attributes -->
+        <attr name="autoUpdate" format="boolean"/>
+
+        <!-- Frame Attributes -->
+        <attr name="showFrame" format="boolean"/>
+        <attr name="frameRadius" format="dimension"/>
+        <attr name="frameColor" format="color"/>
+        <attr name="frameThickness" format="dimension"/>
+
+        <!-- Seconds Hand Attributes -->
+        <attr name="showSecondsHand" format="boolean"/>
+        <attr name="secondHandColor" format="color"/>
+        <attr name="secondHandThickness" format="dimension"/>
+
+        <!-- Hour Hand Attributes -->
+        <attr name="hourHandColor" format="color"/>
+        <attr name="hourHandThickness" format="dimension"/>
+
+        <!-- Minute Hand Attributes -->
+        <attr name="minuteHandColor" format="color"/>
+        <attr name="minuteHandThickness" format="dimension"/>
+    </declare-styleable>
+
 
 </resources>

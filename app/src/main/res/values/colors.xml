@@ -44,4 +44,14 @@
     <color name="lightRed">#ff4c4c</color>
     <color name="gblue">#4885ed</color>
 
+
+    <array name="demo_color">
+        <item>@color/colorPrimary</item>
+        <item>@color/colorPrimaryDark</item>
+        <item>@color/colorAccent</item>
+        <item>@color/limeBlue</item>
+        <item>@color/limeGreen</item>
+        <item>@color/lightRed</item>
+    </array>
+
 </resources>

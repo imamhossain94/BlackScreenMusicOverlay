@@ -44,7 +44,7 @@ class TextClockView : LinearLayout {
         // Set initial values
         updateTime()
 
-        gravity = if (mClockStyle == 2) Gravity.CENTER_VERTICAL or Gravity.START else Gravity.CENTER
+        gravity = if (mClockStyle == 3) Gravity.CENTER_VERTICAL or Gravity.START else Gravity.CENTER
 
         // Listen for time changes and update TextViews accordingly
         val timeTicker = object : Runnable {
@@ -74,16 +74,22 @@ class TextClockView : LinearLayout {
             0 -> {
                 // Vertical Number Clock
                 orientation = VERTICAL
-                mHourTextView?.text = String.format("%02d", calendar[Calendar.HOUR])
+                mHourTextView?.text = String.format("%02d", if (calendar[Calendar.HOUR] == 0) 12 else calendar[Calendar.HOUR])
                 mMinuteTextView?.text = String.format("%02d", calendar[Calendar.MINUTE])
             }
             1 -> {
                 // Horizontal Number Clock
                 orientation = HORIZONTAL
-                mHourTextView?.text = String.format("%02d:", calendar[Calendar.HOUR])
-                mMinuteTextView?.text = String.format("%02d", calendar[Calendar.MINUTE])
+                mHourTextView?.text = String.format("%02d", if (calendar[Calendar.HOUR] == 0) 12 else calendar[Calendar.HOUR])
+                mMinuteTextView?.text = String.format(" %02d", calendar[Calendar.MINUTE])
             }
             2 -> {
+                // Horizontal Number Clock
+                orientation = HORIZONTAL
+                mHourTextView?.text = String.format("%02d", if (calendar[Calendar.HOUR] == 0) 12 else calendar[Calendar.HOUR])
+                mMinuteTextView?.text = String.format("\n%02d", calendar[Calendar.MINUTE])
+            }
+            3 -> {
                 // Vertical Text Clock
                 orientation = VERTICAL
                 mHourTextView?.text = convertToWords(calendar[Calendar.HOUR])

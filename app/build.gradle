@@ -48,6 +48,7 @@ configurations.configureEach {
     exclude group: 'androidx.customview', module: 'customview'
     exclude group: 'androidx.coordinatorlayout', module: 'coordinatorlayout'
     exclude group: 'com.android.support', module: 'support-compat'
+    exclude group: 'androidx.preference', module: 'preference'
 }
 
 dependencies {
@@ -61,5 +62,6 @@ dependencies {
     implementation 'io.github.oneuiproject.sesl:preference:1.1.0'
     /*TODO: add/update/remove libraries*/
     implementation 'androidx.databinding:databinding-runtime:7.1.1'
+    implementation 'com.thebluealliance:spectrum:0.7.1'
 
 }

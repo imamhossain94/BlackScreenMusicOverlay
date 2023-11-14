@@ -6,13 +6,31 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.View
-import androidx.core.content.ContextCompat
 import com.newagedevs.musicoverlay.R
 import java.util.Calendar
+import kotlin.math.cos
+import kotlin.math.sin
 
 class FrameClockView : View {
     private var mBackgroundPaint: Paint? = null
     private var mHandPaint: Paint? = null
+
+    private var autoUpdate: Boolean = true
+
+    private var showFrame: Boolean = false
+    private var frameRadius: Float = 0f
+    private var frameColor: Int = Color.WHITE
+    private var frameThickness: Float = 0f
+
+    private var showSecondsHand: Boolean = false
+    private var secondHandColor: Int = Color.RED
+    private var secondHandThickness: Float = 0f
+
+    private var hourHandColor: Int = Color.WHITE
+    private var hourHandThickness: Float = 0f
+
+    private var minuteHandColor: Int = Color.RED
+    private var minuteHandThickness: Float = 0f
 
     constructor(context: Context) : super(context) {
         init(context, null)
@@ -28,15 +46,39 @@ class FrameClockView : View {
         mBackgroundPaint!!.isAntiAlias = true
         mHandPaint = Paint(Paint.ANTI_ALIAS_FLAG)
         mHandPaint!!.strokeCap = Paint.Cap.ROUND
-        mHandPaint!!.color = Color.WHITE
         mHandPaint!!.isAntiAlias = true
+
+        // Load custom attributes from XML layout
+        attrs?.let {
+            val typedArray = context.obtainStyledAttributes(it, R.styleable.FrameClockView)
+            try {
+                autoUpdate = typedArray.getBoolean(R.styleable.FrameClockView_autoUpdate, true)
+
+                showFrame = typedArray.getBoolean(R.styleable.FrameClockView_showFrame, false)
+                frameRadius = typedArray.getDimension(R.styleable.FrameClockView_frameRadius, 0f)
+                frameColor = typedArray.getColor(R.styleable.FrameClockView_frameColor, Color.WHITE)
+                frameThickness = typedArray.getDimension(R.styleable.FrameClockView_frameThickness, 0f)
+
+                showSecondsHand = typedArray.getBoolean(R.styleable.FrameClockView_showSecondsHand, false)
+                secondHandColor = typedArray.getColor(R.styleable.FrameClockView_secondHandColor, Color.RED)
+                secondHandThickness = typedArray.getDimension(R.styleable.FrameClockView_secondHandThickness, 0f)
+
+                hourHandColor = typedArray.getColor(R.styleable.FrameClockView_hourHandColor, Color.WHITE)
+                hourHandThickness = typedArray.getDimension(R.styleable.FrameClockView_hourHandThickness, 0f)
+
+                minuteHandColor = typedArray.getColor(R.styleable.FrameClockView_minuteHandColor, Color.RED)
+                minuteHandThickness = typedArray.getDimension(R.styleable.FrameClockView_minuteHandThickness, 0f)
+            } finally {
+                typedArray.recycle()
+            }
+        }
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         // always keep square size 1:1
         val width = MeasureSpec.getSize(widthMeasureSpec)
         val height = MeasureSpec.getSize(heightMeasureSpec)
-        val measuredSize = Math.min(width, height)
+        val measuredSize = width.coerceAtMost(height)
         setMeasuredDimension(measuredSize, measuredSize)
     }
 
@@ -44,45 +86,39 @@ class FrameClockView : View {
      * Runnable instantiated only once
      */
     private val invalidator = Runnable { invalidate() }
+
     override fun onDraw(canvas: Canvas) {
-        drawRectClockFrame(canvas)
+        if (showFrame) {
+            drawRectClockFrame(canvas)
+        }
         drawBackground(canvas)
+        if (showSecondsHand) {
+            drawSecondHand(canvas)
+        }
         drawMinuteHand(canvas)
         drawHourHand(canvas)
-        drawSecondHand(canvas);
         drawNail(canvas)
         // redraw itself in REDRAW_RATE millis
-        postDelayed(invalidator, REDRAW_RATE)
-    }
-
-    private fun drawClockFrame(canvas: Canvas) {
-        val padding = 15
-        val viewRadius = width / 2f - padding
-        val frameRadius = viewRadius * 1.1f // Adjust the frame size as needed
-        val frameThickness = viewRadius * 0.01f // Adjust the frame thickness as needed
-        val framePaint = Paint()
-        framePaint.color = Color.WHITE
-        framePaint.style = Paint.Style.STROKE
-        framePaint.strokeWidth = frameThickness
-        canvas.drawCircle(viewRadius + padding, viewRadius + padding, frameRadius, framePaint)
+        if (autoUpdate) {
+            postDelayed(invalidator, REDRAW_RATE)
+        }
     }
 
     private fun drawRectClockFrame(canvas: Canvas) {
-        val padding = 15
+        val padding = 12 + (frameThickness.takeIf { it > 0 }?.div(2f) ?: 0).toInt()
         val viewRadius = width / 2f - padding
         val frameSize = viewRadius * 1.1f // Adjust the frame size as needed
-        val frameThickness = viewRadius * 0.01f // Adjust the frame thickness as needed
         val framePaint = Paint()
         framePaint.color = Color.WHITE
         framePaint.style = Paint.Style.STROKE
-        framePaint.strokeWidth = frameThickness
+        framePaint.strokeWidth = frameThickness.takeIf { it > 0 } ?: (viewRadius * 0.01f)
 
         // Calculate the coordinates of the rounded square
         val left = (viewRadius + padding) - frameSize
         val top = (viewRadius + padding) - frameSize
         val right = (viewRadius + padding) + frameSize
         val bottom = (viewRadius + padding) + frameSize
-        val cornerRadius = frameSize * 0.1f // Adjust the corner radius as needed
+        val cornerRadius = frameRadius.takeIf { it > 0 } ?: (frameSize * 0.5f)
 
         // Draw the rounded square
         canvas.drawRoundRect(left, top, right, bottom, cornerRadius, cornerRadius, framePaint)
@@ -96,10 +132,10 @@ class FrameClockView : View {
     private fun drawHourHand(canvas: Canvas) {
         val viewRadius = width / 2f
         val handRadius = width * 0.2f
-        val thickness = width * 0.06f // 1% of view's width
+        val thickness = hourHandThickness.takeIf { it > 0 } ?: (width * 0.06f)
         mHandPaint!!.strokeWidth = thickness
         // coordinates of hand's end
-        mHandPaint!!.color = Color.WHITE
+        mHandPaint!!.color = hourHandColor
         val angle = hoursAngle
         val x = getStopX(viewRadius, handRadius, angle)
         val y = getStopY(viewRadius, handRadius, angle)
@@ -109,11 +145,11 @@ class FrameClockView : View {
     private fun drawMinuteHand(canvas: Canvas) {
         val viewRadius = width / 2f
         val handRadius = width * 0.3f
-        val thickness = width * 0.05f // 1% of view's width
+        val thickness = minuteHandThickness.takeIf { it > 0 } ?: (width * 0.05f)
         mHandPaint!!.strokeWidth = thickness
         // coordinates of hand's end
         val angle = minutesAngle
-        mHandPaint!!.color = ContextCompat.getColor(context, R.color.lightRed)
+        mHandPaint!!.color = minuteHandColor
         val x = getStopX(viewRadius, handRadius, angle)
         val y = getStopY(viewRadius, handRadius, angle)
         canvas.drawLine(viewRadius, viewRadius, x, y, mHandPaint!!)
@@ -122,30 +158,14 @@ class FrameClockView : View {
     private fun drawSecondHand(canvas: Canvas) {
         val viewRadius = width / 2f
         val handRadius = width * 0.4f
-        val thickness = width * 0.005f // 0.5% of view's width
+        val thickness = secondHandThickness.takeIf { it > 0 } ?: (width * 0.005f)
         mHandPaint!!.strokeWidth = thickness
         // coordinates of hand's end
         val angle = secondsAngle
-        mHandPaint!!.color = ContextCompat.getColor(context, R.color.limeBlue)
+        mHandPaint!!.color = secondHandColor
         val x = getStopX(viewRadius, handRadius, angle)
         val y = getStopY(viewRadius, handRadius, angle)
         canvas.drawLine(viewRadius, viewRadius, x, y, mHandPaint!!)
-    }
-
-    /**
-     * Evaluates hand's end X coordinate based on the given angle.
-     * x = R + r * sin(a);
-     */
-    private fun getStopX(viewRadius: Float, handRadius: Float, angle: Double): Float {
-        return (viewRadius + handRadius * Math.sin(angle)).toFloat()
-    }
-
-    /**
-     * Evaluates hand's end Y coordinate based on the given angle
-     * y = R - r * cos(a);
-     */
-    private fun getStopY(viewRadius: Float, handRadius: Float, angle: Double): Float {
-        return (viewRadius - handRadius * Math.cos(angle)).toFloat()
     }
 
     private fun drawNail(canvas: Canvas) {
@@ -155,44 +175,39 @@ class FrameClockView : View {
         canvas.drawCircle(viewRadius, viewRadius, nailRadius, mHandPaint!!)
     }
 
+    private fun getStopX(viewRadius: Float, handRadius: Float, angle: Double): Float {
+        return (viewRadius + handRadius * sin(angle)).toFloat()
+    }
+
+    private fun getStopY(viewRadius: Float, handRadius: Float, angle: Double): Float {
+        return (viewRadius - handRadius * cos(angle)).toFloat()
+    }
+
     private val hoursAngle: Double
-        /**
-         * Gets angle of hour hand(minute-accurate)
-         * @return angle in radians
-         */
         get() {
             val c = Calendar.getInstance()
             val hours = c[Calendar.HOUR]
             val minutes = c[Calendar.MINUTE]
-            val minutesFromStart = (hours * 60
-                    + minutes)
-            return 2 * Math.PI * minutesFromStart / 720 // divided by number of minutes in 12 hours;
+            val minutesFromStart = (hours * 60 + minutes)
+            return 2 * Math.PI * minutesFromStart / 720
         }
+
     private val minutesAngle: Double
-        /**
-         * Gets angle of minute hand (second-accurate)
-         * @return angle in radians
-         */
         get() {
             val c = Calendar.getInstance()
-            val secondsFromStart = (c[Calendar.MINUTE] * 60
-                    + c[Calendar.SECOND])
-            return 2 * Math.PI * secondsFromStart / 3600 // divided by number of seconds in 1 hour
+            val secondsFromStart = (c[Calendar.MINUTE] * 60 + c[Calendar.SECOND])
+            return 2 * Math.PI * secondsFromStart / 3600
         }
+
     private val secondsAngle: Double
-        /**
-         * Gets angle of second hand (millisecond-accurate)
-         * @return angle in radians
-         */
         get() {
             val c = Calendar.getInstance()
             val millisFromStart = c[Calendar.SECOND] * 1000 + c[Calendar.MILLISECOND]
-            return 2 * Math.PI * millisFromStart / 60000 // divided by number of milliseconds in 1 minute
+            return 2 * Math.PI * millisFromStart / 60000
         }
 
     companion object {
-        private val TAG = FrameClockView::class.java.simpleName
         private const val REDRAW_RATE: Long = 20 // 20ms
-        private const val BACKGROUND_COLOR = -0xf677ae
     }
 }
+

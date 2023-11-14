@@ -18,23 +18,6 @@
             android:id="@+id/clock69"
             android:background="@drawable/rounded_corners2">
             <com.newagedevs.musicoverlay.view.TextClockView
-                android:id="@+id/textClockViewVerticalNumber"
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                app:textSize="26sp"
-                app:clockStyle="verticalNumberClock"/>
-        </LinearLayout>
-        <View
-            android:layout_width="10dp"
-            android:layout_height="1dp"/>
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:padding="10dp"
-            android:id="@+id/clock86"
-            android:background="@drawable/rounded_corners2">
-            <com.newagedevs.musicoverlay.view.TextClockView
                 android:id="@+id/textClockViewVerticalTe"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
@@ -48,35 +31,61 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:padding="10dp"
+            android:id="@+id/clock86"
+            android:background="@drawable/rounded_corners2">
+            <com.newagedevs.musicoverlay.view.TextClockView
+                android:id="@+id/textClockViewVerticalNumber"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                app:textSize="26sp"
+                app:clockStyle="verticalNumberClock"/>
+        </LinearLayout>
+        <View
+            android:layout_width="10dp"
+            android:layout_height="1dp"/>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:id="@+id/clock363"
             android:padding="10dp"
             android:background="@drawable/rounded_corners2">
-            <com.newagedevs.musicoverlay.view.FrameClockView
+            <com.newagedevs.musicoverlay.view.TextClockView
                 android:layout_width="match_parent"
-                android:layout_height="100dp" />
+                android:layout_height="100dp"
+                app:textSize="26sp"
+                app:clockStyle="horizontalNumberClock2"/>
         </LinearLayout>
     </LinearLayout>
+
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:paddingHorizontal="16dp"
-        android:paddingBottom="16dp">
+        android:padding="16dp">
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:padding="10dp"
-            android:id="@+id/clock2"
-            android:background="@drawable/rounded_corners2"
-            android:gravity="center">
-            <com.newagedevs.musicoverlay.view.TextClockView
-                android:id="@+id/textClockViewVerticalText"
+            android:background="@drawable/rounded_corners2">
+            <com.newagedevs.musicoverlay.view.FrameClockView
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
-                app:textSize="26sp"
-                app:clockStyle="verticalTextClock"/>
+                app:autoUpdate="true"
+                app:showFrame="true"
+                app:frameRadius="15dp"
+                app:frameColor="#FF0000"
+                app:frameThickness="1dp"
+                app:showSecondsHand="true"
+                app:secondHandColor="#00FF00"
+                app:secondHandThickness="2dp"
+                app:hourHandColor="#FFFFFF"
+                app:hourHandThickness="8dp"
+                app:minuteHandColor="#FFFF00"
+                app:minuteHandThickness="5dp" />
         </LinearLayout>
         <View
             android:layout_width="10dp"
@@ -86,14 +95,48 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:padding="10dp"
-            android:id="@+id/clock4"
-            android:background="@drawable/rounded_corners2"
-            android:gravity="center">
-            <com.newagedevs.musicoverlay.view.CustomClockView
+            android:background="@drawable/rounded_corners2">
+            <com.newagedevs.musicoverlay.view.FrameClockView
                 android:layout_width="match_parent"
-                android:layout_height="100dp"/>
+                android:layout_height="100dp"
+                app:autoUpdate="true"
+                app:showFrame="false"
+                app:frameRadius="15dp"
+                app:frameColor="#FF0000"
+                app:frameThickness="1dp"
+                app:showSecondsHand="true"
+                app:secondHandColor="#00FF00"
+                app:secondHandThickness="2dp"
+                app:hourHandColor="#FFFFFF"
+                app:hourHandThickness="8dp"
+                app:minuteHandColor="#FFFF00"
+                app:minuteHandThickness="5dp" />
         </LinearLayout>
-
+        <View
+            android:layout_width="10dp"
+            android:layout_height="1dp"/>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="10dp"
+            android:background="@drawable/rounded_corners2">
+            <com.newagedevs.musicoverlay.view.FrameClockView
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                app:autoUpdate="true"
+                app:showFrame="true"
+                app:frameRadius="50dp"
+                app:frameColor="#FF0000"
+                app:frameThickness="1dp"
+                app:showSecondsHand="true"
+                app:secondHandColor="#00FF00"
+                app:secondHandThickness="2dp"
+                app:hourHandColor="#FFFFFF"
+                app:hourHandThickness="8dp"
+                app:minuteHandColor="#FFFF00"
+                app:minuteHandThickness="5dp" />
+        </LinearLayout>
     </LinearLayout>
 
 </LinearLayout>
