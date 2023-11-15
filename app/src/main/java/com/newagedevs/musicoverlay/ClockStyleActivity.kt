@@ -25,17 +25,17 @@ class ClockStyleActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding = ActivityClockStyleBinding.inflate(layoutInflater);
+        binding = ActivityClockStyleBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         binding.tabsSubtab
 
-        binding.tabsSubtab.seslSetSubTabStyle();
-        binding.tabsSubtab.tabMode = TabLayout.SESL_MODE_WEIGHT_AUTO;
+        binding.tabsSubtab.seslSetSubTabStyle()
+        binding.tabsSubtab.tabMode = TabLayout.SESL_MODE_WEIGHT_AUTO
         binding.tabsSubtab.addTab(binding.tabsSubtab.newTab().setText("Select clock"))
         binding.tabsSubtab.addTab(binding.tabsSubtab.newTab().setText("Appearance"))
 
-        binding.tabsBottomnavText.setOnItemSelectedListener { it ->
+        binding.tabsBottomnavText.setOnItemSelectedListener {
 
             when (it.itemId) {
                 R.id.bvn_1 -> {

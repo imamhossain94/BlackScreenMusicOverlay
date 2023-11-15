@@ -18,12 +18,16 @@ class MainActivity : AppCompatActivity() {
 
         binding.toolbarLayout.setNavigationButtonAsBack()
 
+        binding.startOverlayStyleActivity.setOnClickListener {
+            startActivity(Intent(this, OverlayStyleActivity::class.java))
+        }
+
         binding.startClockStyleActivity.setOnClickListener {
             startActivity(Intent(this, ClockStyleActivity::class.java))
         }
 
         binding.aboutMusicOverlay.setOnClickListener {
-            startActivity(Intent(this, AboutActivity::class.java))
+            startActivity(Intent(this, DemoActivity::class.java))
         }
 
     }
