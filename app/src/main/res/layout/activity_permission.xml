@@ -69,6 +69,14 @@
                 app:roundedCorners="all">
 
                 <com.newagedevs.musicoverlay.view.PermissionCardView
+                    android:id="@+id/permission_record_audio_card"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    app:IconDrawable="@drawable/ic_oui_audio_filled"
+                    app:SummaryText="@string/oui_app_permission_record_audio_summary"
+                    app:TitleText="@string/oui_app_permission_record_audio_title" />
+
+                <com.newagedevs.musicoverlay.view.PermissionCardView
                     android:id="@+id/permission_appear_on_top_card"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"

@@ -15,6 +15,7 @@ class PermissionActivity : AppCompatActivity() {
         binding = ActivityPermissionBinding.inflate(layoutInflater);
         setContentView(binding.root)
 
+        binding.permissionRecordAudioCard.isEnabled = true
         binding.permissionAppearOnTopCard.isEnabled = true
 
         binding.startMainActivity.setOnClickListener {

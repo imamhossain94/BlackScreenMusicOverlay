@@ -5,13 +5,15 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.PixelFormat
 import android.media.AudioFormat
+import android.media.AudioRecord
 import android.media.MediaPlayer
+import android.media.MediaRecorder
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.animation.LinearInterpolator
 import android.view.animation.TranslateAnimation
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.material.tabs.TabLayout
 import com.newagedevs.musicoverlay.converter.AbsAudioDataConverter
 import com.newagedevs.musicoverlay.converter.AudioDataConverterFactory
 import com.newagedevs.musicoverlay.databinding.ActivityOverlayStyleBinding
@@ -26,12 +28,15 @@ import me.bogerchan.niervisualizer.renderer.circle.CircleWaveRenderer
 import me.bogerchan.niervisualizer.renderer.columnar.ColumnarType1Renderer
 import me.bogerchan.niervisualizer.renderer.columnar.ColumnarType2Renderer
 import me.bogerchan.niervisualizer.renderer.columnar.ColumnarType3Renderer
-import me.bogerchan.niervisualizer.renderer.columnar.ColumnarType4Renderer
 import me.bogerchan.niervisualizer.renderer.line.LineRenderer
 import me.bogerchan.niervisualizer.renderer.other.ArcStaticRenderer
 import me.bogerchan.niervisualizer.util.NierAnimator
 
-class OverlayStyleActivity : AppCompatActivity() {
+@SuppressLint("MissingPermission")
+class OverlayStyleActivity : AppCompatActivity(), AudioStatusListener {
+    private lateinit var audioStatusChecker: AudioStatusChecker
+
+
 
     private var originalWidth: Int = 0
     private var originalHeight: Int = 0
@@ -131,12 +136,30 @@ class OverlayStyleActivity : AppCompatActivity() {
         )
     )
 
-    private val mPlayer by lazy {
-        MediaPlayer().apply {
-            resources.openRawResourceFd(R.raw.demo_audio).apply {
-                setDataSource(fileDescriptor, startOffset, length)
-            }
-        }
+//    private val mPlayer by lazy {
+//        MediaPlayer().apply {
+//            resources.openRawResourceFd(R.raw.demo_audio).apply {
+//                setDataSource(fileDescriptor, startOffset, length)
+//            }
+//        }
+//    }
+
+    private val mAudioBufferSize by lazy {
+        AudioRecord.getMinBufferSize(
+            44100,
+            AudioFormat.CHANNEL_IN_MONO,
+            AudioFormat.ENCODING_PCM_16BIT
+        )
+    }
+
+    private val mAudioRecord by lazy {
+        AudioRecord(
+            MediaRecorder.AudioSource.MIC,
+            44100,
+            AudioFormat.CHANNEL_IN_MONO,
+            AudioFormat.ENCODING_PCM_16BIT,
+            mAudioBufferSize
+        )
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -174,11 +197,14 @@ class OverlayStyleActivity : AppCompatActivity() {
         binding.surfaceView.setZOrderOnTop(true)
         binding.surfaceView.holder.setFormat(PixelFormat.TRANSLUCENT)
 
-        mPlayer.apply {
-            prepare()
-            start()
-            createNewVisualizerManager()
-        }
+//        mPlayer.apply {
+//            prepare()
+//            start()
+//            createNewVisualizerManager()
+//        }
+
+        audioStatusChecker = AudioStatusChecker(this, this)
+        audioStatusChecker.startChecking()
 
         mVisualizerManager?.start(binding.surfaceView, mRenderers[++mCurrentStyleIndex % mRenderers.size])
 
@@ -193,13 +219,34 @@ class OverlayStyleActivity : AppCompatActivity() {
         super.onDestroy()
         mVisualizerManager?.release()
         mVisualizerManager = null
-        mPlayer.release()
+        //mPlayer.release()
+        mAudioRecord.release()
+        audioStatusChecker.stopChecking()
     }
 
     private fun createNewVisualizerManager() {
         mVisualizerManager?.release()
         mVisualizerManager = NierVisualizerManager().apply {
-            init(mPlayer.audioSessionId)
+            init(object : NierVisualizerManager.NVDataSource {
+
+                private val mBuffer: ByteArray = ByteArray(512)
+                private val mAudioDataConverter: AbsAudioDataConverter =
+                    AudioDataConverterFactory.getConverterByAudioRecord(mAudioRecord)
+
+                override fun getDataSamplingInterval() = 0L
+
+                override fun getDataLength() = mBuffer.size
+
+                override fun fetchFftData(): ByteArray? {
+                    return null
+                }
+
+                override fun fetchWaveData(): ByteArray? {
+                    mAudioDataConverter.convertWaveDataTo(mBuffer)
+                    return mBuffer
+                }
+
+            })
         }
     }
 
@@ -263,6 +310,23 @@ class OverlayStyleActivity : AppCompatActivity() {
         if (originalWidth == 0 && originalHeight == 0) {
             originalWidth = binding.overlayViewHolder.width
             originalHeight = binding.overlayViewHolder.height
+        }
+    }
+
+    override fun onAudioStatusChanged(isAudioActive: Boolean) {
+
+        Log.d("onAudioStatus", "$isAudioActive")
+
+        if (isAudioActive) {
+            mAudioRecord.apply {
+                startRecording()
+                createNewVisualizerManager()
+            }
+        } else {
+//            mAudioRecord.apply {
+//                stop()
+//                mVisualizerManager?.stop()
+//            }
         }
     }
 

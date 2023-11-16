@@ -5,4 +5,7 @@
 
     <string name="oui_app_permission_appear_on_top_title">Appear on top settings</string>
     <string name="oui_app_permission_appear_on_top_summary">This permission is used to enable the app to appear on top of other applications.</string>
+    <string name="oui_app_permission_record_audio_title">Audio Recording Permission</string>
+    <string name="oui_app_permission_record_audio_summary">This permission is required to enable the app to capture audio for displaying the music visualizer.</string>
+
 </resources>
