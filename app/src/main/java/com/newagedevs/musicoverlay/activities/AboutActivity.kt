@@ -1,4 +1,4 @@
-package com.newagedevs.musicoverlay
+package com.newagedevs.musicoverlay.activities
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity

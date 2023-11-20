@@ -1,14 +1,14 @@
-package com.newagedevs.musicoverlay
+package com.newagedevs.musicoverlay.activities
+
+//import java.util.Random
 
 import android.annotation.SuppressLint
-import android.content.ContentValues.TAG
 import android.content.Context
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.PixelFormat
 import android.media.AudioManager
 import android.media.MediaPlayer
-import android.opengl.Visibility
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -17,11 +17,11 @@ import android.view.View
 import android.view.animation.LinearInterpolator
 import android.view.animation.TranslateAnimation
 import androidx.appcompat.app.AppCompatActivity
-import com.newagedevs.musicoverlay.converter.AbsAudioDataConverter
-import com.newagedevs.musicoverlay.converter.AudioDataConverterFactory
+import com.newagedevs.musicoverlay.R
 import com.newagedevs.musicoverlay.databinding.ActivityOverlayStyleBinding
 import com.newagedevs.musicoverlay.extension.OnSwipeTouchListener
 import com.newagedevs.musicoverlay.extension.ResizeAnimation
+import com.newagedevs.musicoverlay.receiver.AudioSessionListener
 import me.bogerchan.niervisualizer.NierVisualizerManager
 import me.bogerchan.niervisualizer.renderer.IRenderer
 import me.bogerchan.niervisualizer.renderer.circle.CircleBarRenderer
@@ -31,10 +31,15 @@ import me.bogerchan.niervisualizer.renderer.circle.CircleWaveRenderer
 import me.bogerchan.niervisualizer.renderer.columnar.ColumnarType1Renderer
 import me.bogerchan.niervisualizer.renderer.columnar.ColumnarType2Renderer
 import me.bogerchan.niervisualizer.renderer.columnar.ColumnarType3Renderer
+import me.bogerchan.niervisualizer.renderer.columnar.ColumnarType4Renderer
 import me.bogerchan.niervisualizer.renderer.line.LineRenderer
 import me.bogerchan.niervisualizer.renderer.other.ArcStaticRenderer
 import me.bogerchan.niervisualizer.util.NierAnimator
-import java.util.Random
+import java.io.FileInputStream
+import java.io.InputStream
+import java.util.Arrays
+import kotlin.random.Random
+
 
 @SuppressLint("MissingPermission")
 class OverlayStyleActivity : AppCompatActivity(), AudioSessionListener {
@@ -49,7 +54,7 @@ class OverlayStyleActivity : AppCompatActivity(), AudioSessionListener {
         arrayOf(ColumnarType1Renderer()),
         arrayOf(ColumnarType2Renderer()),
         arrayOf(ColumnarType3Renderer()),
-        //arrayOf(ColumnarType4Renderer()),
+        arrayOf(ColumnarType4Renderer()),
         arrayOf(LineRenderer(true)),
         arrayOf(CircleBarRenderer()),
         arrayOf(CircleRenderer(true)),
@@ -192,11 +197,13 @@ class OverlayStyleActivity : AppCompatActivity(), AudioSessionListener {
         // Start checking every 2 seconds v
         handler.postDelayed(checkMusicRunnable, 10)
 
+        byteArrays = generateRandomByteArray(0)
+
         mVisualizerManager = NierVisualizerManager().apply {
             init(object : NierVisualizerManager.NVDataSource {
                 override fun getDataSamplingInterval() = 0L
 
-                override fun getDataLength() = 512
+                override fun getDataLength() = byteArrays.size
 
                 override fun fetchFftData(): ByteArray? {
                     return null
@@ -209,7 +216,7 @@ class OverlayStyleActivity : AppCompatActivity(), AudioSessionListener {
             })
         }
 
-        mVisualizerManager?.start(binding.surfaceView, arrayOf(ColumnarType3Renderer()))
+        mVisualizerManager?.start(binding.surfaceView, arrayOf(ColumnarType1Renderer()))
 
     }
 
@@ -218,11 +225,16 @@ class OverlayStyleActivity : AppCompatActivity(), AudioSessionListener {
     private lateinit var audioManager: AudioManager
     private val handler = Handler(Looper.getMainLooper())
 
+//    fun generateRandomByteArray(size: Int): ByteArray {
+//        val random = Random()
+//        val byteArray = ByteArray(size)
+//        random.nextBytes(byteArray)
+//        return byteArray
+//    }
+
     fun generateRandomByteArray(size: Int): ByteArray {
-        val random = Random()
-        val byteArray = ByteArray(size)
-        random.nextBytes(byteArray)
-        return byteArray
+        val random = Random
+        return ByteArray(size) { random.nextInt(120, 512).toByte() }
     }
 
     private val checkMusicRunnable = object : Runnable {
@@ -230,7 +242,7 @@ class OverlayStyleActivity : AppCompatActivity(), AudioSessionListener {
             byteArrays = if (audioManager.isMusicActive) {
                 generateRandomByteArray(512)
             } else {
-                ByteArray(512)
+                generateRandomByteArray(0)
             }
             handler.postDelayed(this, 10)
         }

@@ -1,4 +1,4 @@
-package com.newagedevs.musicoverlay
+package com.newagedevs.musicoverlay.receiver
 
 import android.content.BroadcastReceiver
 import android.content.ContentValues.TAG
@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.media.audiofx.AudioEffect
 import android.util.Log
+import com.newagedevs.musicoverlay.activities.OverlayStyleActivity
 
 class AudioSessionReceiver : BroadcastReceiver() {
 

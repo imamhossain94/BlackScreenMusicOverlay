@@ -1,4 +1,4 @@
-package com.newagedevs.musicoverlay
+package com.newagedevs.musicoverlay.receiver
 
 interface AudioSessionListener {
     fun onAudioSessionOpened(sessionId: Int)

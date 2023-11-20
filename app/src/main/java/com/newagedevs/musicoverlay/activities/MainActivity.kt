@@ -1,4 +1,4 @@
-package com.newagedevs.musicoverlay
+package com.newagedevs.musicoverlay.activities
 
 import android.content.Intent
 import android.os.Bundle
@@ -27,7 +27,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.aboutMusicOverlay.setOnClickListener {
-            startActivity(Intent(this, DemoActivity::class.java))
+            startActivity(Intent(this, AboutActivity::class.java))
         }
 
     }

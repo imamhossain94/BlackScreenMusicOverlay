@@ -8,7 +8,7 @@
     app:expandable="true"
     app:expanded="false"
     app:title="@string/app_name"
-    tools:context=".MainActivity">
+    tools:context=".activities.MainActivity">
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"

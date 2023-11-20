@@ -1,4 +1,4 @@
-package com.newagedevs.musicoverlay
+package com.newagedevs.musicoverlay.activities
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import com.newagedevs.musicoverlay.R
 import com.newagedevs.musicoverlay.adapter.ViewPagerAdapter
 import com.newagedevs.musicoverlay.databinding.ActivityClockStyleBinding
 import com.newagedevs.musicoverlay.extension.OnSwipeTouchListener
