@@ -14,7 +14,7 @@ class AudioSessionReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context?, intent: Intent) {
 
-        listener = context as OverlayStyleActivity
+//        listener = context as OverlayStyleActivity
 
         val audioSession: Int = intent.getIntExtra(
             AudioEffect.EXTRA_AUDIO_SESSION,
@@ -31,11 +31,11 @@ class AudioSessionReceiver : BroadcastReceiver() {
         }
         // open audio session
         if (intent.action.equals(AudioEffect.ACTION_OPEN_AUDIO_EFFECT_CONTROL_SESSION)) {
-            listener.onAudioSessionOpened(audioSession)
+            //listener.onAudioSessionOpened(audioSession)
         }
         // close audio session
         if (intent.action.equals(AudioEffect.ACTION_CLOSE_AUDIO_EFFECT_CONTROL_SESSION)) {
-            listener.onAudioSessionClosed()
+            //listener.onAudioSessionClosed()
         }
     }
 }

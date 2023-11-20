@@ -60,6 +60,7 @@ dependencies {
     implementation 'io.github.oneuiproject.sesl:material:1.5.0'
     implementation 'io.github.oneuiproject.sesl:recyclerview:1.4.0'
     implementation 'io.github.oneuiproject.sesl:preference:1.1.0'
+    implementation("io.github.oneuiproject.sesl:picker-color:1.1.0")
     /*TODO: add/update/remove libraries*/
     implementation 'androidx.databinding:databinding-runtime:7.1.1'
     implementation 'com.github.bogerchan:Nier-Visualizer:v0.1.3'

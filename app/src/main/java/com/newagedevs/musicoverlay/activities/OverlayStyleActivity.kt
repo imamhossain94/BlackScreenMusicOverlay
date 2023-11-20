@@ -7,21 +7,22 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.PixelFormat
+import android.graphics.drawable.GradientDrawable
 import android.media.AudioManager
-import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
+import android.util.TypedValue
 import android.view.View
 import android.view.animation.LinearInterpolator
 import android.view.animation.TranslateAnimation
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.newagedevs.musicoverlay.R
 import com.newagedevs.musicoverlay.databinding.ActivityOverlayStyleBinding
 import com.newagedevs.musicoverlay.extension.OnSwipeTouchListener
 import com.newagedevs.musicoverlay.extension.ResizeAnimation
-import com.newagedevs.musicoverlay.receiver.AudioSessionListener
+import com.newagedevs.musicoverlay.view.ColorPaletteView
 import me.bogerchan.niervisualizer.NierVisualizerManager
 import me.bogerchan.niervisualizer.renderer.IRenderer
 import me.bogerchan.niervisualizer.renderer.circle.CircleBarRenderer
@@ -35,14 +36,12 @@ import me.bogerchan.niervisualizer.renderer.columnar.ColumnarType4Renderer
 import me.bogerchan.niervisualizer.renderer.line.LineRenderer
 import me.bogerchan.niervisualizer.renderer.other.ArcStaticRenderer
 import me.bogerchan.niervisualizer.util.NierAnimator
-import java.io.FileInputStream
-import java.io.InputStream
-import java.util.Arrays
 import kotlin.random.Random
 
 
 @SuppressLint("MissingPermission")
-class OverlayStyleActivity : AppCompatActivity(), AudioSessionListener {
+class OverlayStyleActivity : AppCompatActivity(), ColorPaletteView.ColorSelectionListener {
+
 
     private var originalWidth: Int = 0
     private var originalHeight: Int = 0
@@ -142,16 +141,6 @@ class OverlayStyleActivity : AppCompatActivity(), AudioSessionListener {
         )
     )
 
-    private val mPlayer by lazy {
-        MediaPlayer().apply {
-            resources.openRawResourceFd(R.raw.demo_audio).apply {
-                setDataSource(fileDescriptor, startOffset, length)
-            }
-            isLooping = true
-            //setVolume(0f, 0f) // Mute the audio (setVolume(leftVolume, rightVolume))
-        }
-    }
-
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -183,7 +172,6 @@ class OverlayStyleActivity : AppCompatActivity(), AudioSessionListener {
             }
         })
 
-
         binding.surfaceView.setZOrderOnTop(true)
         binding.surfaceView.holder.setFormat(PixelFormat.TRANSLUCENT)
 
@@ -191,13 +179,15 @@ class OverlayStyleActivity : AppCompatActivity(), AudioSessionListener {
             mVisualizerManager?.start(binding.surfaceView, mRenderers[++mCurrentStyleIndex % mRenderers.size])
         }
 
+        binding.colorPaletteView.setColorSelectionListener(this)
+
 
         audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
 
         // Start checking every 2 seconds v
         handler.postDelayed(checkMusicRunnable, 10)
 
-        byteArrays = generateRandomByteArray(0)
+        byteArrays = generateRandomByteArray(512)
 
         mVisualizerManager = NierVisualizerManager().apply {
             init(object : NierVisualizerManager.NVDataSource {
@@ -242,7 +232,7 @@ class OverlayStyleActivity : AppCompatActivity(), AudioSessionListener {
             byteArrays = if (audioManager.isMusicActive) {
                 generateRandomByteArray(512)
             } else {
-                generateRandomByteArray(0)
+                ByteArray(512)
             }
             handler.postDelayed(this, 10)
         }
@@ -256,17 +246,6 @@ class OverlayStyleActivity : AppCompatActivity(), AudioSessionListener {
         handler.removeCallbacks(checkMusicRunnable)
 
     }
-
-
-
-    override fun onAudioSessionOpened(sessionId: Int) {
-
-    }
-
-    override fun onAudioSessionClosed() {
-
-    }
-
 
     private fun showClockStyleHolder() {
         val isOriginalSize = binding.overlayViewHolder.layoutParams?.let { layoutParams ->
@@ -326,5 +305,33 @@ class OverlayStyleActivity : AppCompatActivity(), AudioSessionListener {
             originalHeight = binding.overlayViewHolder.height
         }
     }
+
+    override fun onColorSelected(color: Int) {
+        binding.overlayViewHolder.background = createDrawableWithColor(color)
+    }
+
+    // Function to create a GradientDrawable with a specific color
+    private fun createDrawableWithColor(color: Int): GradientDrawable {
+        val drawable = GradientDrawable()
+        drawable.setColor(color)
+
+        val typedValue = TypedValue()
+        this.theme.resolveAttribute(
+            R.attr.colorSecondaryText,
+            typedValue,
+            true
+        )
+
+        drawable.setStroke(2.dpToPx(), ContextCompat.getColor(this, typedValue.resourceId))
+        drawable.cornerRadius = 16.dpToPx().toFloat()
+        return drawable
+    }
+
+    // Extension function to convert dp to pixels
+    private fun Int.dpToPx(): Int {
+        val scale = resources.displayMetrics.density
+        return (this * scale + 0.5f).toInt()
+    }
+
 
 }

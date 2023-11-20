@@ -11,11 +11,19 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.picker.app.SeslColorPickerDialog
 import com.newagedevs.musicoverlay.R
+
+
 
 class ColorPaletteView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
-) : LinearLayout(context, attrs, defStyleAttr) {
+) : LinearLayout(context, attrs, defStyleAttr),  SeslColorPickerDialog.OnColorSetListener{
+
+
+    interface ColorSelectionListener {
+        fun onColorSelected(color: Int)
+    }
 
     private val colorArray: IntArray = intArrayOf(
         R.color.paletteColor1, R.color.paletteColor2, R.color.paletteColor3,
@@ -23,6 +31,8 @@ class ColorPaletteView @JvmOverloads constructor(
         R.color.paletteColor7, R.color.paletteColor8, R.color.paletteColor9,
         R.color.paletteColor10, R.color.paletteColor11, R.color.paletteColor12
     ).map { ContextCompat.getColor(context, it) }.toIntArray()
+
+    private var colorSelectionListener: ColorSelectionListener? = null
 
     init {
         orientation = VERTICAL
@@ -35,7 +45,9 @@ class ColorPaletteView @JvmOverloads constructor(
         return (this * scale + 0.5f).toInt()
     }
 
-
+    fun setColorSelectionListener(listener: ColorSelectionListener) {
+        colorSelectionListener = listener
+    }
 
     private fun setupColorPalette() {
         for (row in 0 until 2) {
@@ -101,12 +113,16 @@ class ColorPaletteView @JvmOverloads constructor(
         resetColorCells()
         colorCell.isSelected = true
         colorCell.background = createCircleDrawableBorder(color)
+
+        colorSelectionListener?.onColorSelected(color)
     }
 
     private fun handleGradientColorSelection(colorCell: TextView) {
         resetColorCells()
         colorCell.isSelected = true
         colorCell.background = createCircleDrawableBorderGradient()
+
+        openColorPickerDialog()
     }
 
     private fun resetColorCells() {
@@ -156,6 +172,18 @@ class ColorPaletteView @JvmOverloads constructor(
         val shape = createCircleDrawableGradient(context) as GradientDrawable
         shape.setStroke(borderWidth, borderColor)
         return shape
+    }
+
+
+    private fun openColorPickerDialog() {
+        val dialog = SeslColorPickerDialog(context, this)
+        dialog.setTransparencyControlEnabled(true)
+        dialog.show()
+    }
+
+
+    override fun onColorSet(color: Int) {
+        colorSelectionListener?.onColorSelected(color)
     }
 
 }
