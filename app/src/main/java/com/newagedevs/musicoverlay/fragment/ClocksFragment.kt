@@ -8,10 +8,9 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import com.newagedevs.musicoverlay.adapter.ClockAdapter
 import com.newagedevs.musicoverlay.databinding.FragmentClocksBinding
-import com.newagedevs.musicoverlay.models.ClockModel
-import com.newagedevs.musicoverlay.models.ClockViewType
+import com.newagedevs.musicoverlay.models.Constants
 
-class ClocksFragment : Fragment() {
+class ClocksFragment : Fragment(), ClockAdapter.OnClockItemClickListener {
 
     private var _binding: FragmentClocksBinding? = null
     private val binding get() = _binding!!
@@ -19,7 +18,7 @@ class ClocksFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentClocksBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -28,9 +27,7 @@ class ClocksFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         // Access views using binding
-
-        val clockList = generateClockList()
-        val adapter = ClockAdapter(clockList)
+        val adapter = ClockAdapter(Constants.clockList, this)
 
         binding.recyclerView.layoutManager = GridLayoutManager(context, 3)
         binding.recyclerView.adapter = adapter
@@ -42,22 +39,13 @@ class ClocksFragment : Fragment() {
         _binding = null
     }
 
+    override fun onTextClockClick(position: Int) {
 
-
-    private fun generateClockList(): List<ClockModel> {
-        val clockList = mutableListOf<ClockModel>()
-
-        // Add TextClocks to the list
-        for (i in 0 until 3) {
-            clockList.add(ClockModel(ClockViewType.TEXT_CLOCK.ordinal))
-        }
-
-        // Add FrameClocks to the list
-        for (i in 0 until 3) {
-            clockList.add(ClockModel(ClockViewType.FRAME_CLOCK.ordinal))
-        }
-
-        return clockList
     }
+
+    override fun onFrameClockClick(position: Int) {
+
+    }
+
 
 }

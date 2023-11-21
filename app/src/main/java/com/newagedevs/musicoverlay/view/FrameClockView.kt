@@ -7,6 +7,7 @@ import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.View
 import com.newagedevs.musicoverlay.R
+import com.newagedevs.musicoverlay.models.ClockType
 import java.util.Calendar
 import kotlin.math.cos
 import kotlin.math.sin
@@ -19,11 +20,11 @@ class FrameClockView : View {
 
     private var showFrame: Boolean = false
     private var frameRadius: Float = 40f
-    private var frameColor: Int = 0x63FFFFFF
+    private var frameColor: Int = Color.GRAY
     private var frameThickness: Float = 2f
 
     private var showSecondsHand: Boolean = false
-    private var secondHandColor: Int = 0x63FFFFFF
+    private var secondHandColor: Int = Color.GRAY
     private var secondHandThickness: Float = 3f
 
     private var hourHandColor: Int = Color.WHITE
@@ -56,11 +57,11 @@ class FrameClockView : View {
 
                 showFrame = typedArray.getBoolean(R.styleable.FrameClockView_showFrame, false)
                 frameRadius = typedArray.getDimension(R.styleable.FrameClockView_frameRadius, 40f)
-                frameColor = typedArray.getColor(R.styleable.FrameClockView_frameColor, 0x63FFFFFF)
+                frameColor = typedArray.getColor(R.styleable.FrameClockView_frameColor, Color.GRAY)
                 frameThickness = typedArray.getDimension(R.styleable.FrameClockView_frameThickness, 2f)
 
                 showSecondsHand = typedArray.getBoolean(R.styleable.FrameClockView_showSecondsHand, false)
-                secondHandColor = typedArray.getColor(R.styleable.FrameClockView_secondHandColor, 0x63FFFFFF)
+                secondHandColor = typedArray.getColor(R.styleable.FrameClockView_secondHandColor, Color.GRAY)
                 secondHandThickness = typedArray.getDimension(R.styleable.FrameClockView_secondHandThickness, 3f)
 
                 hourHandColor = typedArray.getColor(R.styleable.FrameClockView_hourHandColor, Color.WHITE)
@@ -209,5 +210,17 @@ class FrameClockView : View {
     companion object {
         private const val REDRAW_RATE: Long = 20 // 20ms
     }
+
+    fun setAutoUpdate(value: Boolean = true) {
+        frameClockAutoUpdate = value
+    }
+    fun showFrame() {
+        showFrame = true
+    }
+
+    fun showSecondsHand() {
+        showSecondsHand = true
+    }
+
 }
 

@@ -10,16 +10,7 @@
     android:clickable="true">
 
     <com.newagedevs.musicoverlay.view.TextClockView
+        android:id="@+id/textClockView"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        app:textClockAutoUpdate="true"
-        app:timePattern="hh:mm"
-        app:hourColor="#FFFFFF"
-        app:hourTextSize="16sp"
-        app:minuteColor="#FF0000"
-        app:minuteTextSize="14sp"
-        app:meridianColor="#00FF00"
-        app:meridianTextSize="12sp"
-        app:clockType="Hour12"
-        app:clockStyle="VerticalNumber"/>
+        android:layout_height="100dp" />
 </LinearLayout>

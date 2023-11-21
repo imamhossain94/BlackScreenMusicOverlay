@@ -26,7 +26,7 @@ class TextClockView : LinearLayout {
     private var mHourTextSize: Float = 26f
     private var mMinuteColor: Int = Color.RED
     private var mMinuteTextSize: Float = 26f
-    private var mMeridianColor: Int = 0x63FFFFFF
+    private var mMeridianColor: Int = Color.GRAY
     private var mMeridianTextSize: Float = 26f
     private var mClockType: ClockType = ClockType.HOUR_12
     private var mClockStyle: ClockStyle = ClockStyle.VERTICAL_NUMBER
@@ -48,7 +48,7 @@ class TextClockView : LinearLayout {
         mHourTextSize = typedArray.getDimension(R.styleable.TextClockView_hourTextSize, 26f)
         mMinuteColor = typedArray.getColor(R.styleable.TextClockView_minuteColor, ContextCompat.getColor(context, R.color.lightRed))
         mMinuteTextSize = typedArray.getDimension(R.styleable.TextClockView_minuteTextSize, 26f)
-        mMeridianColor = typedArray.getColor(R.styleable.TextClockView_meridianColor, 0x63FFFFFF)
+        mMeridianColor = typedArray.getColor(R.styleable.TextClockView_meridianColor, Color.GRAY)
         mMeridianTextSize = typedArray.getDimension(R.styleable.TextClockView_meridianTextSize, 26f)
         val clockTypeValue = typedArray.getInt(R.styleable.TextClockView_clockType, 0)
         mClockType = if (clockTypeValue == 1) ClockType.HOUR_24 else ClockType.HOUR_12
@@ -191,6 +191,16 @@ class TextClockView : LinearLayout {
             number < 100 -> tens[number / 10] + if (number % 10 != 0) " " + units[number % 10] else ""
             else -> throw IllegalArgumentException("Number must be less than 100")
         }
+    }
+
+    fun setClockStyle(style: ClockStyle) {
+        mClockStyle = style
+        updateTime()
+    }
+
+    fun setClockType(type: ClockType) {
+        mClockType = type
+        updateTime()
     }
 
     // Function to set hour view properties
