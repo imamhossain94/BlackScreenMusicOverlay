@@ -1,19 +1,27 @@
 package com.newagedevs.musicoverlay.fragment
 
+import android.graphics.Color
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffColorFilter
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SeekBar
+import androidx.appcompat.widget.SeslSeekBar
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.BlendModeColorFilterCompat
+import androidx.core.graphics.BlendModeCompat
 import androidx.fragment.app.Fragment
 import com.newagedevs.musicoverlay.R
 import com.newagedevs.musicoverlay.activities.ClockStyleActivity
 import com.newagedevs.musicoverlay.databinding.FragmentAppearanceBinding
 import com.newagedevs.musicoverlay.view.ColorPaletteView
 
-class AppearanceFragment : Fragment(), ColorPaletteView.ColorSelectionListener {
+
+class AppearanceFragment : Fragment(), ColorPaletteView.ColorSelectionListener, SeslSeekBar.OnSeekBarChangeListener {
 
     private var _binding: FragmentAppearanceBinding? = null
     private val binding get() = _binding!!
@@ -31,6 +39,8 @@ class AppearanceFragment : Fragment(), ColorPaletteView.ColorSelectionListener {
 
         // Access views using binding
         binding.colorPaletteView.setColorSelectionListener(this)
+        binding.transparencySeekBar.setOnSeekBarChangeListener(this)
+        binding.transparencySeekBar.max = 100
     }
 
     override fun onDestroyView() {
@@ -40,29 +50,17 @@ class AppearanceFragment : Fragment(), ColorPaletteView.ColorSelectionListener {
 
     override fun onColorSelected(color: Int) {
         val activityBinding = (requireActivity() as ClockStyleActivity).binding
-        activityBinding.clockViewHolder.background = createDrawableWithColor(color)
+        activityBinding.clockPreview.setForegroundColor(color)
     }
 
-    // Function to create a GradientDrawable with a specific color
-    private fun createDrawableWithColor(color: Int): GradientDrawable {
-        val drawable = GradientDrawable()
-        drawable.setColor(color)
-
-        val typedValue = TypedValue()
-        requireActivity().theme.resolveAttribute(
-            R.attr.colorSecondaryText,
-            typedValue,
-            true
-        )
-
-        drawable.setStroke(2.dpToPx(), ContextCompat.getColor(requireContext(), typedValue.resourceId))
-        drawable.cornerRadius = 16.dpToPx().toFloat()
-        return drawable
+    override fun onProgressChanged(seekBar: SeslSeekBar?, progress: Int, fromUser: Boolean) {
+        val activityBinding = (requireActivity() as ClockStyleActivity).binding
+        activityBinding.clockPreview.setOpacity((105f - progress.toFloat()) / 100.0f)
     }
 
-    // Extension function to convert dp to pixels
-    private fun Int.dpToPx(): Int {
-        val scale = resources.displayMetrics.density
-        return (this * scale + 0.5f).toInt()
-    }
+    override fun onStartTrackingTouch(seekBar: SeslSeekBar?) { }
+
+    override fun onStopTrackingTouch(seekBar: SeslSeekBar?) { }
+
+
 }

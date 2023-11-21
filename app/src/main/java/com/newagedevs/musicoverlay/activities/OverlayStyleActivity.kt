@@ -17,6 +17,7 @@ import android.view.View
 import android.view.animation.LinearInterpolator
 import android.view.animation.TranslateAnimation
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SeslSeekBar
 import androidx.core.content.ContextCompat
 import com.newagedevs.musicoverlay.R
 import com.newagedevs.musicoverlay.databinding.ActivityOverlayStyleBinding
@@ -40,7 +41,7 @@ import kotlin.random.Random
 
 
 @SuppressLint("MissingPermission")
-class OverlayStyleActivity : AppCompatActivity(), ColorPaletteView.ColorSelectionListener {
+class OverlayStyleActivity : AppCompatActivity(), ColorPaletteView.ColorSelectionListener, SeslSeekBar.OnSeekBarChangeListener {
 
 
     private var originalWidth: Int = 0
@@ -49,96 +50,14 @@ class OverlayStyleActivity : AppCompatActivity(), ColorPaletteView.ColorSelectio
 
     private var mCurrentStyleIndex = 0
     private var mVisualizerManager: NierVisualizerManager? = null
+
     private val mRenderers = arrayOf<Array<IRenderer>>(
         arrayOf(ColumnarType1Renderer()),
         arrayOf(ColumnarType2Renderer()),
         arrayOf(ColumnarType3Renderer()),
-        arrayOf(ColumnarType4Renderer()),
         arrayOf(LineRenderer(true)),
-        arrayOf(CircleBarRenderer()),
         arrayOf(CircleRenderer(true)),
-//        arrayOf(
-//            CircleRenderer(true),
-//            CircleBarRenderer(),
-//            ColumnarType4Renderer()
-//        )
-        arrayOf(CircleRenderer(true), CircleBarRenderer(), LineRenderer(true)),
-        arrayOf(
-            ArcStaticRenderer(
-                paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-                    color = Color.parseColor("#cfa9d0fd")
-                }),
-            ArcStaticRenderer(
-                paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-                    color = Color.parseColor("#dad2eafe")
-                },
-                amplificationOuter = .83f,
-                startAngle = -90f,
-                sweepAngle = 225f
-            ),
-            ArcStaticRenderer(
-                paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-                    color = Color.parseColor("#7fa9d0fd")
-                },
-                amplificationOuter = .93f,
-                amplificationInner = 0.8f,
-                startAngle = -45f,
-                sweepAngle = 135f
-            ),
-            CircleSolidRenderer(
-                paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-                    color = Color.parseColor("#d2eafe")
-                },
-                amplification = .45f
-            ),
-            CircleBarRenderer(
-                paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-                    strokeWidth = 4f
-                    color = Color.parseColor("#efe3f2ff")
-                },
-                modulationStrength = 1f,
-                type = CircleBarRenderer.Type.TYPE_A_AND_TYPE_B,
-                amplification = 1f, divisions = 8
-            ),
-            CircleBarRenderer(
-                paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-                    strokeWidth = 5f
-                    color = Color.parseColor("#e3f2ff")
-                },
-                modulationStrength = 0.1f,
-                amplification = 1.2f,
-                divisions = 8
-            ),
-            CircleWaveRenderer(
-                paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-                    strokeWidth = 6f
-                    color = Color.WHITE
-                },
-                modulationStrength = 0.2f,
-                type = CircleWaveRenderer.Type.TYPE_B,
-                amplification = 1f,
-                animator = NierAnimator(
-                    interpolator = LinearInterpolator(),
-                    duration = 20000,
-                    values = floatArrayOf(0f, -360f)
-                )
-            ),
-            CircleWaveRenderer(
-                paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-                    strokeWidth = 6f
-                    color = Color.parseColor("#7fcee7fe")
-                },
-                modulationStrength = 0.2f,
-                type = CircleWaveRenderer.Type.TYPE_B,
-                amplification = 1f,
-                divisions = 8,
-                animator = NierAnimator(
-                    interpolator = LinearInterpolator(),
-                    duration = 20000,
-                    values = floatArrayOf(0f, -360f)
-                )
-            )
-        )
+        arrayOf(CircleRenderer(true), CircleBarRenderer(), LineRenderer(true))
     )
 
     @SuppressLint("ClickableViewAccessibility")
@@ -180,6 +99,8 @@ class OverlayStyleActivity : AppCompatActivity(), ColorPaletteView.ColorSelectio
         }
 
         binding.colorPaletteView.setColorSelectionListener(this)
+        binding.transparencySeekBar.setOnSeekBarChangeListener(this)
+        binding.transparencySeekBar.max = 100
 
 
         audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
@@ -187,7 +108,7 @@ class OverlayStyleActivity : AppCompatActivity(), ColorPaletteView.ColorSelectio
         // Start checking every 2 seconds v
         handler.postDelayed(checkMusicRunnable, 10)
 
-        byteArrays = generateRandomByteArray(512)
+        byteArrays = generateRandomByteArray(128)
 
         mVisualizerManager = NierVisualizerManager().apply {
             init(object : NierVisualizerManager.NVDataSource {
@@ -210,30 +131,31 @@ class OverlayStyleActivity : AppCompatActivity(), ColorPaletteView.ColorSelectio
 
     }
 
-    private var byteArrays = ByteArray(512)
+    private var byteArrays = ByteArray(128)
 
     private lateinit var audioManager: AudioManager
     private val handler = Handler(Looper.getMainLooper())
 
-//    fun generateRandomByteArray(size: Int): ByteArray {
-//        val random = Random()
-//        val byteArray = ByteArray(size)
-//        random.nextBytes(byteArray)
-//        return byteArray
-//    }
-
     fun generateRandomByteArray(size: Int): ByteArray {
-        val random = Random
-        return ByteArray(size) { random.nextInt(120, 512).toByte() }
+        val byteArray = ByteArray(size)
+        Random.nextBytes(byteArray)
+        return byteArray
     }
+
+//    private val checkMusicRunnable = object : Runnable {
+//        override fun run() {
+//            byteArrays = if (audioManager.isMusicActive) {
+//                generateRandomByteArray(512)
+//            } else {
+//                ByteArray(512)
+//            }
+//            handler.postDelayed(this, 10)
+//        }
+//    }
 
     private val checkMusicRunnable = object : Runnable {
         override fun run() {
-            byteArrays = if (audioManager.isMusicActive) {
-                generateRandomByteArray(512)
-            } else {
-                ByteArray(512)
-            }
+            byteArrays = generateRandomByteArray(128)
             handler.postDelayed(this, 10)
         }
     }
@@ -324,6 +246,11 @@ class OverlayStyleActivity : AppCompatActivity(), ColorPaletteView.ColorSelectio
 
         drawable.setStroke(2.dpToPx(), ContextCompat.getColor(this, typedValue.resourceId))
         drawable.cornerRadius = 16.dpToPx().toFloat()
+
+        if(binding.transparencySeekBar.progress != 0) {
+            drawable.alpha = 300 - (binding.transparencySeekBar.progress * 2.55).toInt()
+        }
+
         return drawable
     }
 
@@ -332,6 +259,17 @@ class OverlayStyleActivity : AppCompatActivity(), ColorPaletteView.ColorSelectio
         val scale = resources.displayMetrics.density
         return (this * scale + 0.5f).toInt()
     }
+
+    override fun onProgressChanged(seekBar: SeslSeekBar?, progress: Int, fromUser: Boolean) {
+        binding.overlayViewHolder.background.apply {
+            alpha = 300 - (progress * 2.55).toInt()
+        }
+    }
+
+    override fun onStartTrackingTouch(seekBar: SeslSeekBar?) { }
+
+    override fun onStopTrackingTouch(seekBar: SeslSeekBar?) { }
+
 
 
 }

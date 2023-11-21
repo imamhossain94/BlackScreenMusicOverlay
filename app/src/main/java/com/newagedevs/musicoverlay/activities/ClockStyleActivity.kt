@@ -1,14 +1,10 @@
 package com.newagedevs.musicoverlay.activities
 
 import android.annotation.SuppressLint
-import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
-import android.util.TypedValue
 import android.view.View
 import android.view.animation.TranslateAnimation
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
-import androidx.picker.app.SeslColorPickerDialog
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
@@ -19,7 +15,6 @@ import com.newagedevs.musicoverlay.extension.OnSwipeTouchListener
 import com.newagedevs.musicoverlay.extension.ResizeAnimation
 import com.newagedevs.musicoverlay.fragment.AppearanceFragment
 import com.newagedevs.musicoverlay.fragment.ClocksFragment
-import com.newagedevs.musicoverlay.view.ColorPaletteView
 
 class ClockStyleActivity : AppCompatActivity() {
 
@@ -70,7 +65,7 @@ class ClockStyleActivity : AppCompatActivity() {
         adapter.addFragment( ClocksFragment(),"Select Clock")
         adapter.addFragment( AppearanceFragment(),"Appearance")
         val viewPager: ViewPager2 = binding.viewPager
-        viewPager.setUserInputEnabled(false)
+        viewPager.isUserInputEnabled = false
         viewPager.adapter = adapter
         viewPager.currentItem = 0
 

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="10dp"
+    android:layout_margin="5dp"
+    android:background="@drawable/rounded_corners2"
+    android:orientation="vertical"
+    android:clickable="true">
+
+    <com.newagedevs.musicoverlay.view.FrameClockView
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        app:showFrame="true"/>
+</LinearLayout>

@@ -192,5 +192,48 @@ class TextClockView : LinearLayout {
             else -> throw IllegalArgumentException("Number must be less than 100")
         }
     }
+
+    // Function to set hour view properties
+    fun setHourTextColor(color: Int) {
+        mHourTextView?.setTextColor(color)
+    }
+
+    fun setHourTextSize(size: Float) {
+        mHourTextView?.setTextSize(TypedValue.COMPLEX_UNIT_PX, size)
+    }
+
+    // Function to set minute view properties
+    fun setMinuteTextColor(color: Int) {
+        mMinuteTextView?.setTextColor(color)
+    }
+
+    fun setMinuteTextSize(size: Float) {
+        mMinuteTextView?.setTextSize(TypedValue.COMPLEX_UNIT_PX, size)
+    }
+
+    // Function to set meridian view properties
+    fun setMeridianTextColor(color: Int) {
+        mMeridianTextView?.setTextColor(color)
+    }
+
+    fun setMeridianTextSize(size: Float) {
+        mMeridianTextView?.setTextSize(TypedValue.COMPLEX_UNIT_PX, size)
+    }
+
+    // Foreground view properties
+    fun setForegroundColor(color: Int) {
+        mHourTextView?.setTextColor(color)
+        mMinuteTextView?.setTextColor(color)
+        mMeridianTextView?.setTextColor(color)
+    }
+
+    fun setOpacity(value: Float) {
+        mHourTextView?.alpha = value
+        mMinuteTextView?.alpha = value
+        mMeridianTextView?.alpha = value
+    }
+
+
+
 }
 

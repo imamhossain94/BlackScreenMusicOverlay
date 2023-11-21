@@ -28,6 +28,7 @@
             android:orientation="horizontal">
 
             <com.newagedevs.musicoverlay.view.TextClockView
+                android:id="@+id/clock_preview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:textClockAutoUpdate="true"
