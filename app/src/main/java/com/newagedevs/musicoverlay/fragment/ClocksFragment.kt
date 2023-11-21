@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import com.newagedevs.musicoverlay.adapter.ClockAdapter
@@ -40,11 +41,19 @@ class ClocksFragment : Fragment(), ClockAdapter.OnClockItemClickListener {
     }
 
     override fun onTextClockClick(position: Int) {
-
+        // Handle click on TextClock at the specified position
+        showToast("TextClock clicked at position $position")
     }
 
     override fun onFrameClockClick(position: Int) {
+        // Handle click on FrameClock at the specified position
+        showToast("FrameClock clicked at position $position")
+    }
 
+    // ... Other activity code ...
+
+    private fun showToast(message: String) {
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }
 
 
