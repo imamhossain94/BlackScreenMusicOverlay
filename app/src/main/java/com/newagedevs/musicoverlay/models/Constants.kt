@@ -28,16 +28,22 @@ class Constants {
 
             // Frame Clocks
             ClockModel(
-                viewType = ClockViewType.FRAME_CLOCK.ordinal
+                viewType = ClockViewType.FRAME_CLOCK.ordinal,
+                autoUpdate = false,
+                showFrame = false,
+                showSecondsHand = false
             ),
             ClockModel(
                 viewType = ClockViewType.FRAME_CLOCK.ordinal,
-                autoUpdate = true,
+                autoUpdate = false,
+                showFrame = false,
                 showSecondsHand = true
             ),
             ClockModel(
                 viewType = ClockViewType.FRAME_CLOCK.ordinal,
-                showFrame = true
+                autoUpdate = false,
+                showFrame = true,
+                showSecondsHand = true
             )
         )
 

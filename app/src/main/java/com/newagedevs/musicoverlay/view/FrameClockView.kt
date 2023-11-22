@@ -7,6 +7,7 @@ import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.View
 import com.newagedevs.musicoverlay.R
+import com.newagedevs.musicoverlay.models.ClockModel
 import com.newagedevs.musicoverlay.models.ClockType
 import java.util.Calendar
 import kotlin.math.cos
@@ -32,6 +33,8 @@ class FrameClockView : View {
 
     private var minuteHandColor: Int = Color.RED
     private var minuteHandThickness: Float = 5f
+
+    private var paintAlpha: Int = 255
 
     constructor(context: Context) : super(context) {
         init(context, null)
@@ -111,6 +114,7 @@ class FrameClockView : View {
         val frameSize = viewRadius * 1.1f // Adjust the frame size as needed
         val framePaint = Paint()
         framePaint.color = frameColor
+        framePaint.alpha = paintAlpha
         framePaint.style = Paint.Style.STROKE
         framePaint.strokeWidth = frameThickness.takeIf { it > 0 } ?: (viewRadius * 0.01f)
 
@@ -137,6 +141,7 @@ class FrameClockView : View {
         mHandPaint!!.strokeWidth = thickness
         // coordinates of hand's end
         mHandPaint!!.color = hourHandColor
+        mHandPaint!!.alpha = paintAlpha
         val angle = hoursAngle
         val x = getStopX(viewRadius, handRadius, angle)
         val y = getStopY(viewRadius, handRadius, angle)
@@ -151,6 +156,7 @@ class FrameClockView : View {
         // coordinates of hand's end
         val angle = minutesAngle
         mHandPaint!!.color = minuteHandColor
+        mHandPaint!!.alpha = paintAlpha
         val x = getStopX(viewRadius, handRadius, angle)
         val y = getStopY(viewRadius, handRadius, angle)
         canvas.drawLine(viewRadius, viewRadius, x, y, mHandPaint!!)
@@ -164,6 +170,7 @@ class FrameClockView : View {
         // coordinates of hand's end
         val angle = secondsAngle
         mHandPaint!!.color = secondHandColor
+        mHandPaint!!.alpha = paintAlpha
         val x = getStopX(viewRadius, handRadius, angle)
         val y = getStopY(viewRadius, handRadius, angle)
         canvas.drawLine(viewRadius, viewRadius, x, y, mHandPaint!!)
@@ -173,6 +180,7 @@ class FrameClockView : View {
         val viewRadius = height / 2f
         val nailRadius = height * 0.02f
         mHandPaint!!.color = Color.BLACK
+        mHandPaint!!.alpha = paintAlpha
         canvas.drawCircle(viewRadius, viewRadius, nailRadius, mHandPaint!!)
     }
 
@@ -213,13 +221,36 @@ class FrameClockView : View {
 
     fun setAutoUpdate(value: Boolean = true) {
         frameClockAutoUpdate = value
+        invalidate()
     }
-    fun showFrame() {
-        showFrame = true
+    fun showFrame(value: Boolean = true) {
+        showFrame = value
+        invalidate()
     }
 
-    fun showSecondsHand() {
-        showSecondsHand = true
+    fun showSecondsHand(value: Boolean = true) {
+        showSecondsHand = value
+        invalidate()
+    }
+
+    // Foreground view properties
+    fun setForegroundColor(color: Int) {
+        frameColor = color
+        secondHandColor = color
+        hourHandColor = color
+        minuteHandColor = color
+        invalidate()
+    }
+
+    fun setOpacity(value: Int) {
+        paintAlpha = value
+        invalidate()
+    }
+
+    fun setAttributes(attr: ClockModel) {
+        setAutoUpdate(attr.autoUpdate)
+        showFrame(attr.showFrame)
+        showSecondsHand(attr.showSecondsHand)
     }
 
 }

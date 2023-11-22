@@ -37,24 +37,4 @@ data class ClockModel(
     var minuteHandThickness: Float = 5f,
     var secondHandThickness: Float = 3f,
 
-
 )
-
-
-//<!-- Frame Attributes -->
-//        <attr name="frameRadius" format="dimension"/>
-//        <attr name="frameColor" format="color"/>
-//        <attr name="frameThickness" format="dimension"/>
-//
-//        <!-- Seconds Hand Attributes -->
-//        <attr name="showSecondsHand" format="boolean"/>
-//        <attr name="secondHandColor" format="color"/>
-//        <attr name="secondHandThickness" format="dimension"/>
-//
-//        <!-- Hour Hand Attributes -->
-//        <attr name="hourHandColor" format="color"/>
-//        <attr name="hourHandThickness" format="dimension"/>
-//
-//        <!-- Minute Hand Attributes -->
-//        <attr name="minuteHandColor" format="color"/>
-//        <attr name="minuteHandThickness" format="dimension"/>

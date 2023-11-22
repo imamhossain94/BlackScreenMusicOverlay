@@ -1,25 +1,14 @@
 package com.newagedevs.musicoverlay.fragment
 
-import android.graphics.Color
-import android.graphics.PorterDuff
-import android.graphics.PorterDuffColorFilter
-import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
-import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.SeekBar
 import androidx.appcompat.widget.SeslSeekBar
-import androidx.core.content.ContextCompat
-import androidx.core.graphics.BlendModeColorFilterCompat
-import androidx.core.graphics.BlendModeCompat
 import androidx.fragment.app.Fragment
-import com.newagedevs.musicoverlay.R
 import com.newagedevs.musicoverlay.activities.ClockStyleActivity
 import com.newagedevs.musicoverlay.databinding.FragmentAppearanceBinding
 import com.newagedevs.musicoverlay.view.ColorPaletteView
-
 
 class AppearanceFragment : Fragment(), ColorPaletteView.ColorSelectionListener, SeslSeekBar.OnSeekBarChangeListener {
 
@@ -50,17 +39,18 @@ class AppearanceFragment : Fragment(), ColorPaletteView.ColorSelectionListener, 
 
     override fun onColorSelected(color: Int) {
         val activityBinding = (requireActivity() as ClockStyleActivity).binding
-        activityBinding.clockPreview.setForegroundColor(color)
+        activityBinding.textClockPreview.setForegroundColor(color)
+        activityBinding.frameClockPreview.setForegroundColor(color)
     }
 
     override fun onProgressChanged(seekBar: SeslSeekBar?, progress: Int, fromUser: Boolean) {
         val activityBinding = (requireActivity() as ClockStyleActivity).binding
-        activityBinding.clockPreview.setOpacity((105f - progress.toFloat()) / 100.0f)
+        activityBinding.textClockPreview.setOpacity((105f - progress.toFloat()) / 100.0f)
+        activityBinding.frameClockPreview.setOpacity(300 - (progress * 2.55).toInt())
     }
 
     override fun onStartTrackingTouch(seekBar: SeslSeekBar?) { }
 
     override fun onStopTrackingTouch(seekBar: SeslSeekBar?) { }
-
 
 }

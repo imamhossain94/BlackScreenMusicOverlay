@@ -11,6 +11,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import com.newagedevs.musicoverlay.R
+import com.newagedevs.musicoverlay.models.ClockModel
 import com.newagedevs.musicoverlay.models.ClockStyle
 import com.newagedevs.musicoverlay.models.ClockType
 import java.text.ParseException
@@ -241,6 +242,13 @@ class TextClockView : LinearLayout {
         mHourTextView?.alpha = value
         mMinuteTextView?.alpha = value
         mMeridianTextView?.alpha = value
+    }
+
+    fun setAttributes(attr: ClockModel) {
+        setClockStyle(attr.clockStyle)
+        setClockType(attr.clockType)
+        setHourTextSize(100f)
+        setMinuteTextSize(100f)
     }
 
 

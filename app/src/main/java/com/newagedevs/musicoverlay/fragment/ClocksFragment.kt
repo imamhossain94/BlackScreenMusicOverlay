@@ -1,12 +1,13 @@
 package com.newagedevs.musicoverlay.fragment
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
+import com.newagedevs.musicoverlay.activities.ClockStyleActivity
 import com.newagedevs.musicoverlay.adapter.ClockAdapter
 import com.newagedevs.musicoverlay.databinding.FragmentClocksBinding
 import com.newagedevs.musicoverlay.models.Constants
@@ -28,10 +29,12 @@ class ClocksFragment : Fragment(), ClockAdapter.OnClockItemClickListener {
         super.onViewCreated(view, savedInstanceState)
 
         // Access views using binding
-        val adapter = ClockAdapter(Constants.clockList, this)
+        val adapter = ClockAdapter(Constants.clockList, this, selectedItemPosition = 0)
 
-        binding.recyclerView.layoutManager = GridLayoutManager(context, 3)
+        binding.recyclerView.layoutManager = context?.let { NonScrollableGridLayoutManager(it, 3) }
         binding.recyclerView.adapter = adapter
+
+
 
     }
 
@@ -41,20 +44,30 @@ class ClocksFragment : Fragment(), ClockAdapter.OnClockItemClickListener {
     }
 
     override fun onTextClockClick(position: Int) {
-        // Handle click on TextClock at the specified position
-        showToast("TextClock clicked at position $position")
+        val activityBinding = (requireActivity() as ClockStyleActivity).binding
+        activityBinding.textClockPreview.visibility = View.VISIBLE
+        activityBinding.frameClockPreview.visibility = View.GONE
+
+        activityBinding.textClockPreview.setAttributes(Constants.clockList[position])
     }
 
     override fun onFrameClockClick(position: Int) {
-        // Handle click on FrameClock at the specified position
-        showToast("FrameClock clicked at position $position")
+        val activityBinding = (requireActivity() as ClockStyleActivity).binding
+        activityBinding.textClockPreview.visibility = View.GONE
+        activityBinding.frameClockPreview.visibility = View.VISIBLE
+
+        activityBinding.frameClockPreview.setAttributes(Constants.clockList[position])
     }
 
-    // ... Other activity code ...
+    inner class NonScrollableGridLayoutManager(context: Context, spanCount: Int) : GridLayoutManager(context, spanCount) {
 
-    private fun showToast(message: String) {
-        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+        override fun canScrollHorizontally(): Boolean {
+            return false
+        }
+
+        override fun canScrollVertically(): Boolean {
+            return false
+        }
+
     }
-
-
 }

@@ -25,21 +25,20 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:gravity="center_horizontal">
 
             <com.newagedevs.musicoverlay.view.TextClockView
-                android:id="@+id/clock_preview"
+                android:id="@+id/textClock_preview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:textClockAutoUpdate="true"
-                app:timePattern="hh:mm"
-                app:hourColor="#FFFFFF"
-                app:hourTextSize="50sp"
-                app:minuteColor="#FF0000"
-                app:minuteTextSize="50sp"
-                app:meridianColor="#00FF00"
-                app:clockType="Hour12"
-                app:clockStyle="VerticalNumber"/>
+                android:visibility="visible"/>
+
+            <com.newagedevs.musicoverlay.view.FrameClockView
+                android:id="@+id/frameClock_preview"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:visibility="gone"/>
 
         </LinearLayout>
 

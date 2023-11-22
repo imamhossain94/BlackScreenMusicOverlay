@@ -10,7 +10,7 @@ import com.newagedevs.musicoverlay.models.ClockViewType
 import com.newagedevs.musicoverlay.view.FrameClockView
 import com.newagedevs.musicoverlay.view.TextClockView
 
-class ClockAdapter(private val clockList: List<ClockModel>, private val listener: OnClockItemClickListener) :
+class ClockAdapter(private val clockList: List<ClockModel>, private val listener: OnClockItemClickListener, private var selectedItemPosition: Int = RecyclerView.NO_POSITION) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     interface OnClockItemClickListener {
@@ -18,7 +18,7 @@ class ClockAdapter(private val clockList: List<ClockModel>, private val listener
         fun onFrameClockClick(position: Int)
     }
 
-    private var selectedItemPosition: Int = RecyclerView.NO_POSITION
+//    private var selectedItemPosition: Int = RecyclerView.NO_POSITION
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val viewHolder = when (viewType) {
@@ -96,18 +96,18 @@ class ClockAdapter(private val clockList: List<ClockModel>, private val listener
         // Example: Set properties of FrameClockViewHolder based on ClockModel
         val view = holder.itemView.findViewById<FrameClockView>(R.id.frameClockView)
 
-        if(clockModel.autoUpdate) view.setAutoUpdate()
-        if(clockModel.showFrame) view.showFrame()
-        if(clockModel.showSecondsHand) view.showSecondsHand()
+        view.setAutoUpdate(clockModel.autoUpdate)
+        view.showFrame(clockModel.showFrame)
+        view.showSecondsHand(clockModel.showSecondsHand)
     }
 
     private fun updateItemView(itemView: View, position: Int) {
         if (selectedItemPosition == position) {
             // Apply border or background color to highlight the selected item
-            itemView.setBackgroundResource(R.drawable.selected_item_background)
+            itemView.setBackgroundResource(R.drawable.selected_clock_item_background)
         } else {
             // Reset the view appearance
-            itemView.setBackgroundResource(0)
+            itemView.setBackgroundResource(R.drawable.clock_item_background)
         }
     }
 }
