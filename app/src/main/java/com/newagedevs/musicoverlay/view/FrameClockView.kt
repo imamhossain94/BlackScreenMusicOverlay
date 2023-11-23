@@ -1,14 +1,17 @@
 package com.newagedevs.musicoverlay.view
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.RectF
 import android.util.AttributeSet
+import android.view.Gravity
 import android.view.View
 import com.newagedevs.musicoverlay.R
 import com.newagedevs.musicoverlay.models.ClockModel
-import com.newagedevs.musicoverlay.models.ClockType
+import com.newagedevs.musicoverlay.models.ClockStyle
 import java.util.Calendar
 import kotlin.math.cos
 import kotlin.math.sin
@@ -51,6 +54,7 @@ class FrameClockView : View {
         mHandPaint = Paint(Paint.ANTI_ALIAS_FLAG)
         mHandPaint!!.strokeCap = Paint.Cap.ROUND
         mHandPaint!!.isAntiAlias = true
+
 
         // Load custom attributes from XML layout
         attrs?.let {
@@ -108,25 +112,22 @@ class FrameClockView : View {
         }
     }
 
-    private fun drawRectClockFrame(canvas: Canvas) {
-        val padding = 12 + (frameThickness.takeIf { it > 0 }?.div(2f) ?: 0).toInt()
-        val viewRadius = width / 2f - padding
-        val frameSize = viewRadius * 1.1f // Adjust the frame size as needed
-        val framePaint = Paint()
-        framePaint.color = frameColor
-        framePaint.alpha = paintAlpha
-        framePaint.style = Paint.Style.STROKE
-        framePaint.strokeWidth = frameThickness.takeIf { it > 0 } ?: (viewRadius * 0.01f)
+    private fun drawRectClockFrame(
+        canvas: Canvas
+    ) {
+        val rectF = RectF()
+        val padding = (frameThickness.takeIf { it > 0 }?.div(2f) ?: 16).toFloat()
+        val cornerRadius = frameRadius.takeIf { it > 0 } ?: 20
 
-        // Calculate the coordinates of the rounded square
-        val left = (viewRadius + padding) - frameSize
-        val top = (viewRadius + padding) - frameSize
-        val right = (viewRadius + padding) + frameSize
-        val bottom = (viewRadius + padding) + frameSize
-        val cornerRadius = frameRadius.takeIf { it > 0 } ?: (frameSize * 0.5f)
+        val framePaint = Paint().apply {
+            color = frameColor
+            alpha = paintAlpha
+            style = Paint.Style.STROKE
+            strokeWidth = frameThickness.takeIf { it > 0 } ?: 5f
+        }
 
-        // Draw the rounded square
-        canvas.drawRoundRect(left, top, right, bottom, cornerRadius, cornerRadius, framePaint)
+        rectF.set(padding, padding, (width - padding), (height - padding))
+        canvas.drawRoundRect(rectF, cornerRadius.toFloat(), cornerRadius.toFloat(), framePaint)
     }
 
     private fun drawBackground(canvas: Canvas) {
@@ -251,6 +252,7 @@ class FrameClockView : View {
         setAutoUpdate(attr.autoUpdate)
         showFrame(attr.showFrame)
         showSecondsHand(attr.showSecondsHand)
+
     }
 
 }

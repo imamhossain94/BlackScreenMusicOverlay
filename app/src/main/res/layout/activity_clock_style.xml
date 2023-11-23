@@ -36,8 +36,8 @@
 
             <com.newagedevs.musicoverlay.view.FrameClockView
                 android:id="@+id/frameClock_preview"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
                 android:visibility="gone"/>
 
         </LinearLayout>
