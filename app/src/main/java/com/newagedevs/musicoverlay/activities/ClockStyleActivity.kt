@@ -15,6 +15,7 @@ import com.newagedevs.musicoverlay.extension.OnSwipeTouchListener
 import com.newagedevs.musicoverlay.extension.ResizeAnimation
 import com.newagedevs.musicoverlay.fragment.AppearanceFragment
 import com.newagedevs.musicoverlay.fragment.ClocksFragment
+import com.newagedevs.musicoverlay.models.Constants
 
 class ClockStyleActivity : AppCompatActivity() {
 
@@ -50,6 +51,8 @@ class ClockStyleActivity : AppCompatActivity() {
             false
         }
 
+        binding.textClockPreview.setHourTextSize(100f)
+        binding.textClockPreview.setMinuteTextSize(100f)
         binding.clockViewHolder.setOnTouchListener(object : OnSwipeTouchListener(this@ClockStyleActivity) {
             override fun onSwipeTop() {
                 showClockStyleHolder()
@@ -58,7 +61,6 @@ class ClockStyleActivity : AppCompatActivity() {
                 hideClockStyleHolder()
             }
         })
-
 
         val adapter = ViewPagerAdapter(this@ClockStyleActivity)
 
