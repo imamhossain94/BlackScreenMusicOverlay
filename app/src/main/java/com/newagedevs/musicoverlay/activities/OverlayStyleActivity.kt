@@ -1,11 +1,8 @@
 package com.newagedevs.musicoverlay.activities
 
-//import java.util.Random
-
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
-import android.graphics.Paint
 import android.graphics.PixelFormat
 import android.graphics.drawable.GradientDrawable
 import android.media.AudioManager
@@ -14,7 +11,6 @@ import android.os.Handler
 import android.os.Looper
 import android.util.TypedValue
 import android.view.View
-import android.view.animation.LinearInterpolator
 import android.view.animation.TranslateAnimation
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SeslSeekBar
@@ -23,26 +19,15 @@ import com.newagedevs.musicoverlay.R
 import com.newagedevs.musicoverlay.databinding.ActivityOverlayStyleBinding
 import com.newagedevs.musicoverlay.extension.OnSwipeTouchListener
 import com.newagedevs.musicoverlay.extension.ResizeAnimation
+import com.newagedevs.musicoverlay.models.Constants.Companion.visualizerList
 import com.newagedevs.musicoverlay.view.ColorPaletteView
 import me.bogerchan.niervisualizer.NierVisualizerManager
-import me.bogerchan.niervisualizer.renderer.IRenderer
-import me.bogerchan.niervisualizer.renderer.circle.CircleBarRenderer
-import me.bogerchan.niervisualizer.renderer.circle.CircleRenderer
-import me.bogerchan.niervisualizer.renderer.circle.CircleSolidRenderer
-import me.bogerchan.niervisualizer.renderer.circle.CircleWaveRenderer
 import me.bogerchan.niervisualizer.renderer.columnar.ColumnarType1Renderer
-import me.bogerchan.niervisualizer.renderer.columnar.ColumnarType2Renderer
-import me.bogerchan.niervisualizer.renderer.columnar.ColumnarType3Renderer
-import me.bogerchan.niervisualizer.renderer.columnar.ColumnarType4Renderer
-import me.bogerchan.niervisualizer.renderer.line.LineRenderer
-import me.bogerchan.niervisualizer.renderer.other.ArcStaticRenderer
-import me.bogerchan.niervisualizer.util.NierAnimator
 import kotlin.random.Random
 
 
 @SuppressLint("MissingPermission")
 class OverlayStyleActivity : AppCompatActivity(), ColorPaletteView.ColorSelectionListener, SeslSeekBar.OnSeekBarChangeListener {
-
 
     private var originalWidth: Int = 0
     private var originalHeight: Int = 0
@@ -51,15 +36,6 @@ class OverlayStyleActivity : AppCompatActivity(), ColorPaletteView.ColorSelectio
     private var mCurrentStyleIndex = 0
     private var mVisualizerManager: NierVisualizerManager? = null
 
-    private val mRenderers = arrayOf<Array<IRenderer>>(
-        arrayOf(ColumnarType1Renderer()),
-        arrayOf(ColumnarType2Renderer()),
-        arrayOf(ColumnarType3Renderer()),
-        arrayOf(LineRenderer(true)),
-        arrayOf(CircleRenderer(true)),
-        arrayOf(CircleRenderer(true), CircleBarRenderer(), LineRenderer(true))
-    )
-
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,20 +43,29 @@ class OverlayStyleActivity : AppCompatActivity(), ColorPaletteView.ColorSelectio
         binding = ActivityOverlayStyleBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.tabsBottomnavText.setOnItemSelectedListener {
+        binding.surfaceView.setZOrderOnTop(true)
+        binding.surfaceView.holder.setFormat(PixelFormat.TRANSLUCENT)
 
+        binding.colorPaletteView.setColorSelectionListener(this)
+        binding.transparencySeekBar.setOnSeekBarChangeListener(this)
+        binding.transparencySeekBar.max = 100
+
+        audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
+        handler.postDelayed(checkMusicRunnable, 10)
+        byteArrays = generateRandomByteArray(128)
+
+        binding.tabsBottomnavText.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.bvn_1 -> {
                     this.finish()
                 }
                 R.id.bvn_2 -> {
-                    mVisualizerManager?.start(binding.surfaceView, mRenderers[++mCurrentStyleIndex % mRenderers.size])
+
                 }
                 else -> {}
             }
             false
         }
-
 
         binding.overlayViewHolder.setOnTouchListener(object : OnSwipeTouchListener(this@OverlayStyleActivity) {
             override fun onSwipeTop() {
@@ -91,43 +76,28 @@ class OverlayStyleActivity : AppCompatActivity(), ColorPaletteView.ColorSelectio
             }
         })
 
-        binding.surfaceView.setZOrderOnTop(true)
-        binding.surfaceView.holder.setFormat(PixelFormat.TRANSLUCENT)
-
-        binding.changeVisualizerStyle.setOnClickListener {
-            mVisualizerManager?.start(binding.surfaceView, mRenderers[++mCurrentStyleIndex % mRenderers.size])
-        }
-
-        binding.colorPaletteView.setColorSelectionListener(this)
-        binding.transparencySeekBar.setOnSeekBarChangeListener(this)
-        binding.transparencySeekBar.max = 100
-
-
-        audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
-
-        // Start checking every 2 seconds v
-        handler.postDelayed(checkMusicRunnable, 10)
-
-        byteArrays = generateRandomByteArray(128)
-
         mVisualizerManager = NierVisualizerManager().apply {
             init(object : NierVisualizerManager.NVDataSource {
                 override fun getDataSamplingInterval() = 0L
-
                 override fun getDataLength() = byteArrays.size
 
                 override fun fetchFftData(): ByteArray? {
                     return null
                 }
-
                 override fun fetchWaveData(): ByteArray {
                     return byteArrays
                 }
-
             })
         }
 
-        mVisualizerManager?.start(binding.surfaceView, arrayOf(ColumnarType1Renderer()))
+        binding.changeVisualizerStyle.setOnClickListener {
+            val visualizers = visualizerList[++mCurrentStyleIndex % visualizerList.size]
+            if (visualizers.isNotEmpty()) {
+                mVisualizerManager?.start(binding.surfaceView, visualizers)
+            } else {
+                mVisualizerManager?.stop()
+            }
+        }
 
     }
 
@@ -142,17 +112,6 @@ class OverlayStyleActivity : AppCompatActivity(), ColorPaletteView.ColorSelectio
         return byteArray
     }
 
-//    private val checkMusicRunnable = object : Runnable {
-//        override fun run() {
-//            byteArrays = if (audioManager.isMusicActive) {
-//                generateRandomByteArray(512)
-//            } else {
-//                ByteArray(512)
-//            }
-//            handler.postDelayed(this, 10)
-//        }
-//    }
-
     private val checkMusicRunnable = object : Runnable {
         override fun run() {
             byteArrays = generateRandomByteArray(128)
@@ -164,9 +123,7 @@ class OverlayStyleActivity : AppCompatActivity(), ColorPaletteView.ColorSelectio
         super.onDestroy()
         mVisualizerManager?.release()
         mVisualizerManager = null
-
         handler.removeCallbacks(checkMusicRunnable)
-
     }
 
     private fun showClockStyleHolder() {
@@ -230,6 +187,14 @@ class OverlayStyleActivity : AppCompatActivity(), ColorPaletteView.ColorSelectio
 
     override fun onColorSelected(color: Int) {
         binding.overlayViewHolder.background = createDrawableWithColor(color)
+
+        val drawable = GradientDrawable()
+        drawable.setColor(color)
+        if(binding.transparencySeekBar.progress != 0) {
+            drawable.alpha = 300 - (binding.transparencySeekBar.progress * 2.55).toInt()
+        }
+
+
     }
 
     // Function to create a GradientDrawable with a specific color
@@ -264,6 +229,7 @@ class OverlayStyleActivity : AppCompatActivity(), ColorPaletteView.ColorSelectio
         binding.overlayViewHolder.background.apply {
             alpha = 300 - (progress * 2.55).toInt()
         }
+
     }
 
     override fun onStartTrackingTouch(seekBar: SeslSeekBar?) { }

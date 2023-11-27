@@ -48,6 +48,7 @@ class Constants {
         )
 
         val visualizerList = arrayOf<Array<IRenderer>>(
+            emptyArray(),
             arrayOf(ColumnarType1Renderer()),
             arrayOf(ColumnarType2Renderer()),
             arrayOf(ColumnarType3Renderer()),
