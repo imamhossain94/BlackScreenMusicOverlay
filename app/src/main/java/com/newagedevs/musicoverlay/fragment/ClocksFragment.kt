@@ -31,7 +31,8 @@ class ClocksFragment : Fragment(), ClockAdapter.OnClockItemClickListener {
         // Access views using binding
         val adapter = ClockAdapter(Constants.clockList, this, selectedItemPosition = 0)
 
-        binding.recyclerView.layoutManager = context?.let { NonScrollableGridLayoutManager(it, 3) }
+        binding.recyclerView.layoutManager = GridLayoutManager(context, 3)
+//        binding.recyclerView.layoutManager = context?.let { NonScrollableGridLayoutManager(it, 3) }
         binding.recyclerView.adapter = adapter
 
 
@@ -60,14 +61,11 @@ class ClocksFragment : Fragment(), ClockAdapter.OnClockItemClickListener {
     }
 
     inner class NonScrollableGridLayoutManager(context: Context, spanCount: Int) : GridLayoutManager(context, spanCount) {
-
         override fun canScrollHorizontally(): Boolean {
             return false
         }
-
         override fun canScrollVertically(): Boolean {
             return false
         }
-
     }
 }

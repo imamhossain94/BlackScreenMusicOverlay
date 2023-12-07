@@ -3,6 +3,7 @@ package com.newagedevs.musicoverlay.activities
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
+import android.view.animation.Animation
 import android.view.animation.TranslateAnimation
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager2.widget.ViewPager2
@@ -112,20 +113,29 @@ class ClockStyleActivity : AppCompatActivity() {
         if(isOriginalSize) binding.clockStyleHolder.slideDown()
     }
 
-
     private fun View.slideUp(duration: Int = 300) {
-        visibility = View.VISIBLE
         val animate = TranslateAnimation(0f, 0f, this.height.toFloat(), 0f)
         animate.duration = duration.toLong()
-        animate.fillAfter = true
+        animate.setAnimationListener(object : Animation.AnimationListener {
+            override fun onAnimationStart(animation: Animation?) { }
+            override fun onAnimationEnd(animation: Animation?) {
+                visibility = View.VISIBLE
+            }
+            override fun onAnimationRepeat(animation: Animation?) { }
+        })
         this.startAnimation(animate)
     }
 
     private fun View.slideDown(duration: Int = 300) {
-        visibility = View.VISIBLE
         val animate = TranslateAnimation(0f, 0f, 0f, this.height.toFloat())
         animate.duration = duration.toLong()
-        animate.fillAfter = true
+        animate.setAnimationListener(object : Animation.AnimationListener {
+            override fun onAnimationStart(animation: Animation?) { }
+            override fun onAnimationEnd(animation: Animation?) {
+                visibility = View.GONE
+            }
+            override fun onAnimationRepeat(animation: Animation?) { }
+        })
         this.startAnimation(animate)
     }
 
