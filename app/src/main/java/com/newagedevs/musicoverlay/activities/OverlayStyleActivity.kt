@@ -92,11 +92,7 @@ class OverlayStyleActivity : AppCompatActivity(), ColorPaletteView.ColorSelectio
 
         binding.changeVisualizerStyle.setOnClickListener {
             val visualizers = visualizerList[++mCurrentStyleIndex % visualizerList.size]
-            if (visualizers.isNotEmpty()) {
-                mVisualizerManager?.start(binding.surfaceView, visualizers)
-            } else {
-                mVisualizerManager?.stop()
-            }
+            mVisualizerManager?.start(binding.surfaceView, visualizers)
         }
 
     }

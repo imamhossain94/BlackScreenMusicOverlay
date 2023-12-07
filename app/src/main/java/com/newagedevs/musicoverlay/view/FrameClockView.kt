@@ -234,6 +234,11 @@ class FrameClockView : View {
         invalidate()
     }
 
+    fun setFrameRadius(value: Float) {
+        frameRadius = value
+        invalidate()
+    }
+
     // Foreground view properties
     fun setForegroundColor(color: Int) {
         frameColor = color
@@ -252,7 +257,7 @@ class FrameClockView : View {
         setAutoUpdate(attr.autoUpdate)
         showFrame(attr.showFrame)
         showSecondsHand(attr.showSecondsHand)
-
+        setFrameRadius(attr.frameRadius)
     }
 
 }

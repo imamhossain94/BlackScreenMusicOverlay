@@ -99,6 +99,7 @@ class ClockAdapter(private val clockList: List<ClockModel>, private val listener
         view.setAutoUpdate(clockModel.autoUpdate)
         view.showFrame(clockModel.showFrame)
         view.showSecondsHand(clockModel.showSecondsHand)
+        view.setFrameRadius(clockModel.frameRadius)
     }
 
     private fun updateItemView(itemView: View, position: Int) {
