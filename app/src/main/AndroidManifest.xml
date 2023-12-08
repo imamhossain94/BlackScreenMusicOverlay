@@ -40,6 +40,8 @@
         <activity android:name=".activities.ClockStyleActivity" android:exported="false" />
         <activity android:name=".activities.AboutActivity" android:exported="false" />
         <activity android:name=".activities.OverlayStyleActivity" android:exported="false" />
+        <activity android:name=".activities.GestureActivity" android:exported="false" />
+        <activity android:name=".activities.SecurityActivity" android:exported="false" />
 
         <receiver android:name=".receiver.AudioSessionReceiver"
             android:exported="true">

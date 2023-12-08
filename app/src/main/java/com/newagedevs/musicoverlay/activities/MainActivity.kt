@@ -13,7 +13,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding = ActivityMainBinding.inflate(layoutInflater);
+        binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         binding.toolbarLayout.setNavigationButtonAsBack()
@@ -24,6 +24,14 @@ class MainActivity : AppCompatActivity() {
 
         binding.startClockStyleActivity.setOnClickListener {
             startActivity(Intent(this, ClockStyleActivity::class.java))
+        }
+
+        binding.startGestureControlActivity.setOnClickListener {
+            startActivity(Intent(this, GestureActivity::class.java))
+        }
+
+        binding.startSecurityActivity.setOnClickListener {
+            startActivity(Intent(this, SecurityActivity::class.java))
         }
 
         binding.aboutMusicOverlay.setOnClickListener {

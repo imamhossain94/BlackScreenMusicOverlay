@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dev.oneuiproject.oneui.layout.ToolbarLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/toolbar_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:expandable="true"
+    app:expanded="false"
+    app:title="Security and privacy"
+    tools:context=".activities.SecurityActivity">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_location="main_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <dev.oneuiproject.oneui.widget.RoundLinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:background="@color/oui_background_color"
+                android:orientation="vertical">
+
+                <com.airbnb.lottie.LottieAnimationView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:lottie_autoPlay="true"
+                    app:lottie_fileName="shield.json"
+                    app:lottie_loop="true"
+                    app:lottie_speed="1" />
+
+            </dev.oneuiproject.oneui.widget.RoundLinearLayout>
+
+
+            <dev.oneuiproject.oneui.widget.Separator
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <dev.oneuiproject.oneui.widget.RoundLinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/oui_background_color"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="16dp"
+                    android:paddingStart="?android:listPreferredItemPaddingStart"
+                    android:paddingEnd="?android:listPreferredItemPaddingEnd"
+                    android:background="?listChoiceBackgroundIndicator"
+                    android:focusable="true"
+                    android:clickable="true"
+                    android:maxLines="1"
+                    android:text="Screen Lock"
+                    style="@style/OneUi.PermissionCardView.TitleStyle" />
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="16dp"
+                    android:paddingStart="?android:listPreferredItemPaddingStart"
+                    android:paddingEnd="?android:listPreferredItemPaddingEnd"
+                    android:background="?listChoiceBackgroundIndicator"
+                    android:focusable="true"
+                    android:clickable="true"
+                    android:checked="true"
+                    android:textColor="?android:attr/textColorSecondary"
+                    android:textSize="13.0sp"
+                    android:text="Lock your screen when someone attempts to unlock or remove the music overlay. (This overlay will be disabled before the screen is locked.)" />
+
+
+            </dev.oneuiproject.oneui.widget.RoundLinearLayout>
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</dev.oneuiproject.oneui.layout.ToolbarLayout>
