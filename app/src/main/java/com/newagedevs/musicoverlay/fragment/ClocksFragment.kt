@@ -31,8 +31,8 @@ class ClocksFragment : Fragment(), ClockAdapter.OnClockItemClickListener {
         // Access views using binding
         val adapter = ClockAdapter(Constants.clockList, this, selectedItemPosition = 0)
 
-        binding.recyclerView.layoutManager = GridLayoutManager(context, 3)
-//        binding.recyclerView.layoutManager = context?.let { NonScrollableGridLayoutManager(it, 3) }
+//        binding.recyclerView.layoutManager = GridLayoutManager(context, 3)
+        binding.recyclerView.layoutManager = context?.let { NonScrollableGridLayoutManager(it, 3) }
         binding.recyclerView.adapter = adapter
 
 

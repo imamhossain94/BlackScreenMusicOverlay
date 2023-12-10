@@ -30,9 +30,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     app:lottie_autoPlay="true"
-                    app:lottie_fileName="swipe.json"
+                    app:lottie_fileName="fingers.json"
                     app:lottie_loop="true"
-                    app:lottie_speed="1" />
+                    app:lottie_speed="1"
+                    android:rotation="0"/>
 
             </dev.oneuiproject.oneui.widget.RoundLinearLayout>
 
