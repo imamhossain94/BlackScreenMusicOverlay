@@ -62,5 +62,24 @@ class Constants {
             arrayOf(CircleRenderer(true)),
             arrayOf(CircleRenderer(true), CircleBarRenderer(), LineRenderer(true))
         )
+
+        val feedbackMail = arrayOf("imamagun94@gmail.com")
+        val contactMail = arrayOf("imamagun94@gmail.com")
+        const val privacyPolicyUrl = "https://newagedevs-privacy-policy.blogspot.com/2023/05/gesture-volume.html"
+        const val sourceCodeUrl = "https://github.com/imamhossain94/BlackScreenMusicOverlay"
+        const val publisherName = "https://play.google.com/store/apps/developer?id=NewAgeDevs"
+        const val appStoreId = "https://play.google.com/store/apps/details?id=com.newagedevs.musicoverlay"
+
+        const val showAdsOnEveryClick: Int = 5
+        const val showAdsOnEveryOpen: Int = 3
+
+        // Default values for clock and overlay
+        const val defaultClockColor: Int = Color.WHITE
+        const val defaultClockTransparency: Int = 255
+        const val defaultOverlayColor: Int = Color.WHITE
+        const val defaultOverlayTransparency: Int = 255
+
+        // Default unlock condition
+        const val defaultUnlockCondition: String = "singleTap"
     }
 }
