@@ -3,7 +3,7 @@ package com.newagedevs.musicoverlay.activities
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.newagedevs.musicoverlay.databinding.ActivitySecurityBinding
-
+import com.newagedevs.musicoverlay.preferences.SharedPrefRepository
 
 class SecurityActivity : AppCompatActivity() {
 
@@ -17,7 +17,10 @@ class SecurityActivity : AppCompatActivity() {
 
         binding.toolbarLayout.setNavigationButtonAsBack()
 
+        binding.screenLockPrivacy.isChecked = SharedPrefRepository(this).isScreenLockPrivacyEnabled()
+        binding.screenLockPrivacy.setOnCheckedChangeListener { _, isChecked ->
+            SharedPrefRepository(this).setScreenLockPrivacy(isChecked)
+        }
     }
-
 
 }

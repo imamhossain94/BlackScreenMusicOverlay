@@ -42,7 +42,7 @@ class ClockStyleActivity : AppCompatActivity() {
 
             when (it.itemId) {
                 R.id.bvn_1 -> {
-                    showClockStyleHolder()
+                    finish()
                 }
                 R.id.bvn_2 -> {
                     hideClockStyleHolder()

@@ -10,7 +10,9 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.newagedevs.musicoverlay.activities.ClockStyleActivity
 import com.newagedevs.musicoverlay.adapter.ClockAdapter
 import com.newagedevs.musicoverlay.databinding.FragmentClocksBinding
+import com.newagedevs.musicoverlay.models.ClockViewType
 import com.newagedevs.musicoverlay.models.Constants
+import com.newagedevs.musicoverlay.preferences.SharedPrefRepository
 
 class ClocksFragment : Fragment(), ClockAdapter.OnClockItemClickListener {
 
@@ -29,13 +31,27 @@ class ClocksFragment : Fragment(), ClockAdapter.OnClockItemClickListener {
         super.onViewCreated(view, savedInstanceState)
 
         // Access views using binding
-        val adapter = ClockAdapter(Constants.clockList, this, selectedItemPosition = 0)
+        val clockIndex = SharedPrefRepository(requireActivity()).getClockStyleIndex()
+        val adapter = ClockAdapter(Constants.clockList, this, selectedItemPosition = clockIndex)
 
-//        binding.recyclerView.layoutManager = GridLayoutManager(context, 3)
         binding.recyclerView.layoutManager = context?.let { NonScrollableGridLayoutManager(it, 3) }
         binding.recyclerView.adapter = adapter
 
+        val clock = Constants.clockList[clockIndex]
+        val activityBinding = (requireActivity() as ClockStyleActivity).binding
 
+        when(clock.viewType) {
+            ClockViewType.TEXT_CLOCK.ordinal -> {
+                activityBinding.textClockPreview.visibility = View.VISIBLE
+                activityBinding.frameClockPreview.visibility = View.GONE
+                activityBinding.textClockPreview.setAttributes(clock)
+            }
+            ClockViewType.FRAME_CLOCK.ordinal -> {
+                activityBinding.textClockPreview.visibility = View.GONE
+                activityBinding.frameClockPreview.visibility = View.VISIBLE
+                activityBinding.frameClockPreview.setAttributes(clock)
+            }
+        }
 
     }
 
@@ -48,16 +64,16 @@ class ClocksFragment : Fragment(), ClockAdapter.OnClockItemClickListener {
         val activityBinding = (requireActivity() as ClockStyleActivity).binding
         activityBinding.textClockPreview.visibility = View.VISIBLE
         activityBinding.frameClockPreview.visibility = View.GONE
-
         activityBinding.textClockPreview.setAttributes(Constants.clockList[position])
+        SharedPrefRepository(requireActivity()).setClockStyleIndex(position)
     }
 
     override fun onFrameClockClick(position: Int) {
         val activityBinding = (requireActivity() as ClockStyleActivity).binding
         activityBinding.textClockPreview.visibility = View.GONE
         activityBinding.frameClockPreview.visibility = View.VISIBLE
-
         activityBinding.frameClockPreview.setAttributes(Constants.clockList[position])
+        SharedPrefRepository(requireActivity()).setClockStyleIndex(position)
     }
 
     inner class NonScrollableGridLayoutManager(context: Context, spanCount: Int) : GridLayoutManager(context, spanCount) {

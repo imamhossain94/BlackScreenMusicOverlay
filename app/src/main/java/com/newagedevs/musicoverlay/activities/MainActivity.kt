@@ -3,7 +3,10 @@ package com.newagedevs.musicoverlay.activities
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.AppCompatRadioButton
 import com.newagedevs.musicoverlay.databinding.ActivityMainBinding
+import com.newagedevs.musicoverlay.models.UnlockCondition
+import com.newagedevs.musicoverlay.preferences.SharedPrefRepository
 
 
 class MainActivity : AppCompatActivity() {
@@ -39,7 +42,32 @@ class MainActivity : AppCompatActivity() {
         }
 
         // Settings
-//        binding.toggleService
+        binding.toggleService.isChecked = SharedPrefRepository(this).isRunning()
+        binding.toggleService.addOnSwitchChangeListener { _, isChecked ->
+            SharedPrefRepository(this).setRunning(isChecked)
+        }
+
+        when (SharedPrefRepository(this).getUnlockCondition()) {
+            UnlockCondition.TAP.displayText -> binding.tapToUnlock.isChecked = true
+            UnlockCondition.DOUBLE_TAP.displayText -> binding.doubleTapToUnlock.isChecked = true
+            UnlockCondition.LONG_PRESS.displayText -> binding.longPressToUnlock.isChecked = true
+        }
+
+        binding.unlockCondition.setOnCheckedChangeListener { _, checkedId ->
+            val radioButton = findViewById<AppCompatRadioButton>(checkedId)
+            val selectedUnlockCondition = UnlockCondition.values().firstOrNull { it.displayText == radioButton.text.toString().trim() }
+            selectedUnlockCondition?.let {
+                SharedPrefRepository(this).setUnlockCondition(it.displayText)
+            }
+        }
+
+        binding.alwaysOnDisplay.isChecked = SharedPrefRepository(this).isAlwaysOnDisplay()
+        binding.startClockStyleActivity.isEnabled = SharedPrefRepository(this).isAlwaysOnDisplay()
+
+        binding.alwaysOnDisplay.setOnCheckedChangeListener { _, isChecked ->
+            binding.startClockStyleActivity.isEnabled = isChecked
+            SharedPrefRepository(this).setAlwaysOnDisplay(isChecked)
+        }
 
     }
 

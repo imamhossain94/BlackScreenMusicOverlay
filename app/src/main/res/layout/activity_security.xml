@@ -61,6 +61,7 @@
                     style="@style/OneUi.PermissionCardView.TitleStyle" />
 
                 <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/screen_lock_privacy"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingBottom="16dp"

@@ -8,6 +8,7 @@ import androidx.appcompat.widget.SeslSeekBar
 import androidx.fragment.app.Fragment
 import com.newagedevs.musicoverlay.activities.ClockStyleActivity
 import com.newagedevs.musicoverlay.databinding.FragmentAppearanceBinding
+import com.newagedevs.musicoverlay.preferences.SharedPrefRepository
 import com.newagedevs.musicoverlay.view.ColorPaletteView
 
 class AppearanceFragment : Fragment(), ColorPaletteView.ColorSelectionListener, SeslSeekBar.OnSeekBarChangeListener {
@@ -41,12 +42,20 @@ class AppearanceFragment : Fragment(), ColorPaletteView.ColorSelectionListener, 
         val activityBinding = (requireActivity() as ClockStyleActivity).binding
         activityBinding.textClockPreview.setForegroundColor(color)
         activityBinding.frameClockPreview.setForegroundColor(color)
+
+        SharedPrefRepository(requireActivity()).setClockColor(color)
     }
 
     override fun onProgressChanged(seekBar: SeslSeekBar?, progress: Int, fromUser: Boolean) {
         val activityBinding = (requireActivity() as ClockStyleActivity).binding
-        activityBinding.textClockPreview.setOpacity((105f - progress.toFloat()) / 100.0f)
-        activityBinding.frameClockPreview.setOpacity(300 - (progress * 2.55).toInt())
+        val textTransparency = (105f - progress.toFloat()) / 100.0f
+        val frameTransparency = 300 - (progress * 2.55).toInt()
+
+        activityBinding.textClockPreview.setOpacity(textTransparency)
+        activityBinding.frameClockPreview.setOpacity(frameTransparency)
+
+        SharedPrefRepository(requireActivity()).setTextClockTransparency(textTransparency)
+        SharedPrefRepository(requireActivity()).setFrameClockTransparency(frameTransparency)
     }
 
     override fun onStartTrackingTouch(seekBar: SeslSeekBar?) { }

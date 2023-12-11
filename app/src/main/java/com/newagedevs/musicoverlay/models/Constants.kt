@@ -75,11 +75,12 @@ class Constants {
 
         // Default values for clock and overlay
         const val defaultClockColor: Int = Color.WHITE
-        const val defaultClockTransparency: Int = 255
+        const val defaultTextClockTransparency: Float = 100f
+        const val defaultFrameClockTransparency: Int = 255
         const val defaultOverlayColor: Int = Color.WHITE
         const val defaultOverlayTransparency: Int = 255
 
         // Default unlock condition
-        const val defaultUnlockCondition: String = "singleTap"
+        var defaultUnlockCondition: String = UnlockCondition.TAP.displayText
     }
 }

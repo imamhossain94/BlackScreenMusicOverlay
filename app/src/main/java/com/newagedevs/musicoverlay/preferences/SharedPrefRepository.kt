@@ -18,7 +18,8 @@ class SharedPrefRepository(private val context: Context) {
     private val alwaysOnDisplayKey = "alwaysOnDisplay"
     private val clockStyleIndexKey = "clockStyleIndex"
     private val clockColorKey = "clockColor"
-    private val clockTransparencyKey = "clockTransparency"
+    private val clockTextTransparencyKey = "clockTextTransparency"
+    private val clockFrameTransparencyKey = "clockFrameTransparency"
     private val screenLockPrivacyKey = "screenLockPrivacy"
     private val overlayStyleIndexKey = "overlayStyleIndex"
     private val overlayColorKey = "overlayColor"
@@ -172,17 +173,31 @@ class SharedPrefRepository(private val context: Context) {
         editor.apply()
     }
 
-    // Get the clock transparency
-    fun getClockTransparency(): Int {
+    // Get the text clock transparency
+    fun getTextClockTransparency(): Float {
         val sharedPref = context.getSharedPreferences(sharedPrefName, Context.MODE_PRIVATE)
-        return sharedPref.getInt(clockTransparencyKey, Constants.defaultClockTransparency)
+        return sharedPref.getFloat(clockTextTransparencyKey, Constants.defaultTextClockTransparency)
     }
 
     // Set the clock transparency
-    fun setClockTransparency(clockTransparency: Int) {
+    fun setTextClockTransparency(clockTransparency: Float) {
         val sharedPref = context.getSharedPreferences(sharedPrefName, Context.MODE_PRIVATE)
         val editor = sharedPref.edit()
-        editor.putInt(clockTransparencyKey, clockTransparency)
+        editor.putFloat(clockTextTransparencyKey, clockTransparency)
+        editor.apply()
+    }
+
+    // Get the frame clock transparency
+    fun getFrameClockTransparency(): Int {
+        val sharedPref = context.getSharedPreferences(sharedPrefName, Context.MODE_PRIVATE)
+        return sharedPref.getInt(clockFrameTransparencyKey, Constants.defaultFrameClockTransparency)
+    }
+
+    // Set the clock transparency
+    fun setFrameClockTransparency(clockTransparency: Int) {
+        val sharedPref = context.getSharedPreferences(sharedPrefName, Context.MODE_PRIVATE)
+        val editor = sharedPref.edit()
+        editor.putInt(clockFrameTransparencyKey, clockTransparency)
         editor.apply()
     }
 

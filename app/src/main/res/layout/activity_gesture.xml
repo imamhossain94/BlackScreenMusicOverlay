@@ -62,6 +62,7 @@
                 style="@style/OneUi.PermissionCardView.TitleStyle" />
 
             <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/gesture_increase_volume"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingBottom="16dp"
@@ -102,6 +103,7 @@
                     style="@style/OneUi.PermissionCardView.TitleStyle" />
 
                 <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/gesture_decrease_volume"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingBottom="16dp"
