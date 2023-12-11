@@ -38,6 +38,9 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(this, AboutActivity::class.java))
         }
 
+        // Settings
+//        binding.toggleService
+
     }
 
 
