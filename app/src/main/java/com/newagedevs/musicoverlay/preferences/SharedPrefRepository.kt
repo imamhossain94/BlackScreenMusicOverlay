@@ -1,6 +1,8 @@
 package com.newagedevs.musicoverlay.preferences
 
 import android.content.Context
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.newagedevs.musicoverlay.models.Constants
 
 class SharedPrefRepository(private val context: Context) {
@@ -26,6 +28,7 @@ class SharedPrefRepository(private val context: Context) {
     private val overlayTransparencyKey = "overlayTransparency"
     private val gestureIncreaseVolumeKey = "gestureIncreaseVolume"
     private val gestureDecreaseVolumeKey = "gestureDecreaseVolume"
+    private val colorPickerRecentColorsKey = "colorPickerRecentColors"
 
     // Increment click count
     private fun incrementClickCount() {
@@ -284,4 +287,24 @@ class SharedPrefRepository(private val context: Context) {
         editor.putBoolean(gestureDecreaseVolumeKey, gestureDecreaseVolume)
         editor.apply()
     }
+
+    // Get recent colors
+    fun getRecentColors(): ArrayList<Int> {
+        val sharedPref = context.getSharedPreferences(sharedPrefName, Context.MODE_PRIVATE)
+        val gson = Gson()
+        val json = sharedPref.getString(colorPickerRecentColorsKey, "")
+        val type = object : TypeToken<ArrayList<Int>>() {}.type
+        return gson.fromJson(json, type) ?: ArrayList()
+    }
+
+    // Set recent colors
+    fun setRecentColors(recentColors: ArrayList<Int>) {
+        val sharedPref = context.getSharedPreferences(sharedPrefName, Context.MODE_PRIVATE)
+        val editor = sharedPref.edit()
+        val gson = Gson()
+        val json = gson.toJson(recentColors)
+        editor.putString(colorPickerRecentColorsKey, json)
+        editor.apply()
+    }
+
 }

@@ -13,7 +13,7 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.picker.app.SeslColorPickerDialog
 import com.newagedevs.musicoverlay.R
-
+import com.newagedevs.musicoverlay.preferences.SharedPrefRepository
 
 
 class ColorPaletteView @JvmOverloads constructor(
@@ -24,6 +24,9 @@ class ColorPaletteView @JvmOverloads constructor(
     interface ColorSelectionListener {
         fun onColorSelected(color: Int)
     }
+
+    private var currentColor: Int = R.color.paletteColor9
+    private var recentColors: ArrayList<Int> = ArrayList()
 
     private val colorArray: IntArray = intArrayOf(
         R.color.paletteColor1, R.color.paletteColor2, R.color.paletteColor3,
@@ -38,6 +41,7 @@ class ColorPaletteView @JvmOverloads constructor(
         orientation = VERTICAL
         setPadding(1.dpToPx(), 5.dpToPx(), 1.dpToPx(), 1.dpToPx())
         setupColorPalette()
+        recentColors.add(currentColor)
     }
 
     private fun Int.dpToPx(): Int {
@@ -50,6 +54,7 @@ class ColorPaletteView @JvmOverloads constructor(
     }
 
     fun setDefaultSelectedColor(color: Int) {
+        currentColor = color
         for (rowIndex in 0 until childCount) {
             val rowLayout = getChildAt(rowIndex) as LinearLayout
             for (colIndex in 0 until rowLayout.childCount) {
@@ -195,14 +200,32 @@ class ColorPaletteView @JvmOverloads constructor(
 
 
     private fun openColorPickerDialog() {
-        val dialog = SeslColorPickerDialog(context, this)
-        dialog.setTransparencyControlEnabled(true)
+        recentColors = SharedPrefRepository(context).getRecentColors()
+        val dialog = SeslColorPickerDialog(context, this, currentColor, buildIntArray(recentColors))
+        dialog.setTransparencyControlEnabled(false)
         dialog.show()
     }
 
 
     override fun onColorSet(color: Int) {
         colorSelectionListener?.onColorSelected(color)
+        currentColor = color
+
+        if (recentColors.size == 6) {
+            recentColors.remove(5)
+        }
+        recentColors.add(0, color)
+
+        SharedPrefRepository(context).setRecentColors(recentColors)
+    }
+
+    private fun buildIntArray(integers: ArrayList<Int>): IntArray {
+        val ints = IntArray(integers.size)
+        var i = 0
+        for (n in integers) {
+            ints[i++] = n
+        }
+        return ints
     }
 
 }
