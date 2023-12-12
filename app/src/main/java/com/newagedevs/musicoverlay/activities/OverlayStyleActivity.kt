@@ -2,7 +2,6 @@ package com.newagedevs.musicoverlay.activities
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.Color
 import android.graphics.PixelFormat
 import android.graphics.drawable.GradientDrawable
 import android.media.AudioManager
@@ -21,9 +20,9 @@ import com.newagedevs.musicoverlay.databinding.ActivityOverlayStyleBinding
 import com.newagedevs.musicoverlay.extension.OnSwipeTouchListener
 import com.newagedevs.musicoverlay.extension.ResizeAnimation
 import com.newagedevs.musicoverlay.models.Constants.Companion.visualizerList
+import com.newagedevs.musicoverlay.preferences.SharedPrefRepository
 import com.newagedevs.musicoverlay.view.ColorPaletteView
 import me.bogerchan.niervisualizer.NierVisualizerManager
-import me.bogerchan.niervisualizer.renderer.columnar.ColumnarType1Renderer
 import kotlin.random.Random
 
 
@@ -51,6 +50,13 @@ class OverlayStyleActivity : AppCompatActivity(), ColorPaletteView.ColorSelectio
         binding.transparencySeekBar.setOnSeekBarChangeListener(this)
         binding.transparencySeekBar.max = 100
 
+        val overlayColor = SharedPrefRepository(this).getOverlayColor()
+        overlayColor?.let { binding.colorPaletteView.setDefaultSelectedColor(it) }
+        val alpha = SharedPrefRepository(this).getOverlayTransparency()
+        binding.transparencySeekBar.progress = ((300 - alpha) / 2.55).toInt()
+
+        val overlayIndex = SharedPrefRepository(this).getOverlayStyleIndex()
+
         audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
         handler.postDelayed(checkMusicRunnable, 10)
         byteArrays = generateRandomByteArray(128)
@@ -58,10 +64,10 @@ class OverlayStyleActivity : AppCompatActivity(), ColorPaletteView.ColorSelectio
         binding.tabsBottomnavText.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.bvn_1 -> {
-                    this.finish()
+                    finish()
                 }
                 R.id.bvn_2 -> {
-
+                    hideOverlayStyleHolder()
                 }
                 else -> {}
             }
@@ -70,10 +76,10 @@ class OverlayStyleActivity : AppCompatActivity(), ColorPaletteView.ColorSelectio
 
         binding.overlayViewHolder.setOnTouchListener(object : OnSwipeTouchListener(this@OverlayStyleActivity) {
             override fun onSwipeTop() {
-                showClockStyleHolder()
+                showOverlayStyleHolder()
             }
             override fun onSwipeBottom() {
-                hideClockStyleHolder()
+                hideOverlayStyleHolder()
             }
         })
 
@@ -92,9 +98,13 @@ class OverlayStyleActivity : AppCompatActivity(), ColorPaletteView.ColorSelectio
         }
 
         binding.changeVisualizerStyle.setOnClickListener {
-            val visualizers = visualizerList[++mCurrentStyleIndex % visualizerList.size]
+            val index = ++mCurrentStyleIndex % visualizerList.size
+            val visualizers = visualizerList[index]
+            SharedPrefRepository(this).setOverlayStyleIndex(index)
             mVisualizerManager?.start(binding.surfaceView, visualizers)
         }
+
+        mVisualizerManager?.start(binding.surfaceView, visualizerList[overlayIndex])
 
     }
 
@@ -123,7 +133,7 @@ class OverlayStyleActivity : AppCompatActivity(), ColorPaletteView.ColorSelectio
         handler.removeCallbacks(checkMusicRunnable)
     }
 
-    private fun showClockStyleHolder() {
+    private fun showOverlayStyleHolder() {
         val isOriginalSize = binding.overlayViewHolder.layoutParams?.let { layoutParams ->
             layoutParams.width == originalWidth || layoutParams.width == -1
                     && layoutParams.height == originalHeight || layoutParams.height == 0
@@ -140,7 +150,7 @@ class OverlayStyleActivity : AppCompatActivity(), ColorPaletteView.ColorSelectio
         if(!isOriginalSize) binding.overlayStyleHolder.slideUp()
     }
 
-    private fun hideClockStyleHolder() {
+    private fun hideOverlayStyleHolder() {
         val isOriginalSize = binding.overlayViewHolder.layoutParams?.let { layoutParams ->
             layoutParams.width == originalWidth || layoutParams.width == -1
                     && layoutParams.height == originalHeight || layoutParams.height == 0
@@ -194,11 +204,14 @@ class OverlayStyleActivity : AppCompatActivity(), ColorPaletteView.ColorSelectio
 
     override fun onColorSelected(color: Int) {
         binding.overlayViewHolder.background = createDrawableWithColor(color)
+        SharedPrefRepository(this).setOverlayColor(color)
 
         val drawable = GradientDrawable()
         drawable.setColor(color)
         if(binding.transparencySeekBar.progress != 0) {
-            drawable.alpha = 300 - (binding.transparencySeekBar.progress * 2.55).toInt()
+            val alpha = 300 - (binding.transparencySeekBar.progress * 2.55).toInt()
+            drawable.alpha = alpha
+            SharedPrefRepository(this).setOverlayTransparency(alpha)
         }
     }
 
@@ -218,7 +231,9 @@ class OverlayStyleActivity : AppCompatActivity(), ColorPaletteView.ColorSelectio
         drawable.cornerRadius = 16.dpToPx().toFloat()
 
         if(binding.transparencySeekBar.progress != 0) {
-            drawable.alpha = 300 - (binding.transparencySeekBar.progress * 2.55).toInt()
+            val alpha = 300 - (binding.transparencySeekBar.progress * 2.55).toInt()
+            drawable.alpha = alpha
+            SharedPrefRepository(this).setOverlayTransparency(alpha)
         }
 
         return drawable
@@ -234,13 +249,11 @@ class OverlayStyleActivity : AppCompatActivity(), ColorPaletteView.ColorSelectio
         binding.overlayViewHolder.background.apply {
             alpha = 300 - (progress * 2.55).toInt()
         }
-
+        SharedPrefRepository(this).setOverlayTransparency(300 - (progress * 2.55).toInt())
     }
 
     override fun onStartTrackingTouch(seekBar: SeslSeekBar?) { }
 
     override fun onStopTrackingTouch(seekBar: SeslSeekBar?) { }
-
-
 
 }
