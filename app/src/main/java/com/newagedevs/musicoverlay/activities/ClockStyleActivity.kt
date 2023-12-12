@@ -10,13 +10,16 @@ import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.newagedevs.musicoverlay.R
+import com.newagedevs.musicoverlay.adapter.ClockAdapter
 import com.newagedevs.musicoverlay.adapter.ViewPagerAdapter
 import com.newagedevs.musicoverlay.databinding.ActivityClockStyleBinding
 import com.newagedevs.musicoverlay.extension.OnSwipeTouchListener
 import com.newagedevs.musicoverlay.extension.ResizeAnimation
 import com.newagedevs.musicoverlay.fragment.AppearanceFragment
 import com.newagedevs.musicoverlay.fragment.ClocksFragment
+import com.newagedevs.musicoverlay.models.ClockViewType
 import com.newagedevs.musicoverlay.models.Constants
+import com.newagedevs.musicoverlay.preferences.SharedPrefRepository
 
 class ClockStyleActivity : AppCompatActivity() {
 
@@ -30,6 +33,34 @@ class ClockStyleActivity : AppCompatActivity() {
 
         binding = ActivityClockStyleBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        val clockIndex = SharedPrefRepository(this).getClockStyleIndex()
+        val textTransparency = SharedPrefRepository(this).getTextClockTransparency()
+        val frameTransparency = SharedPrefRepository(this).getFrameClockTransparency()
+        val clockColor = SharedPrefRepository(this).getClockColor()
+
+        val clock = Constants.clockList[clockIndex]
+
+        when(clock.viewType) {
+            ClockViewType.TEXT_CLOCK.ordinal -> {
+                binding.textClockPreview.visibility = View.VISIBLE
+                binding.frameClockPreview.visibility = View.GONE
+                binding.textClockPreview.setAttributes(clock)
+            }
+            ClockViewType.FRAME_CLOCK.ordinal -> {
+                binding.textClockPreview.visibility = View.GONE
+                binding.frameClockPreview.visibility = View.VISIBLE
+                binding.frameClockPreview.setAttributes(clock)
+            }
+        }
+
+        binding.textClockPreview.setOpacity(textTransparency)
+        binding.frameClockPreview.setOpacity(frameTransparency)
+
+        clockColor?.let { binding.textClockPreview.setForegroundColor(it) }
+        clockColor?.let { binding.frameClockPreview.setForegroundColor(it) }
+
+
 
         binding.tabsSubtab
 

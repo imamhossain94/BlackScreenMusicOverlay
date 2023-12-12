@@ -5,9 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.SeslSeekBar
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import com.newagedevs.musicoverlay.R
 import com.newagedevs.musicoverlay.activities.ClockStyleActivity
 import com.newagedevs.musicoverlay.databinding.FragmentAppearanceBinding
+import com.newagedevs.musicoverlay.models.ClockViewType
+import com.newagedevs.musicoverlay.models.Constants
 import com.newagedevs.musicoverlay.preferences.SharedPrefRepository
 import com.newagedevs.musicoverlay.view.ColorPaletteView
 
@@ -31,6 +35,25 @@ class AppearanceFragment : Fragment(), ColorPaletteView.ColorSelectionListener, 
         binding.colorPaletteView.setColorSelectionListener(this)
         binding.transparencySeekBar.setOnSeekBarChangeListener(this)
         binding.transparencySeekBar.max = 100
+
+        val clockColor = SharedPrefRepository(requireActivity()).getClockColor()
+        clockColor?.let { binding.colorPaletteView.setDefaultSelectedColor(it) }
+
+        val clockIndex = SharedPrefRepository(requireActivity()).getClockStyleIndex()
+        val clock = Constants.clockList[clockIndex]
+
+
+        when(clock.viewType) {
+            ClockViewType.TEXT_CLOCK.ordinal -> {
+                val textTransparency = SharedPrefRepository(requireActivity()).getTextClockTransparency()
+                binding.transparencySeekBar.progress = ((105 - textTransparency * 100).toInt())
+            }
+            ClockViewType.FRAME_CLOCK.ordinal -> {
+                val frameTransparency = SharedPrefRepository(requireActivity()).getFrameClockTransparency()
+                binding.transparencySeekBar.progress = ((300 - frameTransparency) / 2.55).toInt()
+            }
+        }
+
     }
 
     override fun onDestroyView() {

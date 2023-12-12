@@ -49,6 +49,25 @@ class ColorPaletteView @JvmOverloads constructor(
         colorSelectionListener = listener
     }
 
+    fun setDefaultSelectedColor(color: Int) {
+        for (rowIndex in 0 until childCount) {
+            val rowLayout = getChildAt(rowIndex) as LinearLayout
+            for (colIndex in 0 until rowLayout.childCount) {
+                val cell = rowLayout.getChildAt(colIndex) as? TextView
+                if (cell?.background is GradientDrawable) {
+                    val cellColor = (cell.background as GradientDrawable).color?.defaultColor ?: Color.TRANSPARENT
+                    if (cellColor == color) {
+                        handleColorSelection(cell, color)
+                        return
+                    }else {
+                        if(rowIndex == 1 && colIndex == 10) cell.background = createCircleDrawableBorderGradient()
+                    }
+                }
+            }
+        }
+
+    }
+
     private fun setupColorPalette() {
         for (row in 0 until 2) {
             val rowLayout = createRowLayout()
