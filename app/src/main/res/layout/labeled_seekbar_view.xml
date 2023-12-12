@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/titleTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="10dp"
+        android:paddingEnd="5dp"
+        android:paddingTop="15dp"
+        android:maxLines="1"
+        android:text="Transparency"
+        android:textAppearance="?textAppearanceListItemSecondary" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="8dp"
+        android:paddingBottom="5dp">
+
+        <TextView
+            android:id="@+id/lowValueTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingStart="10dp"
+            android:paddingEnd="5dp"
+            android:paddingTop="5dp"
+            android:maxLines="1"
+            android:text="Low"
+            android:textAppearance="?textAppearanceListItemSecondary" />
+
+        <TextView
+            android:id="@+id/highValueTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:paddingTop="5dp"
+            android:maxLines="1"
+            android:text="High"
+            android:textAlignment="textEnd"
+            android:textAppearance="?textAppearanceListItemSecondary" />
+    </LinearLayout>
+
+    <androidx.appcompat.widget.SeslSeekBar
+        android:id="@+id/seekBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="0dp"
+        android:layout_marginVertical="15dp"
+        app:seslSeekBarMode="expand" />
+</LinearLayout>

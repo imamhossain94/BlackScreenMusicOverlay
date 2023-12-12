@@ -76,5 +76,19 @@
         <attr name="minuteHandThickness" format="dimension"/>
     </declare-styleable>
 
+    <declare-styleable name="LabeledSeekBarView">
+        <attr name="title" format="string" />
+        <attr name="lowText" format="string" />
+        <attr name="highText" format="string" />
+        <attr name="progressValue" format="integer" />
+    </declare-styleable>
+
+    <declare-styleable name="LabeledHapticSeekBarView">
+        <attr name="hapticTitle" format="string" />
+        <attr name="hapticLowText" format="string" />
+        <attr name="hapticHighText" format="string" />
+        <attr name="hapticStepValue" format="integer" />
+        <attr name="hapticMaxStep" format="integer" />
+    </declare-styleable>
 
 </resources>

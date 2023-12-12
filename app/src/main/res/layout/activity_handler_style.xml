@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dev.oneuiproject.oneui.layout.ToolbarLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/toolbar_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:expandable="true"
+    app:expanded="false"
+    app:title="Handler style"
+    tools:context=".activities.HandlerStyleActivity">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_location="main_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <dev.oneuiproject.oneui.widget.RoundLinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/oui_background_color"
+                android:orientation="vertical">
+
+                <fragment
+                    android:id="@+id/settings_fragment"
+                    android:name="com.newagedevs.musicoverlay.fragment.SettingsFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+
+            </dev.oneuiproject.oneui.widget.RoundLinearLayout>
+
+            <dev.oneuiproject.oneui.widget.Separator
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Style"/>
+
+            <dev.oneuiproject.oneui.widget.RoundLinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/oui_background_color"
+                android:orientation="vertical">
+
+                <com.newagedevs.musicoverlay.view.ColorPaletteView
+                    android:id="@+id/colorPaletteView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="12dp"
+                    android:layout_marginTop="15dp"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginHorizontal="16dp"
+                    android:background="@color/oui_list_divider_color" />
+
+                <com.newagedevs.musicoverlay.view.LabeledSeekBarView
+                    android:id="@+id/handler_transparency"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginVertical="5dp"
+                    app:title="Transparency"
+                    app:lowText="Low"
+                    app:highText="High"
+                    app:progressValue="50" />
+
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginHorizontal="16dp"
+                    android:background="@color/oui_list_divider_color" />
+
+                <com.newagedevs.musicoverlay.view.LabeledSeekBarView
+                    android:id="@+id/handler_size"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginVertical="5dp"
+                    app:title="Size"
+                    app:lowText="Low"
+                    app:highText="High"
+                    app:progressValue="50" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginHorizontal="16dp"
+                    android:background="@color/oui_list_divider_color" />
+
+                <com.newagedevs.musicoverlay.view.LabeledHapticSeekBarView
+                    android:id="@+id/handler_width"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginVertical="5dp"
+                    app:hapticTitle="Width"
+                    app:hapticLowText="Thin"
+                    app:hapticHighText="Thick"
+                    app:hapticStepValue="0"
+                    app:hapticMaxStep="2" />
+
+            </dev.oneuiproject.oneui.widget.RoundLinearLayout>
+
+
+            <dev.oneuiproject.oneui.widget.Separator
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Vibration"/>
+
+            <dev.oneuiproject.oneui.widget.RoundLinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/oui_background_color"
+                android:orientation="vertical"
+                android:layout_marginBottom="16dp">
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/vibrate_on_handle_is_touched"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingVertical="16dp"
+                    android:paddingStart="?android:listPreferredItemPaddingStart"
+                    android:paddingEnd="?android:listPreferredItemPaddingEnd"
+                    android:background="?listChoiceBackgroundIndicator"
+                    android:focusable="true"
+                    android:clickable="true"
+                    android:checked="true"
+                    style="@style/OneUi.PermissionCardView.TitleStyle"
+                    android:text="Vibrate when handle is touched" />
+
+            </dev.oneuiproject.oneui.widget.RoundLinearLayout>
+
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</dev.oneuiproject.oneui.layout.ToolbarLayout>

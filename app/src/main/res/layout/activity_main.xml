@@ -147,26 +147,6 @@
                     android:background="@color/oui_list_divider_color" />
 
                 <TextView
-                    android:id="@+id/start_security_activity"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingVertical="16dp"
-                    android:paddingStart="?android:listPreferredItemPaddingStart"
-                    android:paddingEnd="?android:listPreferredItemPaddingEnd"
-                    android:background="?listChoiceBackgroundIndicator"
-                    android:focusable="true"
-                    android:clickable="true"
-                    android:maxLines="1"
-                    android:text="Security and privacy"
-                    style="@style/OneUi.PermissionCardView.TitleStyle" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginHorizontal="24dp"
-                    android:background="@color/oui_list_divider_color" />
-
-                <TextView
                     android:id="@+id/start_overlay_style_activity"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -180,7 +160,51 @@
                     android:text="Overlay style"
                     style="@style/OneUi.PermissionCardView.TitleStyle" />
 
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginHorizontal="24dp"
+                    android:background="@color/oui_list_divider_color" />
 
+                <TextView
+                    android:id="@+id/start_handler_style_activity"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingVertical="16dp"
+                    android:paddingStart="?android:listPreferredItemPaddingStart"
+                    android:paddingEnd="?android:listPreferredItemPaddingEnd"
+                    android:background="?listChoiceBackgroundIndicator"
+                    android:focusable="true"
+                    android:clickable="true"
+                    android:maxLines="1"
+                    android:text="Handler style"
+                    style="@style/OneUi.PermissionCardView.TitleStyle" />
+
+            </dev.oneuiproject.oneui.widget.RoundLinearLayout>
+
+            <dev.oneuiproject.oneui.widget.Separator
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <dev.oneuiproject.oneui.widget.RoundLinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/oui_background_color"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/start_security_activity"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingVertical="16dp"
+                    android:paddingStart="?android:listPreferredItemPaddingStart"
+                    android:paddingEnd="?android:listPreferredItemPaddingEnd"
+                    android:background="?listChoiceBackgroundIndicator"
+                    android:focusable="true"
+                    android:clickable="true"
+                    android:maxLines="1"
+                    android:text="Security and privacy"
+                    style="@style/OneUi.PermissionCardView.TitleStyle" />
 
                 <View
                     android:layout_width="match_parent"

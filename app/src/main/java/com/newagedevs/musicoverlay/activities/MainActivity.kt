@@ -21,20 +21,24 @@ class MainActivity : AppCompatActivity() {
 
         binding.toolbarLayout.setNavigationButtonAsBack()
 
-        binding.startOverlayStyleActivity.setOnClickListener {
-            startActivity(Intent(this, OverlayStyleActivity::class.java))
-        }
-
         binding.startClockStyleActivity.setOnClickListener {
             startActivity(Intent(this, ClockStyleActivity::class.java))
         }
 
-        binding.startGestureControlActivity.setOnClickListener {
-            startActivity(Intent(this, GestureActivity::class.java))
+        binding.startOverlayStyleActivity.setOnClickListener {
+            startActivity(Intent(this, OverlayStyleActivity::class.java))
+        }
+
+        binding.startHandlerStyleActivity.setOnClickListener {
+            startActivity(Intent(this, HandlerStyleActivity::class.java))
         }
 
         binding.startSecurityActivity.setOnClickListener {
             startActivity(Intent(this, SecurityActivity::class.java))
+        }
+
+        binding.startGestureControlActivity.setOnClickListener {
+            startActivity(Intent(this, GestureActivity::class.java))
         }
 
         binding.aboutMusicOverlay.setOnClickListener {

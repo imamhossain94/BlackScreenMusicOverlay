@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory>
+        <DropDownPreference
+            android:key="handlerPosition"
+            android:title="DropDownPreference"
+            android:entries="@array/preferences_handler_position"
+            android:entryValues="@array/preferences_handler_position"
+            android:defaultValue="Left"
+            app:useSimpleSummaryProvider="true" />
+
+        <SwitchPreferenceCompat
+            android:key="lockHandler"
+            android:title="SwitchPreference"
+            android:defaultValue="false" />
+    </PreferenceCategory>
+
+</PreferenceScreen>
