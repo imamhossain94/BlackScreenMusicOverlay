@@ -82,5 +82,12 @@ class Constants {
 
         // Default unlock condition
         var defaultUnlockCondition: String = UnlockCondition.TAP.displayText
+
+        // Default values for handler
+        const val defaultHandlerPosition: String = "Right"
+        const val defaultHandlerColor: Int = Color.WHITE
+        const val defaultHandlerTransparency: Int = 255
+        const val defaultHandlerSize: Int = 100
+        const val defaultHandlerWidth: Int = 0
     }
 }

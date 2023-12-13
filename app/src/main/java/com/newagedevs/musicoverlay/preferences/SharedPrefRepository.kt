@@ -30,6 +30,16 @@ class SharedPrefRepository(private val context: Context) {
     private val gestureDecreaseVolumeKey = "gestureDecreaseVolume"
     private val colorPickerRecentColorsKey = "colorPickerRecentColors"
 
+    // Handler properties
+    private val handlerPositionKey = "handlerPosition"
+    private val lockHandlerPositionKey = "lockHandlerPosition"
+    private val handlerColorKey = "handlerColor"
+    private val handlerTransparencyKey = "handlerTransparency"
+    private val handlerSizeKey = "handlerSize"
+    private val handlerWidthKey = "handlerWidth"
+    private val vibrateHandlerOnTouchKey = "vibrateHandlerOnTouch"
+
+
     // Increment click count
     private fun incrementClickCount() {
         val sharedPref = context.getSharedPreferences(sharedPrefName, Context.MODE_PRIVATE)
@@ -233,7 +243,7 @@ class SharedPrefRepository(private val context: Context) {
     }
 
     // Get the overlay color
-    fun getOverlayColor(): Int? {
+    fun getOverlayColor(): Int {
         val sharedPref = context.getSharedPreferences(sharedPrefName, Context.MODE_PRIVATE)
         return sharedPref.getInt(overlayColorKey, Constants.defaultOverlayColor)
     }
@@ -304,6 +314,106 @@ class SharedPrefRepository(private val context: Context) {
         val gson = Gson()
         val json = gson.toJson(recentColors)
         editor.putString(colorPickerRecentColorsKey, json)
+        editor.apply()
+    }
+
+
+    // Handler properties
+// Get the handler position
+    fun getHandlerPosition(): String {
+        val sharedPref = context.getSharedPreferences(sharedPrefName, Context.MODE_PRIVATE)
+        return sharedPref.getString(handlerPositionKey, Constants.defaultHandlerPosition) ?: Constants.defaultHandlerPosition
+    }
+
+    // Set the handler position
+    fun setHandlerPosition(handlerPosition: String) {
+        val sharedPref = context.getSharedPreferences(sharedPrefName, Context.MODE_PRIVATE)
+        val editor = sharedPref.edit()
+        editor.putString(handlerPositionKey, handlerPosition)
+        editor.apply()
+    }
+
+    // Get the lock handler position state
+    fun isLockHandlerPositionEnabled(): Boolean {
+        val sharedPref = context.getSharedPreferences(sharedPrefName, Context.MODE_PRIVATE)
+        return sharedPref.getBoolean(lockHandlerPositionKey, false)
+    }
+
+    // Set the lock handler position state
+    fun setLockHandlerPositionEnabled(lockHandlerPosition: Boolean) {
+        val sharedPref = context.getSharedPreferences(sharedPrefName, Context.MODE_PRIVATE)
+        val editor = sharedPref.edit()
+        editor.putBoolean(lockHandlerPositionKey, lockHandlerPosition)
+        editor.apply()
+    }
+
+    // Get the handler color
+    fun getHandlerColor(): Int {
+        val sharedPref = context.getSharedPreferences(sharedPrefName, Context.MODE_PRIVATE)
+        return sharedPref.getInt(handlerColorKey, Constants.defaultHandlerColor)
+    }
+
+    // Set the handler color
+    fun setHandlerColor(handlerColor: Int) {
+        val sharedPref = context.getSharedPreferences(sharedPrefName, Context.MODE_PRIVATE)
+        val editor = sharedPref.edit()
+        editor.putInt(handlerColorKey, handlerColor)
+        editor.apply()
+    }
+
+    // Get the handler transparency
+    fun getHandlerTransparency(): Int {
+        val sharedPref = context.getSharedPreferences(sharedPrefName, Context.MODE_PRIVATE)
+        return sharedPref.getInt(handlerTransparencyKey, Constants.defaultHandlerTransparency)
+    }
+
+    // Set the handler transparency
+    fun setHandlerTransparency(handlerTransparency: Int) {
+        val sharedPref = context.getSharedPreferences(sharedPrefName, Context.MODE_PRIVATE)
+        val editor = sharedPref.edit()
+        editor.putInt(handlerTransparencyKey, handlerTransparency)
+        editor.apply()
+    }
+
+    // Get the handler size
+    fun getHandlerSize(): Int {
+        val sharedPref = context.getSharedPreferences(sharedPrefName, Context.MODE_PRIVATE)
+        return sharedPref.getInt(handlerSizeKey, Constants.defaultHandlerSize)
+    }
+
+    // Set the handler size
+    fun setHandlerSize(handlerSize: Int) {
+        val sharedPref = context.getSharedPreferences(sharedPrefName, Context.MODE_PRIVATE)
+        val editor = sharedPref.edit()
+        editor.putInt(handlerSizeKey, handlerSize)
+        editor.apply()
+    }
+
+    // Get the handler width
+    fun getHandlerWidth(): Int {
+        val sharedPref = context.getSharedPreferences(sharedPrefName, Context.MODE_PRIVATE)
+        return sharedPref.getInt(handlerWidthKey, Constants.defaultHandlerWidth)
+    }
+
+    // Set the handler width
+    fun setHandlerWidth(handlerWidth: Int) {
+        val sharedPref = context.getSharedPreferences(sharedPrefName, Context.MODE_PRIVATE)
+        val editor = sharedPref.edit()
+        editor.putInt(handlerWidthKey, handlerWidth)
+        editor.apply()
+    }
+
+    // Get the vibrate handler on touch state
+    fun isVibrateHandlerOnTouchEnabled(): Boolean {
+        val sharedPref = context.getSharedPreferences(sharedPrefName, Context.MODE_PRIVATE)
+        return sharedPref.getBoolean(vibrateHandlerOnTouchKey, false)
+    }
+
+    // Set the vibrate handler on touch state
+    fun setVibrateHandlerOnTouchEnabled(vibrateHandlerOnTouch: Boolean) {
+        val sharedPref = context.getSharedPreferences(sharedPrefName, Context.MODE_PRIVATE)
+        val editor = sharedPref.edit()
+        editor.putBoolean(vibrateHandlerOnTouchKey, vibrateHandlerOnTouch)
         editor.apply()
     }
 

@@ -51,7 +51,7 @@ class OverlayStyleActivity : AppCompatActivity(), ColorPaletteView.ColorSelectio
         binding.transparencySeekBar.max = 100
 
         val overlayColor = SharedPrefRepository(this).getOverlayColor()
-        overlayColor?.let { binding.colorPaletteView.setDefaultSelectedColor(it) }
+        overlayColor.let { binding.colorPaletteView.setDefaultSelectedColor(it) }
         val alpha = SharedPrefRepository(this).getOverlayTransparency()
         binding.transparencySeekBar.progress = ((300 - alpha) / 2.55).toInt()
 

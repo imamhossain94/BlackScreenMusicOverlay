@@ -5,15 +5,15 @@
     <PreferenceCategory>
         <DropDownPreference
             android:key="handlerPosition"
-            android:title="DropDownPreference"
+            android:title="Position"
             android:entries="@array/preferences_handler_position"
             android:entryValues="@array/preferences_handler_position"
-            android:defaultValue="Left"
+            android:defaultValue="Right"
             app:useSimpleSummaryProvider="true" />
 
         <SwitchPreferenceCompat
             android:key="lockHandler"
-            android:title="SwitchPreference"
+            android:title="Lock handler position"
             android:defaultValue="false" />
     </PreferenceCategory>
 

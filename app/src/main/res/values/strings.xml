@@ -8,4 +8,6 @@
     <string name="oui_app_permission_record_audio_title">Audio Recording Permission</string>
     <string name="oui_app_permission_record_audio_summary">This permission is required to enable the app to capture audio for displaying the music visualizer.</string>
 
+    <string name="device_description">Lock screen on click with Device Policy Manager API</string>
+    <string name="device_admin_label">Music Overlay Device Admin</string>
 </resources>
