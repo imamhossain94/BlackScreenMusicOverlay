@@ -39,7 +39,6 @@ class HandlerView(context: Context, attrs: AttributeSet? = null) : AppCompatText
         shape.setStroke(strokeWidth.toInt(), strokeColor)
         return shape
     }
-dd .
     private fun updateViewProperties(width: Int, height: Int, gravity: Int, color: Int, cornerRadius: Float, strokeColor: Int, strokeWidth: Float) {
         val layoutParams = FrameLayout.LayoutParams(width, height)
         layoutParams.gravity = gravity
