@@ -59,4 +59,8 @@ class LabeledSeekBarView @JvmOverloads constructor(
     }
 
     // Other methods as needed...
+    fun setOnSeekBarChangeListener(listener: SeslSeekBar.OnSeekBarChangeListener) {
+        seekBar.setOnSeekBarChangeListener(listener)
+    }
+
 }

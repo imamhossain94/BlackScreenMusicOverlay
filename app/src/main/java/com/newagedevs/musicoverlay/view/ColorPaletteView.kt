@@ -165,6 +165,7 @@ class ColorPaletteView @JvmOverloads constructor(
         val shape = GradientDrawable()
         shape.shape = GradientDrawable.OVAL
         shape.setColor(color)
+        shape.setStroke(1, Color.GRAY)
         return shape
     }
 

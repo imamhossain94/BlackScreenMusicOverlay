@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.appcompat.widget.SeslSeekBar
 import com.newagedevs.musicoverlay.R
 import dev.oneuiproject.oneui.utils.SeekBarUtils
 import dev.oneuiproject.oneui.widget.HapticSeekBar
@@ -69,4 +70,7 @@ class LabeledHapticSeekBarView @JvmOverloads constructor(
     }
 
     // Other methods as needed...
+    fun setOnSeekBarChangeListener(listener: SeslSeekBar.OnSeekBarChangeListener) {
+        seekBar.setOnSeekBarChangeListener(listener)
+    }
 }
