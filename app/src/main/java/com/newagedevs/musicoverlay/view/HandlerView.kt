@@ -28,26 +28,70 @@ class HandlerView(context: Context, attrs: AttributeSet? = null) : AppCompatText
     private var lastClickTime = 0L
 
     init {
-        updateViewProperties(50, 300, Gravity.TOP or Gravity.END, Color.BLUE, 20f, Color.GRAY, 1f)
+        updateViewProperties()
     }
 
-    private fun createViewDrawable(color: Int, cornerRadius: Float, strokeColor: Int, strokeWidth: Float): GradientDrawable {
+    private fun createViewDrawable(
+        color: Int,
+        cornerRadiusTopLeft: Float,
+        cornerRadiusTopRight: Float,
+        cornerRadiusBottomLeft: Float,
+        cornerRadiusBottomRight: Float,
+        strokeColor: Int,
+        strokeWidth: Float
+    ): GradientDrawable {
         val shape = GradientDrawable()
         shape.shape = GradientDrawable.RECTANGLE
-        shape.cornerRadii = floatArrayOf(cornerRadius, cornerRadius, 0f, 0f, 0f, 0f, cornerRadius, cornerRadius)
+        shape.cornerRadii = floatArrayOf(
+            cornerRadiusTopLeft,
+            cornerRadiusTopLeft,
+            cornerRadiusTopRight,
+            cornerRadiusTopRight,
+            cornerRadiusBottomRight,
+            cornerRadiusBottomRight,
+            cornerRadiusBottomLeft,
+            cornerRadiusBottomLeft
+        )
         shape.setColor(color)
         shape.setStroke(strokeWidth.toInt(), strokeColor)
         return shape
     }
-    private fun updateViewProperties(width: Int, height: Int, gravity: Int, color: Int, cornerRadius: Float, strokeColor: Int, strokeWidth: Float) {
+
+    private fun updateViewProperties(
+        width: Int = 50,
+        height: Int = 300,
+        gravity: Int = Gravity.TOP or Gravity.END,
+        color: Int = Color.BLUE,
+        cornerRadiusTopLeft: Float = 20f,
+        cornerRadiusTopRight: Float = 0f,
+        cornerRadiusBottomLeft: Float = 20f,
+        cornerRadiusBottomRight: Float = 0f,
+        strokeColor: Int = Color.GRAY,
+        strokeWidth: Float = 1f
+    ) {
         val layoutParams = FrameLayout.LayoutParams(width, height)
         layoutParams.gravity = gravity
         this.layoutParams = layoutParams
 
-        background = createViewDrawable(color, cornerRadius, strokeColor, strokeWidth)
+        background = createViewDrawable(
+            color,
+            cornerRadiusTopLeft,
+            cornerRadiusTopRight,
+            cornerRadiusBottomLeft,
+            cornerRadiusBottomRight,
+            strokeColor,
+            strokeWidth
+        )
     }
 
     fun setViewSize(width: Int, height: Int) {
+        val layoutParams = this.layoutParams as FrameLayout.LayoutParams
+        layoutParams.width = width
+        layoutParams.height = height
+        requestLayout()
+    }
+
+    fun setViewSize(height: Int) {
         val layoutParams = this.layoutParams as FrameLayout.LayoutParams
         layoutParams.width = width
         layoutParams.height = height
@@ -65,10 +109,22 @@ class HandlerView(context: Context, attrs: AttributeSet? = null) : AppCompatText
         gradientDrawable.setColor(color)
     }
 
-    fun setCornerRadius(cornerRadius: Float) {
+    fun setCornerRadius(
+        cornerRadiusTopLeft: Float,
+        cornerRadiusTopRight: Float,
+        cornerRadiusBottomLeft: Float,
+        cornerRadiusBottomRight: Float
+    ) {
         val gradientDrawable = background as GradientDrawable
         gradientDrawable.cornerRadii = floatArrayOf(
-            cornerRadius, cornerRadius, 0f, 0f, 0f, 0f, cornerRadius, cornerRadius
+            cornerRadiusTopLeft,
+            cornerRadiusTopLeft,
+            cornerRadiusTopRight,
+            cornerRadiusTopRight,
+            cornerRadiusBottomRight,
+            cornerRadiusBottomRight,
+            cornerRadiusBottomLeft,
+            cornerRadiusBottomLeft
         )
     }
 

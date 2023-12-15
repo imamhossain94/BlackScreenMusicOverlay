@@ -16,12 +16,15 @@ import dev.oneuiproject.oneui.widget.Toast
 class HandlerStyleActivity : AppCompatActivity(), ColorPaletteView.ColorSelectionListener {
 
     private lateinit var binding: ActivityHandlerStyleBinding
+    lateinit var handlerView: HandlerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = ActivityHandlerStyleBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        handlerView = HandlerView(this)
 
         binding.toolbarLayout.setNavigationButtonAsBack()
 
@@ -51,17 +54,6 @@ class HandlerStyleActivity : AppCompatActivity(), ColorPaletteView.ColorSelectio
             SharedPrefRepository(this).setVibrateHandlerOnTouchEnabled(isChecked)
         }
 
-
-
-
-
-        // Add HandlerView on top of other views
-        val handlerView = HandlerView(this)
-//        val layoutParams = FrameLayout.LayoutParams(
-//            FrameLayout.LayoutParams.WRAP_CONTENT,
-//            FrameLayout.LayoutParams.WRAP_CONTENT
-//        )
-
         binding.rootLayout.addView(handlerView)
 
         // Set click listener for HandlerView
@@ -77,6 +69,7 @@ class HandlerStyleActivity : AppCompatActivity(), ColorPaletteView.ColorSelectio
 
     override fun onColorSelected(color: Int) {
         SharedPrefRepository(this).setHandlerColor(color)
+        handlerView.setViewColor(color)
     }
 
     private val transparencySeekBarChangeListener: SeslSeekBar.OnSeekBarChangeListener =
@@ -92,6 +85,7 @@ class HandlerStyleActivity : AppCompatActivity(), ColorPaletteView.ColorSelectio
         object : SeslSeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeslSeekBar?, progress: Int, fromUser: Boolean) {
                 SharedPrefRepository(this@HandlerStyleActivity).setHandlerSize(progress)
+                handlerView.setViewSize(progress)
             }
             override fun onStartTrackingTouch(seekBar: SeslSeekBar?) { }
             override fun onStopTrackingTouch(seekBar: SeslSeekBar?) { }
