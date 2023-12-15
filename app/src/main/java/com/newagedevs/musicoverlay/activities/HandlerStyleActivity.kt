@@ -68,14 +68,19 @@ class HandlerStyleActivity : AppCompatActivity(), ColorPaletteView.ColorSelectio
     }
 
     override fun onColorSelected(color: Int) {
+        val progress = SharedPrefRepository(this@HandlerStyleActivity).getHandlerTransparency()
         SharedPrefRepository(this).setHandlerColor(color)
-        handlerView.setViewColor(color)
+        handlerView.setViewColor(color, progress)
+
     }
 
     private val transparencySeekBarChangeListener: SeslSeekBar.OnSeekBarChangeListener =
         object : SeslSeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeslSeekBar?, progress: Int, fromUser: Boolean) {
-                SharedPrefRepository(this@HandlerStyleActivity).setHandlerTransparency((progress * 2.55).toInt())
+                val progressValue = (progress * 2.55).toInt()
+                val color = SharedPrefRepository(this@HandlerStyleActivity).getHandlerColor()
+                SharedPrefRepository(this@HandlerStyleActivity).setHandlerTransparency(progressValue)
+                handlerView.setViewColor(color, progressValue)
             }
             override fun onStartTrackingTouch(seekBar: SeslSeekBar?) { }
             override fun onStopTrackingTouch(seekBar: SeslSeekBar?) { }
@@ -85,7 +90,7 @@ class HandlerStyleActivity : AppCompatActivity(), ColorPaletteView.ColorSelectio
         object : SeslSeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeslSeekBar?, progress: Int, fromUser: Boolean) {
                 SharedPrefRepository(this@HandlerStyleActivity).setHandlerSize(progress)
-                handlerView.setViewSize(progress)
+                handlerView.setViewSize(((progress * 1.5) + 200).toInt())
             }
             override fun onStartTrackingTouch(seekBar: SeslSeekBar?) { }
             override fun onStopTrackingTouch(seekBar: SeslSeekBar?) { }
@@ -95,6 +100,7 @@ class HandlerStyleActivity : AppCompatActivity(), ColorPaletteView.ColorSelectio
         object : SeslSeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeslSeekBar?, progress: Int, fromUser: Boolean) {
                 SharedPrefRepository(this@HandlerStyleActivity).setHandlerWidth(progress)
+                handlerView.setViewWidth((progress + 1) * 20)
             }
             override fun onStartTrackingTouch(seekBar: SeslSeekBar?) { }
             override fun onStopTrackingTouch(seekBar: SeslSeekBar?) { }

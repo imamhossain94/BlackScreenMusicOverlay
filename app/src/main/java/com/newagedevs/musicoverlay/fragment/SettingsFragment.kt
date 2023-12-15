@@ -2,11 +2,13 @@ package com.newagedevs.musicoverlay.fragment
 
 import android.content.Context
 import android.os.Bundle
+import android.view.Gravity
 import androidx.preference.DropDownPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
 import com.newagedevs.musicoverlay.R
+import com.newagedevs.musicoverlay.activities.HandlerStyleActivity
 import com.newagedevs.musicoverlay.preferences.SharedPrefRepository
 
 
@@ -29,7 +31,18 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceChan
     override fun onPreferenceChange(preference: Preference?, newValue: Any?): Boolean {
         when (preference!!.key) {
             "handlerPosition" -> {
-                mContext?.let { SharedPrefRepository(it).setHandlerPosition(newValue as String) }
+                mContext?.let {
+                    val value = newValue as String
+                    SharedPrefRepository(it).setHandlerPosition(value)
+                    when (value) {
+                        "Left" -> {
+                            (activity as HandlerStyleActivity).handlerView.setViewGravity(Gravity.START)
+                        }
+                        "Right" -> {
+                            (activity as HandlerStyleActivity).handlerView.setViewGravity(Gravity.END)
+                        }
+                    }
+                }
                 return true
             }
             "lockHandler" -> {

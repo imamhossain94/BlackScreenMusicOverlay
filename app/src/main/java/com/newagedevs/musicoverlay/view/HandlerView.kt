@@ -84,7 +84,7 @@ class HandlerView(context: Context, attrs: AttributeSet? = null) : AppCompatText
         )
     }
 
-    fun setViewSize(width: Int, height: Int) {
+    fun setViewWidth(width: Int) {
         val layoutParams = this.layoutParams as FrameLayout.LayoutParams
         layoutParams.width = width
         layoutParams.height = height
@@ -104,9 +104,10 @@ class HandlerView(context: Context, attrs: AttributeSet? = null) : AppCompatText
         requestLayout()
     }
 
-    fun setViewColor(color: Int) {
+    fun setViewColor(color: Int, alpha: Int = 255) {
+        val adjustedColor = Color.argb(alpha, Color.red(color), Color.green(color), Color.blue(color))
         val gradientDrawable = background as GradientDrawable
-        gradientDrawable.setColor(color)
+        gradientDrawable.setColor(adjustedColor)
     }
 
     fun setCornerRadius(
