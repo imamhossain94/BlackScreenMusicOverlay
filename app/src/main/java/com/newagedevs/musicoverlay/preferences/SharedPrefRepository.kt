@@ -38,6 +38,7 @@ class SharedPrefRepository(private val context: Context) {
     private val handlerSizeKey = "handlerSize"
     private val handlerWidthKey = "handlerWidth"
     private val vibrateHandlerOnTouchKey = "vibrateHandlerOnTouch"
+    private val handlerTranslationYKey = "handlerTranslationY"
 
 
     // Increment click count
@@ -415,6 +416,20 @@ class SharedPrefRepository(private val context: Context) {
         val editor = sharedPref.edit()
         editor.putBoolean(vibrateHandlerOnTouchKey, vibrateHandlerOnTouch)
         editor.apply()
+    }
+
+    // Save handler translationY
+    fun setHandlerTranslationY(translationY: Float) {
+        val sharedPref = context.getSharedPreferences(sharedPrefName, Context.MODE_PRIVATE)
+        val editor = sharedPref.edit()
+        editor.putFloat(handlerTranslationYKey, translationY)
+        editor.apply()
+    }
+
+    // Retrieve handler translationY
+    fun getHandlerTranslationY(): Float {
+        val sharedPref = context.getSharedPreferences(sharedPrefName, Context.MODE_PRIVATE)
+        return sharedPref.getFloat(handlerTranslationYKey, 0f)
     }
 
 }

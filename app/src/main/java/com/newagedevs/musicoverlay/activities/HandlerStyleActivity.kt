@@ -13,7 +13,7 @@ import com.newagedevs.musicoverlay.view.ColorPaletteView
 import dev.oneuiproject.oneui.widget.Toast
 
 
-class HandlerStyleActivity : AppCompatActivity(), ColorPaletteView.ColorSelectionListener {
+class HandlerStyleActivity : AppCompatActivity(), ColorPaletteView.ColorSelectionListener, HandlerView.HandlerPositionChangeListener {
 
     private lateinit var binding: ActivityHandlerStyleBinding
     lateinit var handlerView: HandlerView
@@ -28,8 +28,17 @@ class HandlerStyleActivity : AppCompatActivity(), ColorPaletteView.ColorSelectio
 
         binding.toolbarLayout.setNavigationButtonAsBack()
 
-        // Handler color
+        // Handler properties
+        val handlerIsLockPosition = SharedPrefRepository(this).isLockHandlerPositionEnabled()
+        val handlerIsVibrateOnTouch = SharedPrefRepository(this).isVibrateHandlerOnTouchEnabled()
+        val handlerPosition = SharedPrefRepository(this).getHandlerPosition()
         val handlerColor = SharedPrefRepository(this).getHandlerColor()
+        val handlerTransparency = SharedPrefRepository(this).getHandlerTransparency()
+        val handlerSize = SharedPrefRepository(this).getHandlerSize()
+        val handlerWidth = SharedPrefRepository(this).getHandlerWidth()
+        val translationY = SharedPrefRepository(this).getHandlerTranslationY()
+
+        // Handler color
         handlerColor.let { binding.colorPaletteView.setDefaultSelectedColor(it) }
         binding.colorPaletteView.setColorSelectionListener(this)
 
@@ -59,11 +68,14 @@ class HandlerStyleActivity : AppCompatActivity(), ColorPaletteView.ColorSelectio
         // Set click listener for HandlerView
         handlerView.setOnClickListener {
             // Handle click event
-
             Toast.makeText(this, "Handler clicked", Toast.LENGTH_SHORT).show()
         }
 
-        handlerView.setViewGravity(Gravity.START)
+        handlerView.setTranslationYPosition(translationY)
+        handlerView.setViewGravity(if (handlerPosition == "Left") Gravity.START else Gravity.END)
+        handlerView.setViewColor(handlerColor, handlerTransparency)
+        handlerView.setViewDimension((handlerWidth + 1) * 20, ((handlerSize * 1.5) + 200).toInt())
+        handlerView.setHandlerPositionChangeListener(this)
 
     }
 
@@ -105,5 +117,9 @@ class HandlerStyleActivity : AppCompatActivity(), ColorPaletteView.ColorSelectio
             override fun onStartTrackingTouch(seekBar: SeslSeekBar?) { }
             override fun onStopTrackingTouch(seekBar: SeslSeekBar?) { }
         }
+
+    override fun onVertical(rawY: Float) {
+        SharedPrefRepository(this@HandlerStyleActivity).setHandlerTranslationY(rawY)
+    }
 
 }

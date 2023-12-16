@@ -31,6 +31,16 @@ class HandlerView(context: Context, attrs: AttributeSet? = null) : AppCompatText
         updateViewProperties()
     }
 
+    interface HandlerPositionChangeListener {
+        fun onVertical(rawY: Float)
+    }
+
+    private var handlerPositionChangeListener: HandlerPositionChangeListener? = null
+
+    fun setHandlerPositionChangeListener(listener: HandlerPositionChangeListener) {
+        handlerPositionChangeListener = listener
+    }
+
     private fun createViewDrawable(
         color: Int,
         cornerRadiusTopLeft: Float,
@@ -98,10 +108,27 @@ class HandlerView(context: Context, attrs: AttributeSet? = null) : AppCompatText
         requestLayout()
     }
 
+    fun setViewDimension(width: Int, height: Int) {
+        val layoutParams = this.layoutParams as FrameLayout.LayoutParams
+        layoutParams.width = width
+        layoutParams.height = height
+        requestLayout()
+    }
+
     fun setViewGravity(gravity: Int) {
         val layoutParams = this.layoutParams as FrameLayout.LayoutParams
         layoutParams.gravity = gravity
         requestLayout()
+
+        when (gravity) {
+            Gravity.START -> {
+                setCornerRadius(cornerRadiusBottomRight = 20f, cornerRadiusTopRight = 20f)
+            }
+            Gravity.END -> {
+                setCornerRadius(cornerRadiusBottomLeft = 20f, cornerRadiusTopLeft = 20f)
+            }
+        }
+
     }
 
     fun setViewColor(color: Int, alpha: Int = 255) {
@@ -111,10 +138,10 @@ class HandlerView(context: Context, attrs: AttributeSet? = null) : AppCompatText
     }
 
     fun setCornerRadius(
-        cornerRadiusTopLeft: Float,
-        cornerRadiusTopRight: Float,
-        cornerRadiusBottomLeft: Float,
-        cornerRadiusBottomRight: Float
+        cornerRadiusTopLeft: Float = 0f,
+        cornerRadiusTopRight: Float = 0f,
+        cornerRadiusBottomLeft: Float = 0f,
+        cornerRadiusBottomRight: Float = 0f
     ) {
         val gradientDrawable = background as GradientDrawable
         gradientDrawable.cornerRadii = floatArrayOf(
@@ -137,6 +164,14 @@ class HandlerView(context: Context, attrs: AttributeSet? = null) : AppCompatText
         (background.mutate() as GradientDrawable).setStroke(strokeWidth, attr.color)
     }
 
+    fun setTranslationYPosition(translationY: Float) {
+        this.translationY = translationY
+    }
+
+    fun getTranslationYPosition(): Float {
+        return translationY
+    }
+
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {
         when (event.action) {
@@ -147,6 +182,7 @@ class HandlerView(context: Context, attrs: AttributeSet? = null) : AppCompatText
                 val deltaY = event.rawY - lastY
                 translationY += deltaY
                 lastY = event.rawY
+                handlerPositionChangeListener?.onVertical(translationY)
             }
             MotionEvent.ACTION_UP -> {
                 val isTouchDuration = System.currentTimeMillis() - touchDownTime < TOUCH_TIME_FACTOR
