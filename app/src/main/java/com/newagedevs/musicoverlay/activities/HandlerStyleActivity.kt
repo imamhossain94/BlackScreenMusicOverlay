@@ -1,21 +1,14 @@
 package com.newagedevs.musicoverlay.activities
 
-import android.content.Context
-import android.os.Build
-import com.newagedevs.musicoverlay.view.HandlerView
 import android.os.Bundle
-import android.os.VibrationEffect
-import android.os.Vibrator
-import android.os.VibratorManager
 import android.view.Gravity
-import android.view.ViewGroup
-import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SeslSeekBar
 import com.newagedevs.musicoverlay.databinding.ActivityHandlerStyleBinding
 import com.newagedevs.musicoverlay.models.Constants
 import com.newagedevs.musicoverlay.preferences.SharedPrefRepository
 import com.newagedevs.musicoverlay.view.ColorPaletteView
+import com.newagedevs.musicoverlay.view.HandlerView
 import dev.oneuiproject.oneui.widget.Toast
 
 
