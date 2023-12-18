@@ -89,5 +89,8 @@ class Constants {
         const val defaultHandlerTransparency: Int = 255
         const val defaultHandlerSize: Int = 100
         const val defaultHandlerWidth: Int = 0
+
+        val handlerWidthList = arrayOf(40, 50, 60)
     }
+
 }

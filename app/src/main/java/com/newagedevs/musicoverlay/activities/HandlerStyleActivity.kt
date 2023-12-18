@@ -1,13 +1,19 @@
 package com.newagedevs.musicoverlay.activities
 
+import android.content.Context
+import android.os.Build
 import com.newagedevs.musicoverlay.view.HandlerView
 import android.os.Bundle
+import android.os.VibrationEffect
+import android.os.Vibrator
+import android.os.VibratorManager
 import android.view.Gravity
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SeslSeekBar
 import com.newagedevs.musicoverlay.databinding.ActivityHandlerStyleBinding
+import com.newagedevs.musicoverlay.models.Constants
 import com.newagedevs.musicoverlay.preferences.SharedPrefRepository
 import com.newagedevs.musicoverlay.view.ColorPaletteView
 import dev.oneuiproject.oneui.widget.Toast
@@ -61,21 +67,23 @@ class HandlerStyleActivity : AppCompatActivity(), ColorPaletteView.ColorSelectio
         binding.vibrateOnHandleIsTouched.isChecked = SharedPrefRepository(this).isVibrateHandlerOnTouchEnabled()
         binding.vibrateOnHandleIsTouched.setOnCheckedChangeListener { _, isChecked ->
             SharedPrefRepository(this).setVibrateHandlerOnTouchEnabled(isChecked)
+            handlerView.setVibrateOnClick(isChecked)
         }
 
         binding.rootLayout.addView(handlerView)
 
         // Set click listener for HandlerView
         handlerView.setOnClickListener {
-            // Handle click event
             Toast.makeText(this, "Handler clicked", Toast.LENGTH_SHORT).show()
         }
 
+        handlerView.setHandlerPositionIsLocked(handlerIsLockPosition)
         handlerView.setTranslationYPosition(translationY)
         handlerView.setViewGravity(if (handlerPosition == "Left") Gravity.START else Gravity.END)
         handlerView.setViewColor(handlerColor, handlerTransparency)
-        handlerView.setViewDimension((handlerWidth + 1) * 20, ((handlerSize * 1.5) + 200).toInt())
+        handlerView.setViewDimension(Constants.handlerWidthList[handlerWidth], ((handlerSize * 1.5) + 200).toInt())
         handlerView.setHandlerPositionChangeListener(this)
+        handlerView.setVibrateOnClick(handlerIsVibrateOnTouch)
 
     }
 
@@ -112,7 +120,7 @@ class HandlerStyleActivity : AppCompatActivity(), ColorPaletteView.ColorSelectio
         object : SeslSeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeslSeekBar?, progress: Int, fromUser: Boolean) {
                 SharedPrefRepository(this@HandlerStyleActivity).setHandlerWidth(progress)
-                handlerView.setViewWidth((progress + 1) * 20)
+                handlerView.setViewWidth(Constants.handlerWidthList[progress])
             }
             override fun onStartTrackingTouch(seekBar: SeslSeekBar?) { }
             override fun onStopTrackingTouch(seekBar: SeslSeekBar?) { }

@@ -46,7 +46,11 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceChan
                 return true
             }
             "lockHandler" -> {
-                mContext?.let { SharedPrefRepository(it).setLockHandlerPositionEnabled(newValue as Boolean) }
+                mContext?.let {
+                    val value = newValue as Boolean
+                    SharedPrefRepository(it).setLockHandlerPositionEnabled(value)
+                    (activity as HandlerStyleActivity).handlerView.setHandlerPositionIsLocked(value)
+                }
                 return true
             }
         }
