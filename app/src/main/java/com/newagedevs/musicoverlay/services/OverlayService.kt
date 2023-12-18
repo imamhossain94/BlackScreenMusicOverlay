@@ -151,8 +151,11 @@ import com.newagedevs.musicoverlay.R
 class OverlayService : Service(), OnTouchListener, View.OnClickListener {
     private var wm: WindowManager? = null
     private var button: Button? = null
-    override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
+
+
+    override fun onCreate() {
         super.onCreate()
+
         val CHANNEL_ID = "channel1"
 
         val channel = NotificationChannel(
@@ -169,6 +172,7 @@ class OverlayService : Service(), OnTouchListener, View.OnClickListener {
             .setContentText("Tap to manage overlay")
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setAutoCancel(false)
+            .setOngoing(true)
             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
             .addAction(R.drawable.ic_show, "Show", getPendingIntent("show"))
             .addAction(R.drawable.ic_hide, "Hide", getPendingIntent("hide"))
@@ -180,30 +184,9 @@ class OverlayService : Service(), OnTouchListener, View.OnClickListener {
 
 
 
-        wm = getSystemService(WINDOW_SERVICE) as WindowManager
-
-        button = Button(this)
-        button!!.setBackgroundResource(R.drawable.ic_show)
-        button!!.text = "Button"
-        button!!.alpha = 1f
-        button!!.setBackgroundColor(Color.BLUE)
-        button!!.setOnClickListener(this)
-
-        val type =
-            WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
-        val params = WindowManager.LayoutParams(
-            WindowManager.LayoutParams.WRAP_CONTENT,
-            WindowManager.LayoutParams.WRAP_CONTENT,
-            type,
-            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
-            PixelFormat.TRANSLUCENT
-        )
-        params.gravity = Gravity.START or Gravity.TOP
-        params.x = 0
-        params.y = 0
-        wm!!.addView(button, params)
-        return START_NOT_STICKY
     }
+
+
 
 
     private fun getPendingIntent(action: String): PendingIntent {
@@ -237,5 +220,44 @@ class OverlayService : Service(), OnTouchListener, View.OnClickListener {
 
     companion object {
         private const val TAG = "OverlayService"
+    }
+
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        intent?.action?.let {
+            when (it) {
+                "show" -> {
+                    wm = getSystemService(WINDOW_SERVICE) as WindowManager
+
+                    button = Button(this)
+                    button!!.setBackgroundResource(R.drawable.ic_show)
+                    button!!.text = "Button"
+                    button!!.alpha = 1f
+                    button!!.setBackgroundColor(Color.BLUE)
+                    button!!.setOnClickListener(this)
+
+                    val type =
+                        WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
+                    val params = WindowManager.LayoutParams(
+                        WindowManager.LayoutParams.WRAP_CONTENT,
+                        WindowManager.LayoutParams.WRAP_CONTENT,
+                        type,
+                        WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
+                        PixelFormat.TRANSLUCENT
+                    )
+                    params.gravity = Gravity.START or Gravity.TOP
+                    params.x = 0
+                    params.y = 0
+                    wm!!.addView(button, params)
+                }
+                "hide" -> {
+                    if (button != null) {
+                        wm!!.removeView(button)
+                        button = null
+                    }
+                }
+                "stop" -> stopSelf()
+            }
+        }
+        return START_STICKY
     }
 }
