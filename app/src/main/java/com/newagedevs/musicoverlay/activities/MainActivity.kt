@@ -80,14 +80,8 @@ class MainActivity : AppCompatActivity() {
         binding.startClockStyleActivity.isEnabled = SharedPrefRepository(this).isAlwaysOnDisplay()
 
         binding.alwaysOnDisplay.setOnCheckedChangeListener { _, isChecked ->
-
-
-
             binding.startClockStyleActivity.isEnabled = isChecked
             SharedPrefRepository(this).setAlwaysOnDisplay(isChecked)
-
-
-
         }
 
         askNotificationPermission()

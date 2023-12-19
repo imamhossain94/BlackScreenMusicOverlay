@@ -35,6 +35,11 @@ class OverlayStyleActivity : AppCompatActivity(), ColorPaletteView.ColorSelectio
 
     private var mCurrentStyleIndex = 0
     private var mVisualizerManager: NierVisualizerManager? = null
+    private var byteArrays = ByteArray(128)
+
+    private lateinit var audioManager: AudioManager
+    private val handler = Handler(Looper.getMainLooper())
+
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -107,11 +112,6 @@ class OverlayStyleActivity : AppCompatActivity(), ColorPaletteView.ColorSelectio
         mVisualizerManager?.start(binding.surfaceView, visualizerList[overlayIndex])
 
     }
-
-    private var byteArrays = ByteArray(128)
-
-    private lateinit var audioManager: AudioManager
-    private val handler = Handler(Looper.getMainLooper())
 
     fun generateRandomByteArray(size: Int): ByteArray {
         val byteArray = ByteArray(size)
