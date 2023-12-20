@@ -77,7 +77,7 @@ class Constants {
         const val defaultClockColor: Int = Color.WHITE
         const val defaultTextClockTransparency: Float = 100f
         const val defaultFrameClockTransparency: Int = 255
-        const val defaultOverlayColor: Int = Color.WHITE
+        const val defaultOverlayColor: Int = Color.BLACK
         const val defaultOverlayTransparency: Int = 255
 
         // Default unlock condition

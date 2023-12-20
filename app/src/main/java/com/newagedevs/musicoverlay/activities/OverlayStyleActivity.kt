@@ -58,7 +58,7 @@ class OverlayStyleActivity : AppCompatActivity(), ColorPaletteView.ColorSelectio
         val overlayColor = SharedPrefRepository(this).getOverlayColor()
         overlayColor.let { binding.colorPaletteView.setDefaultSelectedColor(it) }
         val alpha = SharedPrefRepository(this).getOverlayTransparency()
-        binding.transparencySeekBar.progress = ((300 - alpha) / 2.55).toInt()
+        binding.transparencySeekBar.progress = ((255 - alpha) / 2.55).toInt()
 
         val overlayIndex = SharedPrefRepository(this).getOverlayStyleIndex()
 
@@ -209,7 +209,7 @@ class OverlayStyleActivity : AppCompatActivity(), ColorPaletteView.ColorSelectio
         val drawable = GradientDrawable()
         drawable.setColor(color)
         if(binding.transparencySeekBar.progress != 0) {
-            val alpha = 300 - (binding.transparencySeekBar.progress * 2.55).toInt()
+            val alpha = 255 - (binding.transparencySeekBar.progress * 2.55).toInt()
             drawable.alpha = alpha
             SharedPrefRepository(this).setOverlayTransparency(alpha)
         }
@@ -231,7 +231,7 @@ class OverlayStyleActivity : AppCompatActivity(), ColorPaletteView.ColorSelectio
         drawable.cornerRadius = 16.dpToPx().toFloat()
 
         if(binding.transparencySeekBar.progress != 0) {
-            val alpha = 300 - (binding.transparencySeekBar.progress * 2.55).toInt()
+            val alpha = 255 - (binding.transparencySeekBar.progress * 2.55).toInt()
             drawable.alpha = alpha
             SharedPrefRepository(this).setOverlayTransparency(alpha)
         }

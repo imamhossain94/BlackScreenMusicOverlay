@@ -2,6 +2,7 @@ package com.newagedevs.musicoverlay.services
 
 import android.R.attr.height
 import android.R.attr.width
+import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -10,18 +11,29 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.PixelFormat
+import android.graphics.PointF
+import android.graphics.drawable.GradientDrawable
 import android.media.AudioManager
 import android.os.Build
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
+import android.os.SystemClock
+import android.os.VibrationEffect
+import android.os.Vibrator
+import android.os.VibratorManager
+import android.view.GestureDetector
 import android.view.Gravity
+import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.SurfaceView
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.FrameLayout
 import android.widget.LinearLayout
+import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.NotificationCompat
 import com.newagedevs.musicoverlay.R
 import com.newagedevs.musicoverlay.models.ClockViewType
@@ -32,6 +44,7 @@ import com.newagedevs.musicoverlay.view.HandlerView
 import com.newagedevs.musicoverlay.view.TextClockView
 import dev.oneuiproject.oneui.widget.Toast
 import me.bogerchan.niervisualizer.NierVisualizerManager
+import kotlin.math.abs
 import kotlin.random.Random
 
 
@@ -161,7 +174,8 @@ import kotlin.random.Random
 
 class OverlayService : Service(), View.OnClickListener {
     private var wm: WindowManager? = null
-    private var overlayView: FrameLayout? = null
+    private var overlayView: View? = null
+
     private var surfaceView: SurfaceView? = null
     private var overlayIndex = 0
 
@@ -176,7 +190,27 @@ class OverlayService : Service(), View.OnClickListener {
         private const val TAG = "OverlayService"
         private const val CHANNEL_ID = "channel1"
         private const val NOTIFICATION_ID = 1
+
+        private const val TOUCH_MOVE_FACTOR: Long = 20
+        private const val TOUCH_TIME_FACTOR: Long = 300
+        private const val DOUBLE_CLICK_TIME_DELTA: Long = 300
     }
+
+
+
+    private var positionLocked:Boolean = false
+    private var vibrateOnClick:Boolean = false
+
+    private var lastY = 0f
+    private var actionDownPoint = PointF(0f, 0f)
+    private var touchDownTime = 0L
+    private var lastClickTime = 0L
+
+
+
+
+
+
 
     override fun onCreate() {
         super.onCreate()
@@ -207,8 +241,6 @@ class OverlayService : Service(), View.OnClickListener {
     }
 
 
-
-
     private fun getPendingIntent(action: String): PendingIntent {
         val intent = Intent(this, OverlayService::class.java).apply {
             this.action = action
@@ -224,9 +256,9 @@ class OverlayService : Service(), View.OnClickListener {
     override fun onDestroy() {
         super.onDestroy()
         if (overlayView != null) {
-            mVisualizerManager?.release()
-            mVisualizerManager = null
-            handler.removeCallbacks(checkMusicRunnable)
+//            mVisualizerManager?.release()
+//            mVisualizerManager = null
+//            handler.removeCallbacks(checkMusicRunnable)
 
             wm!!.removeView(overlayView)
             overlayView = null
@@ -238,6 +270,7 @@ class OverlayService : Service(), View.OnClickListener {
         return null
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Suppress("DEPRECATION")
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         intent?.action?.let {
@@ -247,8 +280,14 @@ class OverlayService : Service(), View.OnClickListener {
 
                         wm = getSystemService(WINDOW_SERVICE) as WindowManager
 
-                        overlayView = FrameLayout(this@OverlayService)
-                        overlayView?.setBackgroundColor(Color.BLACK)
+                        overlayView = LayoutInflater.from(this@OverlayService).inflate(R.layout.overlay_layout, null)
+
+                        val overlayLayout = overlayView?.findViewById<FrameLayout>(R.id.overlay_layout)
+                        val overlayViewHolder = overlayView?.findViewById<ConstraintLayout>(R.id.overlay_view_holder)
+                        val clockViewHolder = overlayView?.findViewById<LinearLayout>(R.id.clock_view_holder)
+                        val textClockView = overlayView?.findViewById<TextClockView>(R.id.textClock_preview)
+                        val frameClockView = overlayView?.findViewById<FrameClockView>(R.id.frameClock_preview)
+
 
                         val layoutParams = WindowManager.LayoutParams(
                             WindowManager.LayoutParams.MATCH_PARENT,
@@ -274,10 +313,6 @@ class OverlayService : Service(), View.OnClickListener {
                                 WindowManager.LayoutParams.FLAG_LAYOUT_INSET_DECOR or WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN
                         }
 
-                        layoutParams.apply {
-                            gravity = Gravity.CENTER
-                        }
-
                         overlayView?.systemUiVisibility = (
                                 View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
                                         or View.SYSTEM_UI_FLAG_FULLSCREEN
@@ -287,8 +322,9 @@ class OverlayService : Service(), View.OnClickListener {
                                         or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                                 )
 
-                        overlayView!!.setOnClickListener(this)
-
+                        // load overlay prefs
+                        val overlayColor = SharedPrefRepository(this).getOverlayColor()
+                        val alpha = SharedPrefRepository(this).getOverlayTransparency()
 
                         // load handler prefs
                         val handlerIsLockPosition = SharedPrefRepository(this).isLockHandlerPositionEnabled()
@@ -313,7 +349,58 @@ class OverlayService : Service(), View.OnClickListener {
 //                        handlerView.setHandlerPositionChangeListener(this)
                         handlerView.setVibrateOnClick(handlerIsVibrateOnTouch)
 
+                        overlayLayout?.addView(handlerView)
 
+                        // Overlay background d color
+                        val drawable = GradientDrawable()
+                        drawable.setColor(overlayColor)
+                        drawable.alpha = alpha
+                        overlayViewHolder?.background = drawable
+
+                        overlayViewHolder?.setOnClickListener(this)
+
+
+
+
+                        clockViewHolder?.setOnTouchListener { _, event ->
+
+                            when (event.action) {
+                                MotionEvent.ACTION_DOWN -> {
+                                    lastY = event.rawY
+                                    actionDownPoint = PointF(event.x, event.y)
+                                    touchDownTime = now()
+                                }
+                                MotionEvent.ACTION_MOVE -> {
+
+                                }
+                                MotionEvent.ACTION_UP -> {
+                                    val isTouchDuration = now() - touchDownTime < TOUCH_TIME_FACTOR
+                                    val isTouchLength = abs(event.x - actionDownPoint.x) + abs(event.y - actionDownPoint.y) < TOUCH_MOVE_FACTOR
+                                    val shouldClick = isTouchLength && isTouchDuration
+
+                                    if (shouldClick) {
+                                        if (now() - lastClickTime < DOUBLE_CLICK_TIME_DELTA) {
+                                            // Double click
+                                            clockViewHolder?.visibility = View.GONE
+
+                                            handler.postDelayed({
+                                                clockViewHolder?.visibility = View.VISIBLE
+                                            }, 5000)
+                                            lastClickTime = 0
+                                        } else {
+                                            // Single click
+                                            lastClickTime = now()
+                                        }
+                                    }
+                                }
+                            }
+                            return@setOnTouchListener true
+                        }
+
+
+                        handler.postDelayed({
+                            clockViewHolder?.visibility = View.VISIBLE
+                        }, 2000)
 
                         // Text clock
                         val clockIndex = SharedPrefRepository(this).getClockStyleIndex()
@@ -321,87 +408,67 @@ class OverlayService : Service(), View.OnClickListener {
                         val frameTransparency = SharedPrefRepository(this).getFrameClockTransparency()
                         val clockColor = SharedPrefRepository(this).getClockColor()
 
-                        val textClockView = TextClockView(this)
-                        val frameClockView = FrameClockView(this)
-
                         val clock = Constants.clockList[clockIndex]
 
                         when(clock.viewType) {
                             ClockViewType.TEXT_CLOCK.ordinal -> {
-                                textClockView.visibility = View.VISIBLE
-                                frameClockView.visibility = View.GONE
-                                textClockView.setAttributes(clock)
+                                textClockView?.visibility = View.VISIBLE
+                                frameClockView?.visibility = View.GONE
+                                textClockView?.setAttributes(clock)
                             }
                             ClockViewType.FRAME_CLOCK.ordinal -> {
-                                textClockView.visibility = View.GONE
-                                frameClockView.visibility = View.VISIBLE
-                                frameClockView.setAttributes(clock)
+                                textClockView?.visibility = View.GONE
+                                frameClockView?.visibility = View.VISIBLE
+                                frameClockView?.setAttributes(clock)
                             }
                         }
 
-                        textClockView.setHourTextSize(100f)
-                        textClockView.setMinuteTextSize(100f)
-                        textClockView.setOpacity(textTransparency)
-                        frameClockView.setOpacity(frameTransparency)
+                        textClockView?.setHourTextSize(100f)
+                        textClockView?.setMinuteTextSize(100f)
+                        textClockView?.setOpacity(textTransparency)
+                        frameClockView?.setOpacity(frameTransparency)
 
-                        clockColor?.let { it2 -> textClockView.setForegroundColor(it2) }
-                        clockColor?.let { it2 -> frameClockView.setForegroundColor(it2) }
-
-
-                        // SurfaceView
-                        val overlayColor = SharedPrefRepository(this).getOverlayColor()
-                        val alpha = SharedPrefRepository(this).getOverlayTransparency()
-                        overlayIndex = SharedPrefRepository(this).getOverlayStyleIndex()
-
-                        audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
-                        handler.postDelayed(checkMusicRunnable, 10)
-//                        handler.postDelayed(visualizerRunnable, 1000)
-                        byteArrays = generateRandomByteArray(128)
+                        clockColor?.let { it2 -> textClockView?.setForegroundColor(it2) }
+                        clockColor?.let { it2 -> frameClockView?.setForegroundColor(it2) }
 
 
-                        surfaceView = SurfaceView(this)
-                        overlayView?.addView(surfaceView)
-
-
-                        surfaceView?.setZOrderOnTop(true)
-                        surfaceView?.holder?.setFormat(PixelFormat.TRANSLUCENT)
-
-                        mVisualizerManager = NierVisualizerManager().apply {
-                            init(object : NierVisualizerManager.NVDataSource {
-                                override fun getDataSamplingInterval() = 0L
-                                override fun getDataLength() = byteArrays.size
-
-                                override fun fetchFftData(): ByteArray? {
-                                    return null
-                                }
-                                override fun fetchWaveData(): ByteArray {
-                                    return byteArrays
-                                }
-                            })
-                        }
-
-                        surfaceView.let {itView ->
-                            if (itView != null) {
-                                mVisualizerManager?.start(itView, Constants.visualizerList[overlayIndex])
-                            }
-                        }
-
-                        val params = LinearLayout.LayoutParams(
-                            300, 300
-                        ).apply {
-                            gravity = Gravity.CENTER
-                        }
-
-                        val params2 = ViewGroup.LayoutParams(
-                            300, 300
-                        )
-
-                        textClockView.layoutParams = params
-                        frameClockView.layoutParams = params2
-
-                        overlayView?.addView(handlerView)
-                        overlayView?.addView(textClockView)
-                        overlayView?.addView(frameClockView)
+//                        // SurfaceView
+//                        val overlayColor = SharedPrefRepository(this).getOverlayColor()
+//                        val alpha = SharedPrefRepository(this).getOverlayTransparency()
+//                        overlayIndex = SharedPrefRepository(this).getOverlayStyleIndex()
+//
+//                        audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
+//                        handler.postDelayed(checkMusicRunnable, 10)
+////                        handler.postDelayed(visualizerRunnable, 1000)
+//                        byteArrays = generateRandomByteArray(128)
+//
+//
+//                        surfaceView = SurfaceView(this)
+//                        overlayView?.addView(surfaceView)
+//
+//
+//                        surfaceView?.setZOrderOnTop(true)
+//                        surfaceView?.holder?.setFormat(PixelFormat.TRANSLUCENT)
+//
+//                        mVisualizerManager = NierVisualizerManager().apply {
+//                            init(object : NierVisualizerManager.NVDataSource {
+//                                override fun getDataSamplingInterval() = 0L
+//                                override fun getDataLength() = byteArrays.size
+//
+//                                override fun fetchFftData(): ByteArray? {
+//                                    return null
+//                                }
+//                                override fun fetchWaveData(): ByteArray {
+//                                    return byteArrays
+//                                }
+//                            })
+//                        }
+//
+//                        surfaceView.let {itView ->
+//                            if (itView != null) {
+//                                mVisualizerManager?.start(itView, Constants.visualizerList[overlayIndex])
+//                            }
+//                        }
 
 
                         wm!!.addView(overlayView, layoutParams)
@@ -409,9 +476,9 @@ class OverlayService : Service(), View.OnClickListener {
                 }
                 "hide" -> {
                     if (overlayView != null) {
-                        mVisualizerManager?.release()
-                        mVisualizerManager = null
-                        handler.removeCallbacks(checkMusicRunnable)
+//                        mVisualizerManager?.release()
+//                        mVisualizerManager = null
+//                        handler.removeCallbacks(checkMusicRunnable)
 
                         wm!!.removeView(overlayView)
                         overlayView = null
@@ -441,6 +508,10 @@ class OverlayService : Service(), View.OnClickListener {
             }
             handler.postDelayed(this, 10)
         }
+    }
+
+    private fun now(): Long {
+        return SystemClock.elapsedRealtime()
     }
 
 }

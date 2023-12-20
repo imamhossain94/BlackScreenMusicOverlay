@@ -22,6 +22,7 @@ class HandlerView(context: Context, attrs: AttributeSet? = null) : AppCompatText
         private const val TOUCH_MOVE_FACTOR: Long = 20
         private const val TOUCH_TIME_FACTOR: Long = 300
         private const val DOUBLE_CLICK_TIME_DELTA: Long = 300
+        private const val HANDLER_INSET: Int = 30
     }
 
     private var positionLocked:Boolean = false
@@ -97,7 +98,7 @@ class HandlerView(context: Context, attrs: AttributeSet? = null) : AppCompatText
             cornerRadiusBottomRight,
             strokeColor,
             strokeWidth
-        ), 20, 0, 0, 0)
+        ), HANDLER_INSET, 0, 0, 0)
 
     }
 
@@ -130,22 +131,38 @@ class HandlerView(context: Context, attrs: AttributeSet? = null) : AppCompatText
         when (gravity) {
             Gravity.START -> {
                 val drawable = setCornerRadius(cornerRadiusBottomRight = 20f, cornerRadiusTopRight = 20f)
-                background = InsetDrawable(drawable, 0, 0, 20, 0)
+                background = InsetDrawable(drawable, 0, 0, HANDLER_INSET, 0)
             }
             Gravity.END -> {
                 val drawable = setCornerRadius(cornerRadiusBottomLeft = 20f, cornerRadiusTopLeft = 20f)
-                background = InsetDrawable(drawable, 20, 0, 0, 0)
+                background = InsetDrawable(drawable, HANDLER_INSET, 0, 0, 0)
             }
         }
 
     }
 
+//    fun setViewColor(color: Int, alpha: Int = 255) {
+//        val adjustedColor = Color.argb(alpha, Color.red(color), Color.green(color), Color.blue(color))
+//        val insetDrawable = background as InsetDrawable
+//        val gradientDrawable = insetDrawable.drawable as GradientDrawable
+//        gradientDrawable.setColor(adjustedColor)
+//    }
+
     fun setViewColor(color: Int, alpha: Int = 255) {
+        val adjustedAlpha = when {
+            alpha > 0 -> alpha + 25
+            else -> 0
+        }
+
         val adjustedColor = Color.argb(alpha, Color.red(color), Color.green(color), Color.blue(color))
+        val strokeAlpha = Color.argb(adjustedAlpha, Color.red(color), Color.green(color), Color.blue(color))
+
         val insetDrawable = background as InsetDrawable
         val gradientDrawable = insetDrawable.drawable as GradientDrawable
         gradientDrawable.setColor(adjustedColor)
+        gradientDrawable.setStroke(1, strokeAlpha)
     }
+
 
     fun setCornerRadius(
         cornerRadiusTopLeft: Float = 0f,
