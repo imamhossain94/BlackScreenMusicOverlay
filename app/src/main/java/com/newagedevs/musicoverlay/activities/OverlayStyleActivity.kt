@@ -2,6 +2,9 @@ package com.newagedevs.musicoverlay.activities
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Paint
 import android.graphics.PixelFormat
 import android.graphics.drawable.GradientDrawable
 import android.media.AudioManager
@@ -12,6 +15,7 @@ import android.util.TypedValue
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.TranslateAnimation
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SeslSeekBar
 import androidx.core.content.ContextCompat
@@ -19,9 +23,31 @@ import com.newagedevs.musicoverlay.R
 import com.newagedevs.musicoverlay.databinding.ActivityOverlayStyleBinding
 import com.newagedevs.musicoverlay.extension.OnSwipeTouchListener
 import com.newagedevs.musicoverlay.extension.ResizeAnimation
+import com.newagedevs.musicoverlay.helper.MediaPlayerManager
+import com.newagedevs.musicoverlay.models.Constants
 import com.newagedevs.musicoverlay.models.Constants.Companion.visualizerList
 import com.newagedevs.musicoverlay.preferences.SharedPrefRepository
 import com.newagedevs.musicoverlay.view.ColorPaletteView
+import io.github.jeffshee.visualizer.painters.Painter
+import io.github.jeffshee.visualizer.painters.fft.FftBar
+import io.github.jeffshee.visualizer.painters.fft.FftCBar
+import io.github.jeffshee.visualizer.painters.fft.FftCLine
+import io.github.jeffshee.visualizer.painters.fft.FftCWave
+import io.github.jeffshee.visualizer.painters.fft.FftCWaveRgb
+import io.github.jeffshee.visualizer.painters.fft.FftLine
+import io.github.jeffshee.visualizer.painters.fft.FftWave
+import io.github.jeffshee.visualizer.painters.fft.FftWaveRgb
+import io.github.jeffshee.visualizer.painters.misc.Gradient
+import io.github.jeffshee.visualizer.painters.misc.Icon
+import io.github.jeffshee.visualizer.painters.modifier.Beat
+import io.github.jeffshee.visualizer.painters.modifier.Blend
+import io.github.jeffshee.visualizer.painters.modifier.Compose
+import io.github.jeffshee.visualizer.painters.modifier.Glitch
+import io.github.jeffshee.visualizer.painters.modifier.Move
+import io.github.jeffshee.visualizer.painters.modifier.Shake
+import io.github.jeffshee.visualizer.painters.waveform.WfmAnalog
+import io.github.jeffshee.visualizer.utils.Preset
+import io.github.jeffshee.visualizer.utils.VisualizerHelper
 import me.bogerchan.niervisualizer.NierVisualizerManager
 import kotlin.random.Random
 
@@ -33,12 +59,10 @@ class OverlayStyleActivity : AppCompatActivity(), ColorPaletteView.ColorSelectio
     private var originalHeight: Int = 0
     private lateinit var binding: ActivityOverlayStyleBinding
 
-    private var mCurrentStyleIndex = 0
-    private var mVisualizerManager: NierVisualizerManager? = null
-    private var byteArrays = ByteArray(128)
-
-    private lateinit var audioManager: AudioManager
-    private val handler = Handler(Looper.getMainLooper())
+    private var currentVisualizerIndex = 0
+    private lateinit var mediaPlayerManager: MediaPlayerManager
+    private lateinit var helper: VisualizerHelper
+    private lateinit var visualizerList: List<Painter?>
 
 
     @SuppressLint("ClickableViewAccessibility")
@@ -47,9 +71,6 @@ class OverlayStyleActivity : AppCompatActivity(), ColorPaletteView.ColorSelectio
 
         binding = ActivityOverlayStyleBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        binding.surfaceView.setZOrderOnTop(true)
-        binding.surfaceView.holder.setFormat(PixelFormat.TRANSLUCENT)
 
         binding.colorPaletteView.setColorSelectionListener(this)
         binding.transparencySeekBar.setOnSeekBarChangeListener(this)
@@ -60,11 +81,7 @@ class OverlayStyleActivity : AppCompatActivity(), ColorPaletteView.ColorSelectio
         val alpha = SharedPrefRepository(this).getOverlayTransparency()
         binding.transparencySeekBar.progress = ((255 - alpha) / 2.55).toInt()
 
-        val overlayIndex = SharedPrefRepository(this).getOverlayStyleIndex()
-
-        audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
-        handler.postDelayed(checkMusicRunnable, 10)
-        byteArrays = generateRandomByteArray(128)
+        currentVisualizerIndex = SharedPrefRepository(this).getOverlayStyleIndex()
 
         binding.tabsBottomnavText.setOnItemSelectedListener {
             when (it.itemId) {
@@ -88,49 +105,33 @@ class OverlayStyleActivity : AppCompatActivity(), ColorPaletteView.ColorSelectio
             }
         })
 
-        mVisualizerManager = NierVisualizerManager().apply {
-            init(object : NierVisualizerManager.NVDataSource {
-                override fun getDataSamplingInterval() = 0L
-                override fun getDataLength() = byteArrays.size
-
-                override fun fetchFftData(): ByteArray? {
-                    return null
-                }
-                override fun fetchWaveData(): ByteArray {
-                    return byteArrays
-                }
-            })
-        }
-
         binding.changeVisualizerStyle.setOnClickListener {
-            val index = ++mCurrentStyleIndex % visualizerList.size
-            val visualizers = visualizerList[index]
-            SharedPrefRepository(this).setOverlayStyleIndex(index)
-            mVisualizerManager?.start(binding.surfaceView, visualizers)
+            currentVisualizerIndex %= visualizerList.size
+            val visualizer = visualizerList[currentVisualizerIndex]
+
+            if(visualizer == null) {
+                mediaPlayerManager.pause()
+                binding.visualizerView.visibility = View.GONE
+            } else {
+                mediaPlayerManager.reset().play()
+                binding.visualizerView.visibility = View.VISIBLE
+                binding.visualizerView.setup(helper, visualizer)
+            }
+
+            val msg = if (visualizer == null) "None" else "${currentVisualizerIndex}/${visualizerList.lastIndex}"
+            binding.visualizerStyleStatus.text = msg
+            SharedPrefRepository(this).setOverlayStyleIndex(currentVisualizerIndex)
+
+            ++currentVisualizerIndex
         }
 
-        mVisualizerManager?.start(binding.surfaceView, visualizerList[overlayIndex])
-
-    }
-
-    fun generateRandomByteArray(size: Int): ByteArray {
-        val byteArray = ByteArray(size)
-        Random.nextBytes(byteArray)
-        return byteArray
-    }
-
-    private val checkMusicRunnable = object : Runnable {
-        override fun run() {
-            byteArrays = generateRandomByteArray(128)
-            handler.postDelayed(this, 10)
-        }
+        initVisualizer()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        mVisualizerManager?.release()
-        mVisualizerManager = null
-        handler.removeCallbacks(checkMusicRunnable)
+        helper.release()
+        mediaPlayerManager.release()
     }
 
     private fun showOverlayStyleHolder() {
@@ -166,7 +167,6 @@ class OverlayStyleActivity : AppCompatActivity(), ColorPaletteView.ColorSelectio
         binding.overlayViewHolder.startAnimation(resizeAnimation)
         if(isOriginalSize) binding.overlayStyleHolder.slideDown()
     }
-
 
     private fun View.slideUp(duration: Int = 300) {
         val animate = TranslateAnimation(0f, 0f, this.height.toFloat(), 0f)
@@ -255,5 +255,24 @@ class OverlayStyleActivity : AppCompatActivity(), ColorPaletteView.ColorSelectio
     override fun onStartTrackingTouch(seekBar: SeslSeekBar?) { }
 
     override fun onStopTrackingTouch(seekBar: SeslSeekBar?) { }
+
+    private fun initVisualizer() {
+        binding.visualizerView.fps = false
+        mediaPlayerManager = MediaPlayerManager(this)
+        helper = VisualizerHelper(mediaPlayerManager.play().pause().getSessionId())
+
+        visualizerList = visualizerList(this, topMargin = -0.47f, bottomMargin = 0.4f)
+
+        val visualizer = visualizerList[currentVisualizerIndex]
+        if(visualizer == null) {
+            binding.visualizerView.visibility = View.GONE
+        } else {
+            mediaPlayerManager.reset().play()
+            binding.visualizerView.visibility = View.VISIBLE
+            binding.visualizerView.setup(helper, visualizer)
+        }
+        val msg = if (visualizer == null) "None" else "${currentVisualizerIndex}/${visualizerList.lastIndex}"
+        binding.visualizerStyleStatus.text = msg
+    }
 
 }

@@ -17,4 +17,4 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "BlackScreenMusicOverlay"
-include ':app'
+include ':app', ':visualizer'
