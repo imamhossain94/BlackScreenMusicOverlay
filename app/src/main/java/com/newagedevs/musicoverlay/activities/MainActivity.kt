@@ -57,21 +57,16 @@ class MainActivity : AppCompatActivity() {
         }
 
         // Settings
-        binding.toggleService.isChecked = SharedPrefRepository(this).isRunning()
+        val isRunning = SharedPrefRepository(this).isRunning()
+
+        if (isRunning) {
+            startOverlayService(isRunning)
+        }
+
+        binding.toggleService.isChecked = isRunning
         binding.toggleService.addOnSwitchChangeListener { _, isChecked ->
             SharedPrefRepository(this).setRunning(isChecked)
-
-            if(isChecked) {
-                if (Settings.canDrawOverlays(this)) {
-                    val intent = Intent(this, OverlayService::class.java)
-                    startForegroundService(intent)
-                }
-            } else {
-                val intent = Intent(this, OverlayService::class.java).apply {
-                    putExtra("command", "stop")
-                }
-                stopService(intent)
-            }
+            startOverlayService(isChecked)
         }
 
         when (SharedPrefRepository(this).getUnlockCondition()) {
@@ -95,7 +90,20 @@ class MainActivity : AppCompatActivity() {
             binding.startClockStyleActivity.isEnabled = isChecked
             SharedPrefRepository(this).setAlwaysOnDisplay(isChecked)
         }
+    }
 
+    fun startOverlayService(start: Boolean) {
+        if(start) {
+            if (Settings.canDrawOverlays(this)) {
+                val intent = Intent(this, OverlayService::class.java)
+                startForegroundService(intent)
+            }
+        } else {
+            val intent = Intent(this, OverlayService::class.java).apply {
+                putExtra("command", "stop")
+            }
+            stopService(intent)
+        }
     }
 
 }

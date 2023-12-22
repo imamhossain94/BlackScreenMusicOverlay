@@ -429,7 +429,7 @@ class SharedPrefRepository(private val context: Context) {
     // Retrieve handler translationY
     fun getHandlerTranslationY(): Float {
         val sharedPref = context.getSharedPreferences(sharedPrefName, Context.MODE_PRIVATE)
-        return sharedPref.getFloat(handlerTranslationYKey, 0f)
+        return sharedPref.getFloat(handlerTranslationYKey, 260f)
     }
 
 }

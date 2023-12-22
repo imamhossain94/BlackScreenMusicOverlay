@@ -3,13 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/overlay_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#00000000">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/overlay_view_holder"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center">
+        android:gravity="center"
+        android:visibility="gone">
 
         <io.github.jeffshee.visualizer.views.VisualizerView
             android:id="@+id/visualizer_view"
@@ -19,34 +21,32 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
-        <LinearLayout
-            android:id="@+id/clock_view_holder"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:paddingTop="140dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:orientation="horizontal"
-            android:gravity="center_horizontal"
-            android:background="@color/black">
-
-            <com.newagedevs.musicoverlay.view.TextClockView
-                android:id="@+id/textClock_preview"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="visible"/>
-
-            <com.newagedevs.musicoverlay.view.FrameClockView
-                android:id="@+id/frameClock_preview"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                android:visibility="gone"
-                app:hourHandThickness="5dp"
-                app:minuteHandThickness="3dp"
-                app:secondHandThickness="2dp"/>
-        </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <LinearLayout
+        android:id="@+id/clock_view_holder"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="140dp"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal"
+        android:background="@color/black"
+        android:visibility="gone">
+
+        <com.newagedevs.musicoverlay.view.TextClockView
+            android:id="@+id/textClock_preview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="visible"/>
+
+        <com.newagedevs.musicoverlay.view.FrameClockView
+            android:id="@+id/frameClock_preview"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:visibility="gone"
+            app:hourHandThickness="5dp"
+            app:minuteHandThickness="3dp"
+            app:secondHandThickness="2dp"/>
+    </LinearLayout>
+
 </FrameLayout>
