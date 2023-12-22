@@ -3,10 +3,22 @@
 
     <string name="oui_permission_page_description">The following permissions are required for the app to work correctly.</string>
 
+    <!-- Strings for Notification Permission -->
+    <string name="oui_app_permission_notification_title">Post notification</string>
+    <string name="oui_app_permission_notification_summary">This permission is required to let apps opt-in to show notifications via user consent.</string>
+
+    <!-- Strings for Appear on Top Permission -->
     <string name="oui_app_permission_appear_on_top_title">Appear on top settings</string>
     <string name="oui_app_permission_appear_on_top_summary">This permission is used to enable the app to appear on top of other applications.</string>
+
+    <!-- Strings for RECORD AUDIO Permission -->
     <string name="oui_app_permission_record_audio_title">Audio Recording Permission</string>
     <string name="oui_app_permission_record_audio_summary">This permission is required to enable the app to capture audio for displaying the music visualizer.</string>
+
+    <!-- Strings for Device Administrator Permission -->
+    <string name="oui_app_permission_device_admin_title">Device Administrator</string>
+    <string name="oui_app_permission_device_admin_summary">This permission is required to enable advanced features and security measures in the app.</string>
+
 
     <string name="device_description">Lock screen on click with Device Policy Manager API</string>
     <string name="device_admin_label">Music Overlay Device Admin</string>

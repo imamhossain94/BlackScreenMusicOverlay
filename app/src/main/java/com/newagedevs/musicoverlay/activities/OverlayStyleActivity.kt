@@ -1,21 +1,12 @@
 package com.newagedevs.musicoverlay.activities
 
 import android.annotation.SuppressLint
-import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.Paint
-import android.graphics.PixelFormat
 import android.graphics.drawable.GradientDrawable
-import android.media.AudioManager
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.util.TypedValue
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.TranslateAnimation
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SeslSeekBar
 import androidx.core.content.ContextCompat
@@ -24,32 +15,11 @@ import com.newagedevs.musicoverlay.databinding.ActivityOverlayStyleBinding
 import com.newagedevs.musicoverlay.extension.OnSwipeTouchListener
 import com.newagedevs.musicoverlay.extension.ResizeAnimation
 import com.newagedevs.musicoverlay.helper.MediaPlayerManager
-import com.newagedevs.musicoverlay.models.Constants
 import com.newagedevs.musicoverlay.models.Constants.Companion.visualizerList
 import com.newagedevs.musicoverlay.preferences.SharedPrefRepository
 import com.newagedevs.musicoverlay.view.ColorPaletteView
 import io.github.jeffshee.visualizer.painters.Painter
-import io.github.jeffshee.visualizer.painters.fft.FftBar
-import io.github.jeffshee.visualizer.painters.fft.FftCBar
-import io.github.jeffshee.visualizer.painters.fft.FftCLine
-import io.github.jeffshee.visualizer.painters.fft.FftCWave
-import io.github.jeffshee.visualizer.painters.fft.FftCWaveRgb
-import io.github.jeffshee.visualizer.painters.fft.FftLine
-import io.github.jeffshee.visualizer.painters.fft.FftWave
-import io.github.jeffshee.visualizer.painters.fft.FftWaveRgb
-import io.github.jeffshee.visualizer.painters.misc.Gradient
-import io.github.jeffshee.visualizer.painters.misc.Icon
-import io.github.jeffshee.visualizer.painters.modifier.Beat
-import io.github.jeffshee.visualizer.painters.modifier.Blend
-import io.github.jeffshee.visualizer.painters.modifier.Compose
-import io.github.jeffshee.visualizer.painters.modifier.Glitch
-import io.github.jeffshee.visualizer.painters.modifier.Move
-import io.github.jeffshee.visualizer.painters.modifier.Shake
-import io.github.jeffshee.visualizer.painters.waveform.WfmAnalog
-import io.github.jeffshee.visualizer.utils.Preset
 import io.github.jeffshee.visualizer.utils.VisualizerHelper
-import me.bogerchan.niervisualizer.NierVisualizerManager
-import kotlin.random.Random
 
 
 @SuppressLint("MissingPermission")

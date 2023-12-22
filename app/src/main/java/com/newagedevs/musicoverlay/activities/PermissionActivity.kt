@@ -1,31 +1,41 @@
 package com.newagedevs.musicoverlay.activities
 
 import android.Manifest
-import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
+import android.view.View
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.newagedevs.musicoverlay.databinding.ActivityPermissionBinding
+import com.newagedevs.musicoverlay.helper.NotificationUtil
+import com.newagedevs.musicoverlay.services.LockScreenUtil
 import dev.oneuiproject.oneui.widget.Toast
-
 
 class PermissionActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityPermissionBinding
+    private lateinit var lockScreenUtil: LockScreenUtil
+    private lateinit var notificationUtil: NotificationUtil
+
     private lateinit var overlayPermissionLauncher: ActivityResultLauncher<Intent>
+    private lateinit var administratorPermissionLauncher: ActivityResultLauncher<Intent>
+    private lateinit var notificationPermissionLauncher: ActivityResultLauncher<String>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = ActivityPermissionBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        lockScreenUtil = LockScreenUtil(this)
+        notificationUtil = NotificationUtil(this)
 
         if(isAllPermissionsAreGranted()) {
             startActivity(Intent(this, MainActivity::class.java))
@@ -41,22 +51,49 @@ class PermissionActivity : AppCompatActivity() {
             finish()
         }
 
+        binding.permissionNotificationCard.setOnClickListener {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                notificationUtil.requestPermission(notificationPermissionLauncher)
+            }
+        }
+
         binding.permissionRecordAudioCard.setOnClickListener {
             requestAudioPermissions()
         }
 
         binding.permissionAppearOnTopCard.setOnClickListener {
             requestOverlayPermission()
-
         }
 
-        overlayPermissionLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                binding.startMainActivity.isEnabled = isAllPermissionsAreGranted()
-            } else {
+        binding.permissionAdministratorCard.setOnClickListener {
+            lockScreenUtil.enableAdmin(administratorPermissionLauncher)
+        }
+
+        overlayPermissionLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { _ ->
+            binding.startMainActivity.isEnabled = isAllPermissionsAreGranted()
+
+            if (!Settings.canDrawOverlays(this)) {
                 Toast.makeText(this, "Overlay permission not granted", Toast.LENGTH_SHORT).show()
             }
         }
+
+        administratorPermissionLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { _ ->
+            binding.startMainActivity.isEnabled = isAllPermissionsAreGranted()
+
+            if (!lockScreenUtil.active()) {
+                Toast.makeText(this, "Device administrator permission not granted", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        notificationPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { _ ->
+            binding.startMainActivity.isEnabled = isAllPermissionsAreGranted()
+
+            if(!notificationUtil.isPermissionGranted()) {
+                Toast.makeText(this, "Post notification permission not granted", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        binding.permissionNotificationCard.visibility = if(notificationUtil.isPermissionRequired()) View.VISIBLE else View.GONE
 
     }
 
@@ -69,7 +106,7 @@ class PermissionActivity : AppCompatActivity() {
     private fun isAllPermissionsAreGranted(): Boolean {
         return Settings.canDrawOverlays(this) &&
                 (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) ==
-                PackageManager.PERMISSION_GRANTED)
+                PackageManager.PERMISSION_GRANTED) && lockScreenUtil.active() && notificationUtil.isPermissionGranted()
     }
 
     private fun requestOverlayPermission() {

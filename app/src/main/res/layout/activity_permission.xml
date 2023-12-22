@@ -69,6 +69,14 @@
                 app:roundedCorners="all">
 
                 <com.newagedevs.musicoverlay.view.PermissionCardView
+                    android:id="@+id/permission_notification_card"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    app:IconDrawable="@drawable/ic_notification_status"
+                    app:SummaryText="@string/oui_app_permission_notification_summary"
+                    app:TitleText="@string/oui_app_permission_notification_title" />
+
+                <com.newagedevs.musicoverlay.view.PermissionCardView
                     android:id="@+id/permission_record_audio_card"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
@@ -83,6 +91,14 @@
                     app:IconDrawable="@drawable/ic_oui_puzzle"
                     app:SummaryText="@string/oui_app_permission_appear_on_top_summary"
                     app:TitleText="@string/oui_app_permission_appear_on_top_title" />
+
+                <com.newagedevs.musicoverlay.view.PermissionCardView
+                    android:id="@+id/permission_administrator_card"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    app:IconDrawable="@drawable/ic_security_safe"
+                    app:SummaryText="@string/oui_app_permission_device_admin_summary"
+                    app:TitleText="@string/oui_app_permission_device_admin_title" />
 
             </dev.oneuiproject.oneui.widget.RoundLinearLayout>
         </LinearLayout>

@@ -1,7 +1,6 @@
 package com.newagedevs.musicoverlay.models
 
 import android.content.Context
-import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.Paint
@@ -25,13 +24,6 @@ import io.github.jeffshee.visualizer.painters.modifier.Move
 import io.github.jeffshee.visualizer.painters.modifier.Shake
 import io.github.jeffshee.visualizer.painters.waveform.WfmAnalog
 import io.github.jeffshee.visualizer.utils.Preset
-import me.bogerchan.niervisualizer.renderer.IRenderer
-import me.bogerchan.niervisualizer.renderer.circle.CircleBarRenderer
-import me.bogerchan.niervisualizer.renderer.circle.CircleRenderer
-import me.bogerchan.niervisualizer.renderer.columnar.ColumnarType1Renderer
-import me.bogerchan.niervisualizer.renderer.columnar.ColumnarType2Renderer
-import me.bogerchan.niervisualizer.renderer.columnar.ColumnarType3Renderer
-import me.bogerchan.niervisualizer.renderer.line.LineRenderer
 
 class Constants {
 

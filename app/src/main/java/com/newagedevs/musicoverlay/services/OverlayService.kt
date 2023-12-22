@@ -1,15 +1,11 @@
 package com.newagedevs.musicoverlay.services
 
-import android.R.attr.height
-import android.R.attr.width
 import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
-import android.content.Context
 import android.content.Intent
-import android.graphics.Color
 import android.graphics.PixelFormat
 import android.graphics.PointF
 import android.graphics.drawable.GradientDrawable
@@ -19,23 +15,18 @@ import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
 import android.os.SystemClock
-import android.os.VibrationEffect
-import android.os.Vibrator
-import android.os.VibratorManager
-import android.view.GestureDetector
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.SurfaceView
 import android.view.View
-import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.FrameLayout
 import android.widget.LinearLayout
-import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.NotificationCompat
 import com.newagedevs.musicoverlay.R
+import com.newagedevs.musicoverlay.helper.MediaPlayerManager
 import com.newagedevs.musicoverlay.models.ClockViewType
 import com.newagedevs.musicoverlay.models.Constants
 import com.newagedevs.musicoverlay.preferences.SharedPrefRepository
@@ -43,148 +34,17 @@ import com.newagedevs.musicoverlay.view.FrameClockView
 import com.newagedevs.musicoverlay.view.HandlerView
 import com.newagedevs.musicoverlay.view.TextClockView
 import dev.oneuiproject.oneui.widget.Toast
-import me.bogerchan.niervisualizer.NierVisualizerManager
+import io.github.jeffshee.visualizer.painters.Painter
+import io.github.jeffshee.visualizer.utils.VisualizerHelper
+import io.github.jeffshee.visualizer.views.VisualizerView
 import kotlin.math.abs
 import kotlin.random.Random
-
-
-//
-//class OverlayService : Service() {
-//
-//    private var overlayView: View? = null
-//    private lateinit var windowManager: WindowManager
-//
-//    companion object {
-//        private const val CHANNEL_ID = "OverlayServiceChannel"
-//        private const val NOTIFICATION_ID = 1
-//    }
-//
-//    override fun onBind(intent: Intent?): IBinder? {
-//        return null
-//    }
-//
-//    override fun onCreate() {
-//        super.onCreate()
-//        createNotificationChannel()
-//        showNotification()
-//        createOverlayView()
-//    }
-//
-//    override fun onDestroy() {
-//        super.onDestroy()
-//        hideNotification()
-//        removeOverlayView()
-//    }
-//
-//    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-//        intent?.action?.let {
-//            when (it) {
-//                "show" -> showOverlay()
-//                "hide" -> hideOverlay()
-//                "stop" -> stopSelf()
-//            }
-//        }
-//        return START_STICKY
-//    }
-//
-//    private fun createNotificationChannel() {
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//            val name = "Overlay Service Channel"
-//            val descriptionText = "Channel for Overlay Service"
-//            val importance = NotificationManager.IMPORTANCE_LOW
-//            val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
-//                description = descriptionText
-//            }
-//            val notificationManager =
-//                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-//            notificationManager.createNotificationChannel(channel)
-//        }
-//    }
-//
-//    private fun showNotification() {
-//        val notification = NotificationCompat.Builder(this, CHANNEL_ID)
-//            .setSmallIcon(android.R.drawable.ic_dialog_info)
-//            .setContentTitle("Overlay Service")
-//            .setContentText("Tap to manage overlay")
-//            .setPriority(NotificationCompat.PRIORITY_LOW)
-//            .setAutoCancel(false)
-//            .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-//            .addAction(R.drawable.ic_show, "Show", getPendingIntent("show"))
-//            .addAction(R.drawable.ic_hide, "Hide", getPendingIntent("hide"))
-//            .addAction(R.drawable.ic_stop, "Stop", getPendingIntent("stop"))
-//            .build()
-//
-//        NotificationManagerCompat.from(this).notify(NOTIFICATION_ID, notification)
-//        startForeground(NOTIFICATION_ID, notification)
-//    }
-//
-//    private fun hideNotification() {
-//        stopForeground(true)
-//        NotificationManagerCompat.from(this).cancel(NOTIFICATION_ID)
-//    }
-//
-//    private fun getPendingIntent(action: String): PendingIntent {
-//        val intent = Intent(this, OverlayService::class.java).apply {
-//            this.action = action
-//        }
-//        return PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_MUTABLE)
-//    }
-//
-//    private fun createOverlayView(): View? {
-//        overlayView = LayoutInflater.from(this).inflate(R.layout.overlay_layout, null)
-//        val params = WindowManager.LayoutParams(
-//            WindowManager.LayoutParams.WRAP_CONTENT,
-//            WindowManager.LayoutParams.WRAP_CONTENT,
-//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-//                WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
-//            else
-//                WindowManager.LayoutParams.TYPE_PHONE,
-//            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
-//            PixelFormat.TRANSLUCENT
-//        )
-//        params.gravity = Gravity.CENTER
-//
-//        windowManager = getSystemService(Context.WINDOW_SERVICE) as WindowManager
-//        windowManager.addView(overlayView, params)
-//
-//        return overlayView
-//    }
-//
-//    private fun removeOverlayView() {
-//        windowManager.removeView(overlayView)
-//    }
-//
-//    private fun showOverlay() {
-//        if (overlayView == null) {
-//            // Create the overlay view
-//            overlayView = createOverlayView()
-//        }
-//    }
-//
-//    private fun hideOverlay() {
-//        overlayView?.let {
-//            // Remove the overlay view from the root layout
-//            windowManager.removeView(it)
-//            overlayView = null
-//        }
-//    }
-//}
-
 
 
 class OverlayService : Service(), View.OnClickListener {
     private var wm: WindowManager? = null
     private var overlayView: View? = null
 
-    private var surfaceView: SurfaceView? = null
-    private var overlayIndex = 0
-
-
-    private var mVisualizerManager: NierVisualizerManager? = null
-    private var byteArrays = ByteArray(128)
-
-    private lateinit var audioManager: AudioManager
-    private val handler = Handler(Looper.getMainLooper())
 
     companion object {
         private const val TAG = "OverlayService"
@@ -207,9 +67,13 @@ class OverlayService : Service(), View.OnClickListener {
     private var lastClickTime = 0L
 
 
+    private val handler = Handler(Looper.getMainLooper())
 
 
-
+    private var currentVisualizerIndex = 0
+    private lateinit var mediaPlayerManager: MediaPlayerManager
+    private lateinit var helper: VisualizerHelper
+    private lateinit var visualizerList: List<Painter?>
 
 
     override fun onCreate() {
@@ -256,13 +120,9 @@ class OverlayService : Service(), View.OnClickListener {
     override fun onDestroy() {
         super.onDestroy()
         if (overlayView != null) {
-//            mVisualizerManager?.release()
-//            mVisualizerManager = null
-//            handler.removeCallbacks(checkMusicRunnable)
-
             wm!!.removeView(overlayView)
             overlayView = null
-            surfaceView = null
+
         }
     }
 
@@ -270,7 +130,7 @@ class OverlayService : Service(), View.OnClickListener {
         return null
     }
 
-    @SuppressLint("ClickableViewAccessibility")
+    @SuppressLint("ClickableViewAccessibility", "InflateParams")
     @Suppress("DEPRECATION")
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         intent?.action?.let {
@@ -287,6 +147,7 @@ class OverlayService : Service(), View.OnClickListener {
                         val clockViewHolder = overlayView?.findViewById<LinearLayout>(R.id.clock_view_holder)
                         val textClockView = overlayView?.findViewById<TextClockView>(R.id.textClock_preview)
                         val frameClockView = overlayView?.findViewById<FrameClockView>(R.id.frameClock_preview)
+                        val visualizerView = overlayView?.findViewById<VisualizerView>(R.id.visualizer_view)
 
 
                         val layoutParams = WindowManager.LayoutParams(
@@ -359,9 +220,6 @@ class OverlayService : Service(), View.OnClickListener {
 
                         overlayViewHolder?.setOnClickListener(this)
 
-
-
-
                         clockViewHolder?.setOnTouchListener { _, event ->
 
                             when (event.action) {
@@ -381,11 +239,11 @@ class OverlayService : Service(), View.OnClickListener {
                                     if (shouldClick) {
                                         if (now() - lastClickTime < DOUBLE_CLICK_TIME_DELTA) {
                                             // Double click
-                                            clockViewHolder?.visibility = View.GONE
+                                            clockViewHolder.visibility = View.GONE
 
                                             handler.postDelayed({
-                                                clockViewHolder?.visibility = View.VISIBLE
-                                            }, 5000)
+                                                clockViewHolder.visibility = View.VISIBLE
+                                            }, 15000)
                                             lastClickTime = 0
                                         } else {
                                             // Single click
@@ -396,11 +254,6 @@ class OverlayService : Service(), View.OnClickListener {
                             }
                             return@setOnTouchListener true
                         }
-
-
-                        handler.postDelayed({
-                            clockViewHolder?.visibility = View.VISIBLE
-                        }, 2000)
 
                         // Text clock
                         val clockIndex = SharedPrefRepository(this).getClockStyleIndex()
@@ -431,58 +284,29 @@ class OverlayService : Service(), View.OnClickListener {
                         clockColor?.let { it2 -> textClockView?.setForegroundColor(it2) }
                         clockColor?.let { it2 -> frameClockView?.setForegroundColor(it2) }
 
+                        // Visualizer View Settings
+                        helper = VisualizerHelper(0)
+                        visualizerList = Constants.visualizerList(this)
 
-//                        // SurfaceView
-//                        val overlayColor = SharedPrefRepository(this).getOverlayColor()
-//                        val alpha = SharedPrefRepository(this).getOverlayTransparency()
-//                        overlayIndex = SharedPrefRepository(this).getOverlayStyleIndex()
-//
-//                        audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
-//                        handler.postDelayed(checkMusicRunnable, 10)
-////                        handler.postDelayed(visualizerRunnable, 1000)
-//                        byteArrays = generateRandomByteArray(128)
-//
-//
-//                        surfaceView = SurfaceView(this)
-//                        overlayView?.addView(surfaceView)
-//
-//
-//                        surfaceView?.setZOrderOnTop(true)
-//                        surfaceView?.holder?.setFormat(PixelFormat.TRANSLUCENT)
-//
-//                        mVisualizerManager = NierVisualizerManager().apply {
-//                            init(object : NierVisualizerManager.NVDataSource {
-//                                override fun getDataSamplingInterval() = 0L
-//                                override fun getDataLength() = byteArrays.size
-//
-//                                override fun fetchFftData(): ByteArray? {
-//                                    return null
-//                                }
-//                                override fun fetchWaveData(): ByteArray {
-//                                    return byteArrays
-//                                }
-//                            })
-//                        }
-//
-//                        surfaceView.let {itView ->
-//                            if (itView != null) {
-//                                mVisualizerManager?.start(itView, Constants.visualizerList[overlayIndex])
-//                            }
-//                        }
+                        val currentVisualizerIndex = SharedPrefRepository(this).getOverlayStyleIndex()
+                        val visualizer = visualizerList[currentVisualizerIndex]
 
+                        visualizerView?.fps = false
+                        if(visualizer == null) {
+                            visualizerView?.visibility = View.GONE
+                        } else {
+                            visualizerView?.visibility = View.VISIBLE
+                            visualizerView?.setup(helper, visualizer)
+                        }
 
                         wm!!.addView(overlayView, layoutParams)
                     }
                 }
                 "hide" -> {
                     if (overlayView != null) {
-//                        mVisualizerManager?.release()
-//                        mVisualizerManager = null
-//                        handler.removeCallbacks(checkMusicRunnable)
-
                         wm!!.removeView(overlayView)
                         overlayView = null
-                        surfaceView = null
+
                     }
                 }
                 "stop" -> {
@@ -491,23 +315,6 @@ class OverlayService : Service(), View.OnClickListener {
             }
         }
         return START_STICKY
-    }
-
-    fun generateRandomByteArray(size: Int): ByteArray {
-        val byteArray = ByteArray(size)
-        Random.nextBytes(byteArray)
-        return byteArray
-    }
-
-    private val checkMusicRunnable = object : Runnable {
-        override fun run() {
-            byteArrays = if (audioManager.isMusicActive) {
-                generateRandomByteArray(128)
-            } else {
-                ByteArray(128)
-            }
-            handler.postDelayed(this, 10)
-        }
     }
 
     private fun now(): Long {
