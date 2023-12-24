@@ -123,4 +123,6 @@ class HandlerStyleActivity : AppCompatActivity(), ColorPaletteView.ColorSelectio
         SharedPrefRepository(this@HandlerStyleActivity).setHandlerTranslationY(rawY)
     }
 
+    override fun onVertical(rawY: Int) { }
+
 }

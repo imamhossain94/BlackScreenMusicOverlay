@@ -40,6 +40,7 @@ class HandlerView(context: Context, attrs: AttributeSet? = null) : AppCompatText
 
     interface HandlerPositionChangeListener {
         fun onVertical(rawY: Float)
+        fun onVertical(rawY: Int)
     }
 
     private var handlerPositionChangeListener: HandlerPositionChangeListener? = null
@@ -232,6 +233,10 @@ class HandlerView(context: Context, attrs: AttributeSet? = null) : AppCompatText
                     translationY += deltaY
                     lastY = event.rawY
                     handlerPositionChangeListener?.onVertical(translationY)
+                } else {
+                    val deltaY = event.rawY - lastY
+                    lastY = event.rawY
+                    handlerPositionChangeListener?.onVertical(deltaY.toInt())
                 }
             }
             MotionEvent.ACTION_UP -> {

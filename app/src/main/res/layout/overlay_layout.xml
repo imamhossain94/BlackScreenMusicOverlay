@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <io.github.jeffshee.visualizer.views.VisualizerView
             android:id="@+id/visualizer_view"
@@ -31,7 +31,7 @@
         android:orientation="horizontal"
         android:gravity="center_horizontal"
         android:background="@color/black"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <com.newagedevs.musicoverlay.view.TextClockView
             android:id="@+id/textClock_preview"
