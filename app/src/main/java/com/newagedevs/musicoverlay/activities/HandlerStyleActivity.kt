@@ -7,6 +7,7 @@ import androidx.appcompat.widget.SeslSeekBar
 import com.newagedevs.musicoverlay.databinding.ActivityHandlerStyleBinding
 import com.newagedevs.musicoverlay.models.Constants
 import com.newagedevs.musicoverlay.preferences.SharedPrefRepository
+import com.newagedevs.musicoverlay.services.OverlayService
 import com.newagedevs.musicoverlay.view.ColorPaletteView
 import com.newagedevs.musicoverlay.view.HandlerView
 import dev.oneuiproject.oneui.widget.Toast

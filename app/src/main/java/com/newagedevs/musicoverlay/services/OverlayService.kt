@@ -7,16 +7,19 @@ import android.app.PendingIntent
 import android.app.Service
 import android.content.Context
 import android.content.Intent
+import android.content.res.Resources
 import android.graphics.PixelFormat
 import android.graphics.PointF
 import android.graphics.drawable.GradientDrawable
 import android.media.AudioManager
+import android.os.Binder
 import android.os.Build
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
 import android.os.SystemClock
 import android.provider.Settings
+import android.view.GestureDetector
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -25,6 +28,7 @@ import android.view.WindowManager
 import android.widget.LinearLayout
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.NotificationCompat
+import androidx.core.view.GestureDetectorCompat
 import com.newagedevs.musicoverlay.R
 import com.newagedevs.musicoverlay.models.ClockViewType
 import com.newagedevs.musicoverlay.models.Constants
@@ -37,10 +41,30 @@ import io.github.jeffshee.visualizer.painters.Painter
 import io.github.jeffshee.visualizer.utils.VisualizerHelper
 import io.github.jeffshee.visualizer.views.VisualizerView
 import kotlin.math.abs
+import kotlin.math.max
+import kotlin.math.min
 import kotlin.math.sqrt
 
+interface OverlayServiceInterface {
+    fun show()
+    fun hide()
+    fun update()
+}
 
-class OverlayService : Service() {
+
+class OverlayService : Service(), OverlayServiceInterface {
+
+
+    private val binder: IBinder = LocalBinder()
+
+    inner class LocalBinder : Binder() {
+        fun instance(): OverlayServiceInterface = this@OverlayService
+    }
+
+    override fun onBind(intent: Intent?): IBinder {
+        return binder
+    }
+
     private var overlayView: View? = null
     private var handlerView: HandlerView? = null
 
@@ -49,6 +73,7 @@ class OverlayService : Service() {
 
     private var lockScreenUtil: LockScreenUtil? = null
 
+    private var minSwipeY: Float = 0f
 
     companion object {
 
@@ -81,27 +106,8 @@ class OverlayService : Service() {
             } catch (_:Exception) { }
         }
 
-        fun show(context: Context) {
-            try{
-                if (Settings.canDrawOverlays(context)) {
-                    val intent = Intent(context, OverlayService::class.java).apply {
-                        putExtra("command", "show")
-                    }
-                    context.startForegroundService(intent)
-                }
-            } catch (_:Exception) { }
-        }
-
-        fun hide(context: Context) {
-            try{
-                if (Settings.canDrawOverlays(context)) {
-                    val intent = Intent(context, OverlayService::class.java).apply {
-                        putExtra("command", "hide")
-                    }
-                    context.startForegroundService(intent)
-                }
-            } catch (_:Exception) { }
-        }
+        private var brightness: Int = 0
+        private var volume: Int = 0
 
     }
 
@@ -117,6 +123,8 @@ class OverlayService : Service() {
 
     private var eventX1: Float = 0f
     private var eventX2: Float = 0f
+
+    private var startY: Float = 0f
 
     private var actionDownPoint = PointF(0f, 0f)
     private var previousPoint = PointF(0f, 0f)
@@ -139,7 +147,9 @@ class OverlayService : Service() {
     override fun onCreate() {
         super.onCreate()
 
-        helper = VisualizerHelper(0)
+        try {
+            helper = VisualizerHelper(0)
+        } catch (_: Exception) {}
 
         windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
         audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
@@ -179,18 +189,11 @@ class OverlayService : Service() {
 
     override fun onDestroy() {
         super.onDestroy()
-        overlayView?.let { oView ->
-            windowManager?.removeView(oView)
-            overlayView = null
-        }
-        handlerView?.let { hView ->
-            windowManager?.removeView(hView)
-            handlerView = null
-        }
-    }
-
-    override fun onBind(intent: Intent): IBinder? {
-        return null
+        hideOverlayView()
+        hideHandlerView()
+        try {
+            helper?.release()
+        } catch (_: Exception) {}
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -208,6 +211,7 @@ class OverlayService : Service() {
                     if(SharedPrefRepository(this@OverlayService).isScreenLockPrivacyEnabled()) {
                         lockScreenUtil?.lockScreen()
                     }
+                    SharedPrefRepository(this).setRunning(false)
                     stopSelf()
                 }
             }
@@ -351,6 +355,7 @@ class OverlayService : Service() {
                 return@setOnTouchListener true
             }
 
+
             overlayViewHolder?.setOnTouchListener { _, event ->
                 when (event.action) {
                     MotionEvent.ACTION_DOWN -> {
@@ -359,6 +364,10 @@ class OverlayService : Service() {
                         previousPoint = PointF(event.x, event.y)
                         touchDownTime = now()
                         eventX1 = event.x
+
+                        startY = event.y
+
+                        return@setOnTouchListener true
                     }
                     MotionEvent.ACTION_MOVE, MotionEvent.ACTION_HOVER_MOVE -> {
                         if (!isActionMoveEventStored) {
@@ -371,16 +380,40 @@ class OverlayService : Service() {
                             val firstX = lastActionMoveEventBeforeUpX
                             val firstY = lastActionMoveEventBeforeUpY
                             val distance = sqrt(((currentY - firstY) * (currentY - firstY) + (currentX - firstX) * (currentX - firstX)).toDouble())
+
                             if (distance > 20) {
                                 longPressHandler.removeCallbacks(longPressedRunnable)
-
                                 eventX2 = event.x
-                                val halfHeight = overlayViewHolder.height / 2f
-                                if (event.y in 0f..halfHeight) {
-                                    if(shouldIncreaseVolume) increaseVolume()
-                                } else if (event.y in halfHeight..overlayViewHolder.height.toFloat()) {
-                                    if(shouldDecreaseVolume) decreaseVolume()
+
+//                                val halfHeight = overlayViewHolder.height / 2f
+//                                if (event.y in 0f..halfHeight) {
+//                                    if(shouldIncreaseVolume) increaseVolume()
+//                                } else if (event.y in halfHeight..overlayViewHolder.height.toFloat()) {
+//                                    if(shouldDecreaseVolume) decreaseVolume()
+//                                }
+
+                                val deltaY = currentY - startY
+
+                                val maxVolume = audioManager!!.getStreamMaxVolume(AudioManager.STREAM_MUSIC)
+
+                                if(abs(deltaY) > overlayViewHolder.height/maxVolume) {
+
+                                    val sectionTravelled = (abs(deltaY) / (overlayViewHolder.height / maxVolume)).toInt()
+
+                                    if(deltaY < 0) {
+                                        // Swipe up
+                                        if(shouldIncreaseVolume)
+                                        volume += sectionTravelled
+                                    } else {
+                                        // Swipe down
+                                        if(shouldDecreaseVolume)
+                                        volume -= sectionTravelled
+                                    }
+                                    volume = max(0, min(maxVolume, volume))
+                                    audioManager?.setStreamVolume(AudioManager.STREAM_MUSIC, volume, AudioManager.FLAG_SHOW_UI)
+                                    startY = currentY
                                 }
+
                                 previousPoint = PointF(event.x, event.y)
                             }
                         }
@@ -398,26 +431,26 @@ class OverlayService : Service() {
                         val shouldClick = isTouchLength && isTouchDuration
 
                         if (shouldClick) {
-                            if (now() - lastClickTime < DOUBLE_CLICK_TIME_DELTA) {
+                            lastClickTime = if (now() - lastClickTime < DOUBLE_CLICK_TIME_DELTA) {
                                 // Double click
                                 if(unlockCondition == UnlockCondition.DOUBLE_TAP.displayText) {
                                     hideOverlayView()
                                     createOverlayHandler()
                                 }
-                                lastClickTime = 0
+                                0
                             } else {
                                 // Single click
                                 if(unlockCondition == UnlockCondition.TAP.displayText) {
                                     hideOverlayView()
                                     createOverlayHandler()
                                 }
-                                lastClickTime = now()
+                                now()
                             }
                         }
                     }
                 }
 
-                return@setOnTouchListener true
+                return@setOnTouchListener false
             }
 
 
@@ -494,9 +527,9 @@ class OverlayService : Service() {
     }
 
     private fun hideOverlayView() {
-        if(SharedPrefRepository(this@OverlayService).isScreenLockPrivacyEnabled()) {
-            lockScreenUtil?.lockScreen()
-        }
+//        if(SharedPrefRepository(this@OverlayService).isScreenLockPrivacyEnabled()) {
+//            lockScreenUtil?.lockScreen()
+//        }
 
         overlayView?.let { oView ->
             windowManager?.removeView(oView)
@@ -511,32 +544,17 @@ class OverlayService : Service() {
         }
     }
 
-
-    private fun increaseVolume() {
-        audioManager.let {
-            if(it != null) {
-                val currentVolume = it.getStreamVolume(AudioManager.STREAM_MUSIC)
-                val maxVolume = it.getStreamMaxVolume(AudioManager.STREAM_MUSIC)
-                val increasedVolume = currentVolume.plus(1)
-                val volumeToSet = if (increasedVolume <= maxVolume) increasedVolume else maxVolume
-
-                it.adjustVolume(AudioManager.ADJUST_SAME, AudioManager.FLAG_SHOW_UI)
-                it.setStreamVolume(AudioManager.STREAM_MUSIC, volumeToSet, 0)
-            }
-        }
+    override fun show() {
+        createOverlayHandler()
     }
 
-    private fun decreaseVolume() {
-        audioManager.let {
-            if(it != null) {
-                val currentVolume = it.getStreamVolume(AudioManager.STREAM_MUSIC)
-                val volumeToSet = if (currentVolume.minus(1) >= 0) currentVolume.minus(1) else 0
-
-                it.adjustVolume(AudioManager.ADJUST_SAME, AudioManager.FLAG_SHOW_UI)
-                it.setStreamVolume(AudioManager.STREAM_MUSIC, volumeToSet, 0)
-            }
-        }
+    override fun hide() {
+        hideOverlayView()
+        hideHandlerView()
     }
 
+    override fun update() {
+
+    }
 
 }

@@ -1,36 +1,57 @@
 package com.newagedevs.musicoverlay.activities
 
-import android.Manifest
-import android.annotation.TargetApi
-import android.content.ContentValues.TAG
+import android.app.ActivityManager
+import android.content.ComponentName
+import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.net.Uri
-import android.os.Build
+import android.content.ServiceConnection
 import android.os.Bundle
-import android.provider.Settings
-import android.util.Log
-import androidx.activity.result.contract.ActivityResultContracts
+import android.os.IBinder
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatRadioButton
-import androidx.core.content.ContextCompat
 import com.newagedevs.musicoverlay.databinding.ActivityMainBinding
 import com.newagedevs.musicoverlay.models.UnlockCondition
 import com.newagedevs.musicoverlay.preferences.SharedPrefRepository
 import com.newagedevs.musicoverlay.services.OverlayService
+import com.newagedevs.musicoverlay.services.OverlayServiceInterface
 
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
+    private var overlayServiceInterface: OverlayServiceInterface? = null
+
+    private var isBound = false
+    private var isRunning = false
+
+
+    private val connection: ServiceConnection = object : ServiceConnection {
+        override fun onServiceConnected(componentName: ComponentName, iBinder: IBinder) {
+            overlayServiceInterface = (iBinder as OverlayService.LocalBinder).instance()
+        }
+
+        override fun onServiceDisconnected(componentName: ComponentName) {
+            overlayServiceInterface = null
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         binding.toolbarLayout.setNavigationButtonAsBack()
+
+        isRunning = SharedPrefRepository(this).isRunning()
+
+        if (isRunning) {
+            val serviceIntent = Intent(this, OverlayService::class.java)
+            if(!isServiceRunning(OverlayService::class.java)) {
+                startForegroundService(serviceIntent)
+            }
+            bindService(serviceIntent, connection, Context.BIND_AUTO_CREATE)
+        }
 
         binding.startClockStyleActivity.setOnClickListener {
             startActivity(Intent(this, ClockStyleActivity::class.java))
@@ -42,6 +63,12 @@ class MainActivity : AppCompatActivity() {
 
         binding.startHandlerStyleActivity.setOnClickListener {
             startActivity(Intent(this, HandlerStyleActivity::class.java))
+            if (isBound) {
+                isRunning = SharedPrefRepository(this).isRunning()
+                if (isRunning) {
+                    overlayServiceInterface?.hide()
+                }
+            }
         }
 
         binding.startSecurityActivity.setOnClickListener {
@@ -56,20 +83,22 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(this, AboutActivity::class.java))
         }
 
-        // Settings
-        val isRunning = SharedPrefRepository(this).isRunning()
-
-        if (isRunning) {
-            OverlayService.start(this)
-        }
-
         binding.toggleService.isChecked = isRunning
         binding.toggleService.addOnSwitchChangeListener { _, isChecked ->
             SharedPrefRepository(this).setRunning(isChecked)
-            if (isChecked) {
-                OverlayService.start(this)
-            }else {
-                OverlayService.stop(this)
+            isRunning = isChecked
+
+            if (isChecked && !isBound) {
+                val serviceIntent = Intent(this, OverlayService::class.java)
+                if(!isServiceRunning(OverlayService::class.java)){
+                    startForegroundService(serviceIntent)
+                }
+                bindService(serviceIntent, connection, Context.BIND_AUTO_CREATE)
+                overlayServiceInterface?.show()
+                isBound = true
+            } else if (!isChecked && isBound) {
+                unbindService(connection)
+                isBound = false
             }
         }
 
@@ -94,6 +123,36 @@ class MainActivity : AppCompatActivity() {
             binding.startClockStyleActivity.isEnabled = isChecked
             SharedPrefRepository(this).setAlwaysOnDisplay(isChecked)
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val isRunning = SharedPrefRepository(this).isRunning()
+        binding.toggleService.isChecked = isRunning
+        if (isBound) {
+            if (isRunning) {
+                overlayServiceInterface?.show()
+            }
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+//        if (isBound) {
+//            unbindService(connection)
+//            isBound = false
+//        }
+    }
+
+    @Suppress("DEPRECATION")
+    private fun isServiceRunning(serviceClass: Class<*>): Boolean {
+        val manager = getSystemService(ACTIVITY_SERVICE) as ActivityManager
+        for (service in manager.getRunningServices(Int.MAX_VALUE)) {
+            if (serviceClass.name == service.service.className) {
+                return true
+            }
+        }
+        return false
     }
 
 }

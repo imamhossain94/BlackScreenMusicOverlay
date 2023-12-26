@@ -136,6 +136,7 @@ class OverlayStyleActivity : AppCompatActivity(), ColorPaletteView.ColorSelectio
         )
         binding.overlayViewHolder.startAnimation(resizeAnimation)
         if(isOriginalSize) binding.overlayStyleHolder.slideDown()
+        else finish()
     }
 
     private fun View.slideUp(duration: Int = 300) {

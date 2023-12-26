@@ -142,6 +142,7 @@ class ClockStyleActivity : AppCompatActivity() {
         )
         binding.clockViewHolder.startAnimation(resizeAnimation)
         if(isOriginalSize) binding.clockStyleHolder.slideDown()
+        else finish()
     }
 
     private fun View.slideUp(duration: Int = 300) {
