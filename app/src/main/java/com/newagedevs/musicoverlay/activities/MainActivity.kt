@@ -29,10 +29,12 @@ class MainActivity : AppCompatActivity() {
     private val connection: ServiceConnection = object : ServiceConnection {
         override fun onServiceConnected(componentName: ComponentName, iBinder: IBinder) {
             overlayServiceInterface = (iBinder as OverlayService.LocalBinder).instance()
+            isBound = true
         }
 
         override fun onServiceDisconnected(componentName: ComponentName) {
             overlayServiceInterface = null
+            isBound = false
         }
     }
 
@@ -134,14 +136,6 @@ class MainActivity : AppCompatActivity() {
                 overlayServiceInterface?.show()
             }
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-//        if (isBound) {
-//            unbindService(connection)
-//            isBound = false
-//        }
     }
 
     @Suppress("DEPRECATION")

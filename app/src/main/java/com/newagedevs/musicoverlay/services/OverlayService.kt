@@ -19,7 +19,6 @@ import android.os.IBinder
 import android.os.Looper
 import android.os.SystemClock
 import android.provider.Settings
-import android.view.GestureDetector
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -28,7 +27,6 @@ import android.view.WindowManager
 import android.widget.LinearLayout
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.NotificationCompat
-import androidx.core.view.GestureDetectorCompat
 import com.newagedevs.musicoverlay.R
 import com.newagedevs.musicoverlay.models.ClockViewType
 import com.newagedevs.musicoverlay.models.Constants
@@ -41,9 +39,8 @@ import io.github.jeffshee.visualizer.painters.Painter
 import io.github.jeffshee.visualizer.utils.VisualizerHelper
 import io.github.jeffshee.visualizer.views.VisualizerView
 import kotlin.math.abs
-import kotlin.math.max
-import kotlin.math.min
 import kotlin.math.sqrt
+
 
 interface OverlayServiceInterface {
     fun show()
@@ -106,12 +103,11 @@ class OverlayService : Service(), OverlayServiceInterface {
             } catch (_:Exception) { }
         }
 
-        private var brightness: Int = 0
         private var volume: Int = 0
-
     }
 
-    private var lastY = 0f
+    private var lastX: Float = 0f
+    private var lastY: Float = 0f
 
     private val handler = Handler(Looper.getMainLooper())
 
@@ -162,9 +158,8 @@ class OverlayService : Service(), OverlayServiceInterface {
         )
         (getSystemService(NOTIFICATION_SERVICE) as NotificationManager).createNotificationChannel(channel)
 
-
         val notification = NotificationCompat.Builder(this, CHANNEL_ID)
-            .setSmallIcon(android.R.drawable.ic_dialog_info)
+            .setSmallIcon(R.drawable.ic_layer)
             .setContentTitle("Overlay Service")
             .setContentText("Tap to manage overlay")
             .setPriority(NotificationCompat.PRIORITY_HIGH)
@@ -173,7 +168,7 @@ class OverlayService : Service(), OverlayServiceInterface {
             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
             .addAction(R.drawable.ic_show, "Show", getPendingIntent("show"))
             .addAction(R.drawable.ic_hide, "Hide", getPendingIntent("hide"))
-            .addAction(R.drawable.ic_stop, "Stop", getPendingIntent("stop"))
+            .addAction(R.drawable.ic_power, "Stop", getPendingIntent("stop"))
             .build()
 
         startForeground(NOTIFICATION_ID, notification)
@@ -205,6 +200,9 @@ class OverlayService : Service(), OverlayServiceInterface {
                 "hide" -> {
                     hideOverlayView()
                     hideHandlerView()
+                    if(SharedPrefRepository(this@OverlayService).isScreenLockPrivacyEnabled()) {
+                        lockScreenUtil?.lockScreen()
+                    }
                     return START_STICKY
                 }
                 "stop" -> {
@@ -323,7 +321,6 @@ class OverlayService : Service(), OverlayServiceInterface {
             clockViewHolder?.setOnTouchListener { _, event ->
                 when (event.action) {
                     MotionEvent.ACTION_DOWN -> {
-                        lastY = event.rawY
                         actionDownPoint = PointF(event.x, event.y)
                         touchDownTime = now()
                     }
@@ -339,7 +336,6 @@ class OverlayService : Service(), OverlayServiceInterface {
                             if (now() - lastClickTime < DOUBLE_CLICK_TIME_DELTA) {
                                 // Double click
                                 clockViewHolder.visibility = View.GONE
-
                                 handler.postDelayed({
                                     clockViewHolder.visibility = View.VISIBLE
                                 }, 5000)
@@ -355,7 +351,6 @@ class OverlayService : Service(), OverlayServiceInterface {
                 return@setOnTouchListener true
             }
 
-
             overlayViewHolder?.setOnTouchListener { _, event ->
                 when (event.action) {
                     MotionEvent.ACTION_DOWN -> {
@@ -364,8 +359,12 @@ class OverlayService : Service(), OverlayServiceInterface {
                         previousPoint = PointF(event.x, event.y)
                         touchDownTime = now()
                         eventX1 = event.x
-
                         startY = event.y
+
+                        minSwipeY = 0f
+
+                        lastX = event.x
+                        lastY = event.y
 
                         return@setOnTouchListener true
                     }
@@ -384,38 +383,41 @@ class OverlayService : Service(), OverlayServiceInterface {
                             if (distance > 20) {
                                 longPressHandler.removeCallbacks(longPressedRunnable)
                                 eventX2 = event.x
-
-//                                val halfHeight = overlayViewHolder.height / 2f
-//                                if (event.y in 0f..halfHeight) {
-//                                    if(shouldIncreaseVolume) increaseVolume()
-//                                } else if (event.y in halfHeight..overlayViewHolder.height.toFloat()) {
-//                                    if(shouldDecreaseVolume) decreaseVolume()
-//                                }
-
-                                val deltaY = currentY - startY
-
-                                val maxVolume = audioManager!!.getStreamMaxVolume(AudioManager.STREAM_MUSIC)
-
-                                if(abs(deltaY) > overlayViewHolder.height/maxVolume) {
-
-                                    val sectionTravelled = (abs(deltaY) / (overlayViewHolder.height / maxVolume)).toInt()
-
-                                    if(deltaY < 0) {
-                                        // Swipe up
-                                        if(shouldIncreaseVolume)
-                                        volume += sectionTravelled
-                                    } else {
-                                        // Swipe down
-                                        if(shouldDecreaseVolume)
-                                        volume -= sectionTravelled
-                                    }
-                                    volume = max(0, min(maxVolume, volume))
-                                    audioManager?.setStreamVolume(AudioManager.STREAM_MUSIC, volume, AudioManager.FLAG_SHOW_UI)
-                                    startY = currentY
-                                }
-
                                 previousPoint = PointF(event.x, event.y)
                             }
+
+                            val x = event.x
+                            val y = event.y
+                            val distanceX = x - lastX
+                            val distanceY = y - lastY
+
+                            minSwipeY += distanceY
+
+                            val sWidth = Resources.getSystem().displayMetrics.widthPixels
+                            val sHeight = Resources.getSystem().displayMetrics.heightPixels
+
+                            val border = 100 * Resources.getSystem().displayMetrics.density.toInt()
+                            if(event.x < border || event.y < border || event.x > sWidth - border || event.y > sHeight - border)
+                                return@setOnTouchListener false
+
+                            if(abs(distanceX) < abs(distanceY) && abs(minSwipeY) > 30){
+                                val maxVolume = audioManager!!.getStreamMaxVolume(AudioManager.STREAM_MUSIC)
+
+                                val newValue = if(distanceY > 0) {
+                                    if(shouldDecreaseVolume) volume - 1 else volume
+                                } else {
+                                    if(shouldIncreaseVolume) volume + 1 else volume
+                                }
+
+                                if(newValue in 0..maxVolume) volume = newValue
+                                if(shouldDecreaseVolume || shouldIncreaseVolume){
+                                    audioManager!!.setStreamVolume(AudioManager.STREAM_MUSIC, volume, AudioManager.FLAG_SHOW_UI)
+                                }
+
+                                minSwipeY = 0f
+                            }
+                            lastX = x
+                            lastY = y
                         }
                     }
                     MotionEvent.ACTION_UP -> {
@@ -436,6 +438,9 @@ class OverlayService : Service(), OverlayServiceInterface {
                                 if(unlockCondition == UnlockCondition.DOUBLE_TAP.displayText) {
                                     hideOverlayView()
                                     createOverlayHandler()
+                                    if(SharedPrefRepository(this@OverlayService).isScreenLockPrivacyEnabled()) {
+                                        lockScreenUtil?.lockScreen()
+                                    }
                                 }
                                 0
                             } else {
@@ -443,6 +448,9 @@ class OverlayService : Service(), OverlayServiceInterface {
                                 if(unlockCondition == UnlockCondition.TAP.displayText) {
                                     hideOverlayView()
                                     createOverlayHandler()
+                                    if(SharedPrefRepository(this@OverlayService).isScreenLockPrivacyEnabled()) {
+                                        lockScreenUtil?.lockScreen()
+                                    }
                                 }
                                 now()
                             }
@@ -522,15 +530,14 @@ class OverlayService : Service(), OverlayServiceInterface {
             UnlockCondition.LONG_PRESS.displayText -> {
                 hideOverlayView()
                 createOverlayHandler()
+                if(SharedPrefRepository(this@OverlayService).isScreenLockPrivacyEnabled()) {
+                    lockScreenUtil?.lockScreen()
+                }
             }
         }
     }
 
     private fun hideOverlayView() {
-//        if(SharedPrefRepository(this@OverlayService).isScreenLockPrivacyEnabled()) {
-//            lockScreenUtil?.lockScreen()
-//        }
-
         overlayView?.let { oView ->
             windowManager?.removeView(oView)
             overlayView = null
@@ -556,5 +563,4 @@ class OverlayService : Service(), OverlayServiceInterface {
     override fun update() {
 
     }
-
 }
