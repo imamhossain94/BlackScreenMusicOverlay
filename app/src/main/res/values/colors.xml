@@ -19,12 +19,6 @@
     <color name="darkIcon">#9AA0A6</color>
 
     <!--ClockStyle Theme-->
-    <color name="clockStylePrimaryText">#E8EAED</color>
-    <color name="clockStyleSecondaryText">#9AA0A6</color>
-    <color name="clockStyleBackground">#000000</color>
-    <color name="clockStyleCardBackground">#3b3b3b</color>
-    <color name="clockStyleTipCardBackground">#002b4e</color>
-    <color name="clockStyleIcon">#9AA0A6</color>
 
     <!--Permission Theme-->
     <color name="oui_subheader_text_color">#ff838383</color>
@@ -33,26 +27,9 @@
     <!--Clock Colors-->
     <color name="black">#FF000000</color>
     <color name="pureBlack">#000000</color>
-    <color name="white">#FFFFFFFF</color>
-    <color name="White">#ffffff</color>
 
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
-    <color name="limeBlue">#00C0F0</color>
-    <color name="limeGreen">#7fff7f</color>
     <color name="lightRed">#ff4c4c</color>
-    <color name="gblue">#4885ed</color>
 
-
-    <array name="demo_color">
-        <item>@color/colorPrimary</item>
-        <item>@color/colorPrimaryDark</item>
-        <item>@color/colorAccent</item>
-        <item>@color/limeBlue</item>
-        <item>@color/limeGreen</item>
-        <item>@color/lightRed</item>
-    </array>
 
     <!--Palette Colors-->
     <color name="paletteColor1">#e32d2c</color>
@@ -68,16 +45,5 @@
     <color name="paletteColor11">#fcfcfc</color>
     <color name="paletteColor12">#fffffe</color>
 
-
-    <color name="colorPrimary2">#3c3b45</color>
-    <color name="colorPrimaryDark2">#25242b</color>
-    <color name="colorAccent2">#a7ffffff</color>
-    <color name="colorCardStart">#25242b</color>
-    <color name="colorCardEnd">#bb25242b</color>
-    <color name="colorText">#b0b8aa</color>
-    <color name="colorTitleStart">#bb25242b</color>
-    <color name="colorTitleCenter">#25242b</color>
-    <color name="colorTitleEnd">#bb25242b</color>
-    <color name="colorRipple">#01a8ae</color>
 
 </resources>
