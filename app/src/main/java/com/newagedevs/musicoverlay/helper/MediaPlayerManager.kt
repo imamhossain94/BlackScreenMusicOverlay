@@ -5,7 +5,7 @@ import android.media.MediaPlayer
 import android.util.Log
 import com.newagedevs.musicoverlay.R
 
-class MediaPlayerManager(private val context: Context, private val resourceId: Int = R.raw.demo_audio) {
+class MediaPlayerManager(private val context: Context, private val resourceId: Int = R.raw.mixkit_just_kidding) {
 
     private var mediaPlayer: MediaPlayer? = null
 

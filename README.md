@@ -69,6 +69,7 @@ Introducing Music Overlay – the ultimate companion for optimizing your multime
 * Icons by [svgrepo.com](https://www.svgrepo.com/)
 * Lottie by [S M Rony](https://lottiefiles.com/110200-mobile-setting)
 * One UI Design Components by [oneuiproject.github.io](https://oneuiproject.github.io/)
+* Music [mixkit-just-kidding-11.mp3](https://assets.mixkit.co/music/preview/mixkit-just-kidding-11.mp3)
 
 ## 💻 Installation steps
 
