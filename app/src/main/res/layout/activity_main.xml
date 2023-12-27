@@ -279,7 +279,7 @@
                     android:textAppearance="?textAppearanceListItem" />
 
                 <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/fragment_btn_3"
+                    android:id="@+id/other_app_gesture_volume"
                     style="@style/OneUI.ButtonStyleTransparent"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

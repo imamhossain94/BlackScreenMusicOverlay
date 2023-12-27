@@ -20,9 +20,10 @@ class NotificationUtil(context: Context) {
     }
 
     val isPermissionGranted: () -> Boolean = {
-        (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) &&
+        if(isPermissionRequired()) (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) &&
                 ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) ==
                 PackageManager.PERMISSION_GRANTED
+        else true
     }
 
     fun requestPermission(launcher: ActivityResultLauncher<String>) {

@@ -76,7 +76,8 @@ class OverlayStyleActivity : AppCompatActivity(), ColorPaletteView.ColorSelectio
         })
 
         binding.changeVisualizerStyle.setOnClickListener {
-            currentVisualizerIndex %= visualizerList.size
+            currentVisualizerIndex = (currentVisualizerIndex + 1) % visualizerList.size
+
             val visualizer = visualizerList[currentVisualizerIndex]
 
             if(visualizer == null) {
@@ -91,8 +92,6 @@ class OverlayStyleActivity : AppCompatActivity(), ColorPaletteView.ColorSelectio
             val msg = if (visualizer == null) "None" else "${currentVisualizerIndex}/${visualizerList.lastIndex}"
             binding.visualizerStyleStatus.text = msg
             SharedPrefRepository(this).setOverlayStyleIndex(currentVisualizerIndex)
-
-            ++currentVisualizerIndex
         }
 
         initVisualizer()

@@ -200,15 +200,11 @@ class OverlayService : Service(), OverlayServiceInterface {
                 "hide" -> {
                     hideOverlayView()
                     hideHandlerView()
-                    if(SharedPrefRepository(this@OverlayService).isScreenLockPrivacyEnabled()) {
-                        lockScreenUtil?.lockScreen()
-                    }
+                    shouldLock()
                     return START_STICKY
                 }
                 "stop" -> {
-                    if(SharedPrefRepository(this@OverlayService).isScreenLockPrivacyEnabled()) {
-                        lockScreenUtil?.lockScreen()
-                    }
+                    shouldLock()
                     SharedPrefRepository(this).setRunning(false)
                     stopSelf()
                 }
@@ -438,9 +434,7 @@ class OverlayService : Service(), OverlayServiceInterface {
                                 if(unlockCondition == UnlockCondition.DOUBLE_TAP.displayText) {
                                     hideOverlayView()
                                     createOverlayHandler()
-                                    if(SharedPrefRepository(this@OverlayService).isScreenLockPrivacyEnabled()) {
-                                        lockScreenUtil?.lockScreen()
-                                    }
+                                    shouldLock()
                                 }
                                 0
                             } else {
@@ -448,9 +442,7 @@ class OverlayService : Service(), OverlayServiceInterface {
                                 if(unlockCondition == UnlockCondition.TAP.displayText) {
                                     hideOverlayView()
                                     createOverlayHandler()
-                                    if(SharedPrefRepository(this@OverlayService).isScreenLockPrivacyEnabled()) {
-                                        lockScreenUtil?.lockScreen()
-                                    }
+                                    shouldLock()
                                 }
                                 now()
                             }
@@ -530,9 +522,7 @@ class OverlayService : Service(), OverlayServiceInterface {
             UnlockCondition.LONG_PRESS.displayText -> {
                 hideOverlayView()
                 createOverlayHandler()
-                if(SharedPrefRepository(this@OverlayService).isScreenLockPrivacyEnabled()) {
-                    lockScreenUtil?.lockScreen()
-                }
+                shouldLock()
             }
         }
     }
@@ -548,6 +538,12 @@ class OverlayService : Service(), OverlayServiceInterface {
         handlerView?.let { hView ->
             windowManager?.removeView(hView)
             handlerView = null
+        }
+    }
+
+    private fun shouldLock() {
+        if(SharedPrefRepository(this@OverlayService).isScreenLockPrivacyEnabled() && overlayView != null) {
+            lockScreenUtil?.lockScreen()
         }
     }
 

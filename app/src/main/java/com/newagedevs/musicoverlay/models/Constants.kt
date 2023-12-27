@@ -69,7 +69,7 @@ class Constants {
         const val privacyPolicyUrl = "https://newagedevs-privacy-policy.blogspot.com/2023/12/music-overlay.html"
         const val sourceCodeUrl = "https://github.com/imamhossain94/BlackScreenMusicOverlay"
         const val publisherName = "https://play.google.com/store/apps/developer?id=NewAgeDevs"
-        const val appStoreId = "https://play.google.com/store/apps/details?id=com.newagedevs.musicoverlay"
+        const val appStoreId = "market://details?id=com.newagedevs.musicoverlay"
 
         const val showAdsOnEveryClick: Int = 5
         const val showAdsOnEveryOpen: Int = 3

@@ -5,6 +5,7 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
+import android.net.Uri
 import android.os.Bundle
 import android.os.IBinder
 import androidx.appcompat.app.AppCompatActivity
@@ -125,6 +126,23 @@ class MainActivity : AppCompatActivity() {
             binding.startClockStyleActivity.isEnabled = isChecked
             SharedPrefRepository(this).setAlwaysOnDisplay(isChecked)
         }
+
+        binding.otherAppGestureVolume.setOnClickListener {
+            val packageName = "com.newagedevs.gesturevolume"
+            val className = "com.newagedevs.gesturevolume.view.ui.main.MainActivity"
+            try{
+                val intent = Intent("android.intent.action.MAIN")
+                intent.setClassName(packageName, className)
+                startActivity(intent)
+            }catch(_:Exception) {
+                val playStoreIntent = Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse("market://details?id=$packageName")
+                )
+                startActivity(playStoreIntent)
+            }
+        }
+
     }
 
     override fun onResume() {
