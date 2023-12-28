@@ -198,13 +198,14 @@ class OverlayService : Service(), OverlayServiceInterface {
                     createOverlayHandler()
                 }
                 "hide" -> {
+                    val isOverlayViewNull = overlayView != null
                     hideOverlayView()
                     hideHandlerView()
-                    shouldLock()
+                    shouldLock(isOverlayViewNull)
                     return START_STICKY
                 }
                 "stop" -> {
-                    shouldLock()
+                    shouldLock(overlayView != null)
                     SharedPrefRepository(this).setRunning(false)
                     stopSelf()
                 }
@@ -512,7 +513,14 @@ class OverlayService : Service(), OverlayServiceInterface {
 
             windowManager!!.addView(overlayView, layoutParams)
 
-            clockViewHolder?.visibility = if(shouldShowAlwaysOnDisplay) View.VISIBLE else View.GONE
+            if(shouldShowAlwaysOnDisplay) {
+                clockViewHolder?.visibility = View.GONE
+                handler.postDelayed({
+                    clockViewHolder?.visibility = View.VISIBLE
+                }, 5000)
+            } else {
+                clockViewHolder?.visibility = View.GONE
+            }
 
         }
     }
@@ -541,8 +549,8 @@ class OverlayService : Service(), OverlayServiceInterface {
         }
     }
 
-    private fun shouldLock() {
-        if(SharedPrefRepository(this@OverlayService).isScreenLockPrivacyEnabled() && overlayView != null) {
+    private fun shouldLock(value: Boolean = true) {
+        if(SharedPrefRepository(this@OverlayService).isScreenLockPrivacyEnabled() && value) {
             lockScreenUtil?.lockScreen()
         }
     }
