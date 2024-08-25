@@ -8,6 +8,9 @@ import android.content.ServiceConnection
 import android.net.Uri
 import android.os.Bundle
 import android.os.IBinder
+import android.provider.Settings
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatRadioButton
 import com.newagedevs.musicoverlay.databinding.ActivityMainBinding
@@ -15,11 +18,14 @@ import com.newagedevs.musicoverlay.models.UnlockCondition
 import com.newagedevs.musicoverlay.preferences.SharedPrefRepository
 import com.newagedevs.musicoverlay.services.OverlayService
 import com.newagedevs.musicoverlay.services.OverlayServiceInterface
+import dev.oneuiproject.oneui.widget.Toast
 
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+
+    private lateinit var overlayPermissionLauncher: ActivityResultLauncher<Intent>
 
     private var overlayServiceInterface: OverlayServiceInterface? = null
 
@@ -44,6 +50,14 @@ class MainActivity : AppCompatActivity() {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        overlayPermissionLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { _ ->
+            if (!Settings.canDrawOverlays(this)) {
+                Toast.makeText(this, "Overlay permission not granted", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+
         binding.toolbarLayout.setNavigationButtonAsBack()
 
         isRunning = SharedPrefRepository(this).isRunning()
@@ -88,6 +102,13 @@ class MainActivity : AppCompatActivity() {
 
         binding.toggleService.isChecked = isRunning
         binding.toggleService.addOnSwitchChangeListener { _, isChecked ->
+
+            if(!Settings.canDrawOverlays(this)) {
+                requestOverlayPermission()
+                binding.toggleService.isChecked = false
+                return@addOnSwitchChangeListener
+            }
+
             SharedPrefRepository(this).setRunning(isChecked)
             isRunning = isChecked
 
@@ -143,6 +164,16 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+    }
+
+    private fun requestOverlayPermission() {
+        if (!Settings.canDrawOverlays(this)) {
+            val intent = Intent(
+                Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                Uri.parse("package:${this.packageName}")
+            )
+            overlayPermissionLauncher.launch(intent)
+        }
     }
 
     override fun onResume() {

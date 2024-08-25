@@ -3,11 +3,12 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
@@ -19,11 +20,21 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <meta-data android:name="SamsungBasicInteraction" android:value="SEP10" />
-        <meta-data android:name="com.samsung.android.icon_container.has_icon_container" android:value="true" />
-        <meta-data android:name="com.samsung.android.icon_container.feature_appicon" android:value="ADAPTIVEICON_SHADOW" />
-        <meta-data android:name="theming-meta" android:value="meta_998_sesl_app" />
-        <meta-data android:name="theming-meta-xml" android:value="@xml/meta_998_sesl_app" />
+        <meta-data
+            android:name="SamsungBasicInteraction"
+            android:value="SEP10" />
+        <meta-data
+            android:name="com.samsung.android.icon_container.has_icon_container"
+            android:value="true" />
+        <meta-data
+            android:name="com.samsung.android.icon_container.feature_appicon"
+            android:value="ADAPTIVEICON_SHADOW" />
+        <meta-data
+            android:name="theming-meta"
+            android:value="meta_998_sesl_app" />
+        <meta-data
+            android:name="theming-meta-xml"
+            android:value="@xml/meta_998_sesl_app" />
 
         <activity
             android:name=".activities.PermissionActivity"
@@ -45,15 +56,28 @@
                 android:value="themeColor" />
         </activity>
 
-        <activity android:name=".activities.ClockStyleActivity" android:exported="false" />
-        <activity android:name=".activities.OverlayStyleActivity" android:exported="false" />
-        <activity android:name=".activities.HandlerStyleActivity" android:exported="false" />
-        <activity android:name=".activities.SecurityActivity" android:exported="false" />
-        <activity android:name=".activities.GestureActivity" android:exported="false" />
+        <activity
+            android:name=".activities.ClockStyleActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.OverlayStyleActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.HandlerStyleActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.SecurityActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.GestureActivity"
+            android:exported="false" />
 
-        <activity android:name=".activities.AboutActivity" android:exported="false" />
+        <activity
+            android:name=".activities.AboutActivity"
+            android:exported="false" />
 
-        <receiver android:name=".receiver.AudioSessionReceiver"
+        <receiver
+            android:name=".receiver.AudioSessionReceiver"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.media.action.OPEN_AUDIO_EFFECT_CONTROL_SESSION" />
@@ -75,9 +99,9 @@
         <receiver
             android:name=".services.DeviceAdmin"
             android:description="@string/device_description"
+            android:exported="true"
             android:label="@string/device_admin_label"
-            android:permission="android.permission.BIND_DEVICE_ADMIN"
-            android:exported="true">
+            android:permission="android.permission.BIND_DEVICE_ADMIN">
             <meta-data
                 android:name="android.app.device_admin"
                 android:resource="@xml/device_admin" />
@@ -88,7 +112,12 @@
 
         <service
             android:name=".services.OverlayService"
-            android:exported="false" />
+            android:exported="false"
+            android:foregroundServiceType="specialUse">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="This_ForegroundService_Provides_SystemWide_Controls_For_User_Interaction" />
+        </service>
 
         <receiver
             android:name=".services.BootReceiver"

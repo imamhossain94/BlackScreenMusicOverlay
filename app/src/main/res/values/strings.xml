@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Music Overlay</string>
 
-    <string name="oui_permission_page_description">The following permissions are required for the app to work correctly. Click on each permission and allow them to start the app.</string>
+    <string name="oui_permission_page_description">The following permissions are required for the app to work correctly. Click on start button to allow permissions.</string>
 
     <!-- Strings for Notification Permission -->
     <string name="oui_app_permission_notification_title">Post notification</string>
