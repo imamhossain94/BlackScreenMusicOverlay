@@ -34,10 +34,12 @@ class Constants {
                 clockStyle = ClockStyle.VERTICAL_NUMBER
             ),
             ClockModel(
+                isPro = true,
                 viewType = ClockViewType.TEXT_CLOCK.ordinal,
                 clockStyle = ClockStyle.HORIZONTAL_NUMBER
             ),
             ClockModel(
+                isPro = true,
                 viewType = ClockViewType.TEXT_CLOCK.ordinal,
                 clockStyle = ClockStyle.HORIZONTAL_NUMBER_2
             ),
@@ -50,12 +52,14 @@ class Constants {
                 showSecondsHand = false
             ),
             ClockModel(
+                isPro = true,
                 viewType = ClockViewType.FRAME_CLOCK.ordinal,
                 autoUpdate = false,
                 showFrame = false,
                 showSecondsHand = true
             ),
             ClockModel(
+                isPro = true,
                 viewType = ClockViewType.FRAME_CLOCK.ordinal,
                 autoUpdate = false,
                 showFrame = true,

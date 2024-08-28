@@ -93,8 +93,8 @@ class HandlerStyleActivity : AppCompatActivity(), ColorPaletteView.ColorSelectio
             override fun onProgressChanged(seekBar: SeslSeekBar?, progress: Int, fromUser: Boolean) {
                 val progressValue = (progress * 2.55).toInt()
                 val color = SharedPrefRepository(this@HandlerStyleActivity).getHandlerColor()
-                SharedPrefRepository(this@HandlerStyleActivity).setHandlerTransparency(progressValue)
-                handlerView.setViewColor(color, progressValue)
+                SharedPrefRepository(this@HandlerStyleActivity).setHandlerTransparency(255 - progressValue)
+                handlerView.setViewColor(color, 255 - progressValue)
             }
             override fun onStartTrackingTouch(seekBar: SeslSeekBar?) { }
             override fun onStopTrackingTouch(seekBar: SeslSeekBar?) { }

@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="AppTheme" parent="@style/OneUITheme">
+    <style name="Theme.AppTheme" parent="@style/OneUITheme">
         <item name="android:windowSplashScreenAnimatedIcon" tools:targetApi="s">@android:color/transparent</item>
 
         <item name="colorPrimaryText">@color/lightPrimaryText</item>
@@ -9,6 +9,14 @@
         <item name="colorBackground">@color/lightBackground</item>
         <item name="colorCardBackground">@color/lightCardBackground</item>
         <item name="colorTipCardBackground">@color/lightTipCardBackground</item>
+    </style>
+
+    <style name="Theme.AppTheme.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/oui_round_and_bgcolor</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_splash</item>
+        <item name="windowSplashScreenAnimationDuration">800</item>
+        <!--item name="windowSplashScreenIconBackgroundColor">@color/oui_background_color</item-->
+        <item name="postSplashScreenTheme">@style/Theme.AppTheme</item>
     </style>
 
 

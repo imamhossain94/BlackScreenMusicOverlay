@@ -22,4 +22,5 @@
 
     <string name="device_description">Lock screen on click with Device Policy Manager API</string>
     <string name="device_admin_label">Music Overlay Device Admin</string>
+    <string name="todo">todo</string>
 </resources>

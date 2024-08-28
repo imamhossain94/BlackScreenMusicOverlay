@@ -62,9 +62,15 @@ class AppearanceFragment : Fragment(), ColorPaletteView.ColorSelectionListener, 
     }
 
     override fun onColorSelected(color: Int) {
-        val activityBinding = (requireActivity() as ClockStyleActivity).binding
-        activityBinding.textClockPreview.setForegroundColor(color)
-        activityBinding.frameClockPreview.setForegroundColor(color)
+        val activity = (requireActivity() as ClockStyleActivity)
+        activity.binding.textClockPreview.setMinuteTextColor(color)
+        activity.binding.frameClockPreview.setMinuteHandColor(color)
+
+        val updatedClockList = Constants.clockList.map {
+            it.copy(minuteColor = color, minuteHandColor = color)
+        }.toList()
+
+        activity.clocksFragment.adapter.updateClockList(updatedClockList)
 
         SharedPrefRepository(requireActivity()).setClockColor(color)
     }

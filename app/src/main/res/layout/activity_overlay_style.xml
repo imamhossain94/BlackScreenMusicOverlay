@@ -35,6 +35,18 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/visualizer_pro_status"
+                style="@style/OneUI.ButtonStyleOutline"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:clickable="false"
+                android:focusable="false"
+                android:text="PRO"
+                android:layout_margin="16dp"/>
 
             <LinearLayout
                 android:layout_width="match_parent"

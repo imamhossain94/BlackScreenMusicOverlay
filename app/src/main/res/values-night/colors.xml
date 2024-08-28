@@ -5,4 +5,7 @@
     <color name="oui_subheader_text_color">#ff999999</color>
     <color name="oui_permissioncardview_item_icon_color">#ffd0d0d0</color>
 
+
+    <color name="tipCardBackground">#002b4e</color>
+
 </resources>

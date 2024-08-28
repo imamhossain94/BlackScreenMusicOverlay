@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<animated-vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt">
+
+    <!-- Define the vector drawable for the animation -->
+    <aapt:attr name="android:drawable">
+        <vector
+            android:width="512dp"
+            android:height="512dp"
+            android:viewportWidth="512"
+            android:viewportHeight="512">
+
+            <group android:name="group1">
+                <path
+                    android:name="path1"
+                    android:pathData="M381.1,255.66C381.1,145.41 324.94,130.22 255.66,130.22C186.37,130.22 130.22,145.41 130.22,255.66C130.22,365.9 186.37,381.1 255.66,381.1C324.94,381.1 381.1,365.9 381.1,255.66Z"
+                    android:fillColor="#1F2125"/>
+            </group>
+
+            <group android:name="group2">
+                <path
+                    android:name="path2"
+                    android:pathData="M188.77,235.86L250.77,271.68C252.14,272.36 252.83,272.36 254.21,272.36C255.59,272.36 256.28,272.36 257.65,271.68L319.65,235.86C321.03,235.17 321.72,234.48 322.4,233.1C323.78,229.66 323.09,225.52 319.65,223.46L257.65,187.64C255.59,186.26 252.83,186.26 250.77,187.64L188.77,223.46C187.39,224.15 186.7,224.83 186.01,226.21C184.64,229.66 185.33,233.79 188.77,235.86ZM319.65,251.01L318.27,250.32L257.65,285.45C255.59,286.83 252.83,286.83 250.77,285.45L190.15,250.32L188.77,251.01C185.33,253.08 184.64,257.21 186.01,260.65C186.7,262.03 187.39,262.72 188.77,263.41L250.77,299.23C252.83,300.61 255.59,300.61 257.65,299.23L319.65,263.41C323.09,261.34 323.78,257.21 322.4,253.77C321.72,252.39 321.03,251.7 319.65,251.01ZM319.65,278.56L318.27,277.88L257.65,313.01C255.59,314.38 252.83,314.38 250.77,313.01L190.15,277.88L188.77,278.56C185.33,280.63 184.64,284.76 186.01,288.21C186.7,289.59 187.39,290.27 188.77,290.96L250.77,326.78C252.83,328.16 255.59,328.16 257.65,326.78L319.65,290.96C323.09,288.9 323.78,284.76 322.4,281.32C321.72,279.94 321.03,279.25 319.65,278.56Z"
+                    android:fillColor="#ffffff"/>
+            </group>
+
+        </vector>
+    </aapt:attr>
+
+    <!-- Define animations for the vector drawable -->
+<!--    <target android:name="group1">-->
+<!--        <aapt:attr name="android:animation">-->
+<!--            <objectAnimator-->
+<!--                android:duration="1000"-->
+<!--                android:propertyName="scaleX"-->
+<!--                android:valueFrom="1"-->
+<!--                android:valueTo="1.2"-->
+<!--                android:repeatCount="infinite"-->
+<!--                android:repeatMode="reverse" />-->
+<!--            <objectAnimator-->
+<!--                android:duration="1000"-->
+<!--                android:propertyName="scaleY"-->
+<!--                android:valueFrom="1"-->
+<!--                android:valueTo="1.2"-->
+<!--                android:repeatCount="infinite"-->
+<!--                android:repeatMode="reverse" />-->
+<!--        </aapt:attr>-->
+<!--    </target>-->
+
+    <target android:name="group2">
+        <aapt:attr name="android:animation">
+            <objectAnimator
+                android:duration="1000"
+                android:propertyName="scaleY"
+                android:valueFrom="0.95"
+                android:valueTo="1.05"
+                android:repeatCount="infinite"
+                android:repeatMode="reverse" />
+        </aapt:attr>
+    </target>
+
+</animated-vector>

@@ -4,21 +4,20 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
-import android.os.Build
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
-import androidx.picker.app.SeslColorPickerDialog
+import androidx.picker3.app.SeslColorPickerDialog
 import com.newagedevs.musicoverlay.R
 import com.newagedevs.musicoverlay.preferences.SharedPrefRepository
 
 
 class ColorPaletteView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
-) : LinearLayout(context, attrs, defStyleAttr),  SeslColorPickerDialog.OnColorSetListener{
+) : LinearLayout(context, attrs, defStyleAttr), SeslColorPickerDialog.OnColorSetListener {
 
 
     interface ColorSelectionListener {
@@ -179,19 +178,19 @@ class ColorPaletteView @JvmOverloads constructor(
 
     private fun createCircleDrawableGradient(context: Context): Drawable {
         val shape = GradientDrawable()
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            shape.innerRadiusRatio = 0.15f
-            shape.thicknessRatio = 0.075f
-        }
         shape.shape = GradientDrawable.OVAL
-        val color1 = ContextCompat.getColor(context, R.color.paletteColor3)
-        val color2 = ContextCompat.getColor(context, R.color.paletteColor11)
-        val color3 = ContextCompat.getColor(context, R.color.paletteColor2)
-        shape.colors = intArrayOf(color1, color2, color3)
+        val startColor = ContextCompat.getColor(context, R.color.paletteColor3)
+        val endColor = ContextCompat.getColor(context, R.color.paletteColor1)
+        shape.colors = intArrayOf(startColor, endColor)
+        shape.gradientType = GradientDrawable.RADIAL_GRADIENT
+        shape.gradientRadius = context.resources.getDimension(R.dimen._30dp)
         shape.setGradientCenter(0.5f, 0.5f)
-        shape.gradientType = GradientDrawable.SWEEP_GRADIENT
+        val width = context.resources.getDimensionPixelSize(R.dimen._25dp)
+        val height = width
+        shape.setSize(width, height)
         return shape
     }
+
 
     private fun createCircleDrawableBorderGradient(borderWidth: Int = 5, borderColor: Int = Color.BLUE): Drawable {
         val shape = createCircleDrawableGradient(context) as GradientDrawable
@@ -202,9 +201,18 @@ class ColorPaletteView @JvmOverloads constructor(
 
     private fun openColorPickerDialog() {
         recentColors = SharedPrefRepository(context).getRecentColors()
-        val dialog = SeslColorPickerDialog(context, this, currentColor, buildIntArray(recentColors))
-        dialog.setTransparencyControlEnabled(false)
+//        val dialog = SeslColorPickerDialog(context, this, currentColor, buildIntArray(recentColors))
+//        dialog.setTransparencyControlEnabled(false)
+//        dialog.show()
+
+        val dialog = SeslColorPickerDialog(
+            context, this,
+            currentColor, buildIntArray(recentColors), true
+        )
+        dialog.setTransparencyControlEnabled(true)
         dialog.show()
+
+
     }
 
 

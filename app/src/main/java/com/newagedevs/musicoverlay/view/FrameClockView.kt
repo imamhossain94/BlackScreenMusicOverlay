@@ -239,6 +239,11 @@ class FrameClockView : View {
         invalidate()
     }
 
+    fun setMinuteHandColor(color: Int) {
+        minuteHandColor = color
+        invalidate()
+    }
+
     // Foreground view properties
     fun setForegroundColor(color: Int) {
         frameColor = color

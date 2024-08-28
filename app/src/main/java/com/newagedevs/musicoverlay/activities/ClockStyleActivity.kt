@@ -26,6 +26,8 @@ class ClockStyleActivity : AppCompatActivity() {
     private var originalWidth: Int = 0
     private var originalHeight: Int = 0
     lateinit var binding: ActivityClockStyleBinding
+    lateinit var clocksFragment:ClocksFragment
+    private lateinit var appearanceFragment:AppearanceFragment
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,10 +59,8 @@ class ClockStyleActivity : AppCompatActivity() {
         binding.textClockPreview.setOpacity(textTransparency)
         binding.frameClockPreview.setOpacity(frameTransparency)
 
-        clockColor?.let { binding.textClockPreview.setForegroundColor(it) }
-        clockColor?.let { binding.frameClockPreview.setForegroundColor(it) }
-
-
+        clockColor?.let { binding.textClockPreview.setMinuteTextColor(it) }
+        clockColor?.let { binding.frameClockPreview.setMinuteHandColor(it) }
 
         binding.tabsSubtab
 
@@ -95,9 +95,11 @@ class ClockStyleActivity : AppCompatActivity() {
         })
 
         val adapter = ViewPagerAdapter(this@ClockStyleActivity)
+        clocksFragment = ClocksFragment()
+        appearanceFragment = AppearanceFragment()
 
-        adapter.addFragment( ClocksFragment(),"Select Clock")
-        adapter.addFragment( AppearanceFragment(),"Appearance")
+        adapter.addFragment( clocksFragment,"Select Clock")
+        adapter.addFragment( appearanceFragment,"Appearance")
         val viewPager: ViewPager2 = binding.viewPager
         viewPager.isUserInputEnabled = false
         viewPager.adapter = adapter

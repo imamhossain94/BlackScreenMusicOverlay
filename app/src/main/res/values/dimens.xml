@@ -4,5 +4,8 @@
     <dimen name="oui_permission_content_padding_horizontal">24.0dip</dimen>
     <dimen name="oui_permissioncardview_item_padding_vertical">14.0dip</dimen>
 
+    <dimen name="_30dp">30dp</dimen>
+    <dimen name="_25dp">25dp</dimen>
+
     <!-- Color Picker -->
 </resources>

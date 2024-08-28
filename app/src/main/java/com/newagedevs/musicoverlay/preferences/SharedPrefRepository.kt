@@ -232,7 +232,7 @@ class SharedPrefRepository(private val context: Context) {
     // Get the overlay style index
     fun getOverlayStyleIndex(): Int {
         val sharedPref = context.getSharedPreferences(sharedPrefName, Context.MODE_PRIVATE)
-        return sharedPref.getInt(overlayStyleIndexKey, 0)
+        return sharedPref.getInt(overlayStyleIndexKey, 22)
     }
 
     // Set the overlay style index

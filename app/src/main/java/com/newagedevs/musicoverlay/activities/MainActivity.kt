@@ -1,11 +1,14 @@
 package com.newagedevs.musicoverlay.activities
 
+import android.R
+import android.app.Activity.OVERRIDE_TRANSITION_OPEN
 import android.app.ActivityManager
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
 import android.provider.Settings
@@ -13,6 +16,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatRadioButton
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.newagedevs.musicoverlay.databinding.ActivityMainBinding
 import com.newagedevs.musicoverlay.models.UnlockCondition
 import com.newagedevs.musicoverlay.preferences.SharedPrefRepository
@@ -46,7 +50,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
+
+//        if (Build.VERSION.SDK_INT >= 34) {
+//            overrideActivityTransition(OVERRIDE_TRANSITION_OPEN, R.anim.fade_in, R.anim.fade_out)
+//        }
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)

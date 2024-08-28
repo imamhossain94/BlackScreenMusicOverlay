@@ -75,6 +75,8 @@ class OverlayStyleActivity : AppCompatActivity(), ColorPaletteView.ColorSelectio
             }
         })
 
+        binding.visualizerProStatus.visibility = View.INVISIBLE
+
         binding.changeVisualizerStyle.setOnClickListener {
             currentVisualizerIndex = (currentVisualizerIndex + 1) % visualizerList.size
 
@@ -92,6 +94,12 @@ class OverlayStyleActivity : AppCompatActivity(), ColorPaletteView.ColorSelectio
             val msg = if (visualizer == null) "None" else "${currentVisualizerIndex}/${visualizerList.lastIndex}"
             binding.visualizerStyleStatus.text = msg
             SharedPrefRepository(this).setOverlayStyleIndex(currentVisualizerIndex)
+
+//            if(currentVisualizerIndex <= 14) {
+//                binding.visualizerProStatus.visibility = View.VISIBLE
+//            } else {
+//                binding.visualizerProStatus.visibility = View.INVISIBLE
+//            }
         }
 
         initVisualizer()
@@ -231,7 +239,7 @@ class OverlayStyleActivity : AppCompatActivity(), ColorPaletteView.ColorSelectio
         mediaPlayerManager = MediaPlayerManager(this)
         helper = VisualizerHelper(mediaPlayerManager.play().pause().getSessionId())
 
-        visualizerList = visualizerList(this, topMargin = -0.47f, bottomMargin = 0.4f)
+        visualizerList = visualizerList(this, topMargin = -0.4f, bottomMargin = 0.4f)
 
         val visualizer = visualizerList[currentVisualizerIndex]
         if(visualizer == null) {

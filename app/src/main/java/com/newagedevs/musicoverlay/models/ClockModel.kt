@@ -7,6 +7,8 @@ import android.graphics.Color
 //)
 
 data class ClockModel(
+    val isPro: Boolean = false,
+
     // View related properties
     val viewType: Int,
     val clockType: ClockType = ClockType.HOUR_12,
@@ -22,7 +24,7 @@ data class ClockModel(
 
     // Text color settings
     val hourColor: Int = Color.WHITE,
-    val minuteColor: Int = Color.RED,
+    var minuteColor: Int = Color.RED,
     val meridianColor: Int = Color.GRAY,
 
     // Text size settings
@@ -30,8 +32,13 @@ data class ClockModel(
     val minuteTextSize: Float = 26f,
     val meridianTextSize: Float = 26f,
 
-    var frameRadius: Float = 40f,
+    // Frame color settings
     var frameColor: Int = Color.GRAY,
+    val hourHandColor: Int = Color.WHITE,
+    var minuteHandColor: Int = Color.RED,
+    val secondHandColor: Int = Color.GRAY,
+
+    var frameRadius: Float = 40f,
     var frameThickness: Float = 2f,
     var hourHandThickness: Float = 5f,
     var minuteHandThickness: Float = 5f,

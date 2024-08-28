@@ -18,6 +18,7 @@ class ClocksFragment : Fragment(), ClockAdapter.OnClockItemClickListener {
 
     private var _binding: FragmentClocksBinding? = null
     private val binding get() = _binding!!
+    lateinit var adapter: ClockAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,8 +32,16 @@ class ClocksFragment : Fragment(), ClockAdapter.OnClockItemClickListener {
         super.onViewCreated(view, savedInstanceState)
 
         // Access views using binding
+        val clockColor = SharedPrefRepository(requireActivity()).getClockColor()
         val clockIndex = SharedPrefRepository(requireActivity()).getClockStyleIndex()
-        val adapter = ClockAdapter(Constants.clockList, this, selectedItemPosition = clockIndex)
+
+        val updatedClockList = Constants.clockList.map {
+            clockColor?.let { color ->
+                it.copy(minuteColor = color, minuteHandColor = color)
+            } ?: it
+        }
+
+        adapter = ClockAdapter(updatedClockList, this, selectedItemPosition = clockIndex)
 
         binding.recyclerView.layoutManager = context?.let { NonScrollableGridLayoutManager(it, 3) }
         binding.recyclerView.adapter = adapter
