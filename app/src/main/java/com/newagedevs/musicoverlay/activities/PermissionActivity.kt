@@ -11,6 +11,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.newagedevs.musicoverlay.databinding.ActivityPermissionBinding
 import com.newagedevs.musicoverlay.helper.NotificationUtil
 import dev.oneuiproject.oneui.widget.Toast
@@ -23,6 +24,7 @@ class PermissionActivity : AppCompatActivity() {
     private lateinit var notificationPermissionLauncher: ActivityResultLauncher<String>
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
 
         binding = ActivityPermissionBinding.inflate(layoutInflater)

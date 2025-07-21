@@ -38,7 +38,7 @@ class VisualizerView : View {
         this.painter = Compose(painter, simpleText)
     }
 
-    override fun onDraw(canvas: Canvas?) {
+    override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         if (this::painter.isInitialized && this::visualizerHelper.isInitialized) {
             setLayerType(LAYER_TYPE_HARDWARE, paint)
